@@ -1,14 +1,24 @@
 {
   "name": "generator-jhipster-cassandra-composite-primary-key",
   "version": "1.0.0",
-  "private": true,
-  "description": "Description for Multiple Human Readable Foreign Key Fields 8",
+  "description": "Description for Cassandra Composite Primary Keys",
   "keywords": [
     "yeoman-generator",
     "jhipster-blueprint",
+    "composite primary keys",
+    "cassandra",
     "jhipster-8"
   ],
-  "license": "UNLICENSED",
+  "author": "Amar Premsaran Patel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amarpatel-xx/generator-jhipster-cassandra-composite-primary-key.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amarpatel-xx/generator-jhipster-cassandra-composite-primary-key/issues"
+  },
+  "homepage": "https://github.com/amarpatel-xx/generator-jhipster-cassandra-composite-primary-key#readme",
   "type": "module",
   "bin": {
     "jhipster-cassandra-composite-primary-key": "cli/cli.cjs"
