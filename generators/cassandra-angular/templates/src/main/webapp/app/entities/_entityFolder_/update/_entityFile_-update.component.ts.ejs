@@ -1,0 +1,204 @@
+<%#
+ Copyright 2013-2024 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+import { Component, inject, OnInit<% if (anyFieldHasImageContentType) { %>, ElementRef<% } %> } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+
+import SharedModule from 'app/shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { <%= entityAngularName %>FormService, <%= entityAngularName %>FormGroup } from './<%= entityFileName %>-form.service';
+<%_ if (anyFieldIsDateDerived || anyFieldIsDateDerivedSaathratri) { _%>
+import dayjs from 'dayjs/esm';
+import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { dateLongToFormattedString, datetimeLongToFormattedString } from '../../../../shared/date/saathratri-local-dayjs-and-utc-unix-utils';
+<%_ } _%>
+import { I<%= entityAngularName %> } from '../<%= entityFileName %>.model';
+import { <%= entityAngularName %>Service } from '../service/<%= entityFileName %>.service';
+<%_ if (anyFieldIsBlobDerived) { _%>
+import { AlertError } from 'app/shared/alert/alert-error.model';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
+<%_ } _%>
+<%_ const enumImports = generateEntityClientEnumImports(fields); _%>
+<%_ enumImports.forEach( (importedPath, importedType) => { _%>
+import { <%- importedType %> } from '<%- importedPath %>';
+<%_ }); _%>
+
+@Component({
+    standalone: true,
+    selector: '<%= jhiPrefixDashed %>-<%= entityFileName %>-update',
+    templateUrl: './<%= entityFileName %>-update.component.html',
+    imports: [SharedModule, FormsModule, ReactiveFormsModule],
+})
+export class <%= entityAngularName %>UpdateComponent implements OnInit {
+    isSaving = false;
+    // Saathratri:
+    isNew = false;
+    <%= entityInstance %>: I<%= entityAngularName %> | null = null;
+<%_ enumImports.forEach( (importedPath, importedType) => { _%>
+    <%- this._.lowerFirst(importedType) %>Values = Object.keys(<%- importedType %>);
+<%_ }); _%>
+
+<%_ if (anyFieldIsBlobDerived) { _%>
+    protected dataUtils = inject(DataUtils);
+    protected eventManager = inject(EventManager);
+<%_ } _%>
+    protected <%= entityInstance %>Service = inject(<%= entityAngularName %>Service);
+    protected <%= entityInstance %>FormService = inject(<%= entityAngularName %>FormService);
+<%_ if (anyFieldHasImageContentType) { _%>
+    protected elementRef = inject(ElementRef);
+<%_ } _%>
+    protected activatedRoute = inject(ActivatedRoute);
+    protected router = inject(Router);
+
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    editForm: <%= entityAngularName %>FormGroup = this.<%= entityInstance %>FormService.create<%= entityAngularName %>FormGroup();
+
+    ngOnInit(): void {
+      <%_
+        // Saathratri Modification
+      _%>
+              this.isNew = this.activatedRoute.snapshot.routeConfig?.path === 'new' ? true : false;
+      <%_
+        // End of Saathratri Modification
+      _%>
+        this.activatedRoute.data.subscribe(({ <%= entityInstance %> }) => {
+       <%_ if (anyFieldIsDateDerived || anyFieldIsDateDerivedSaathratri) { _%>
+	    <%_ 
+	        // Saathratri: Composite Primary Key Code
+	        if (primaryKeySaathratri.composite) { 
+	    _%>
+	            if (<%= entityInstance %>?.<%= primaryKeySaathratri.name %> !== undefined && 
+                    <%- getCompositePrimaryKeyClientUpdateComponentUndefinedCheck(entityInstance, primaryKeySaathratri) %>) {
+	    <%_ 
+	        // Saathratri: Single-value Primary Key Code
+	        } else { 
+	    _%>
+	            if (<%= entityInstance %>?.<%= primaryKey.name %> === undefined) {
+	    <%_ 
+	        }
+	        // Saathratri 
+	    _%>
+                const today = dayjs().startOf('day');
+            <%_ for (const field of fields) {
+                const fieldName = field.fieldName;
+                const fieldType = field.fieldType;
+            _%>
+                <%_ if (field.fieldTypeTimed) { _%>
+                <%= entityInstance %>.<%= fieldName %> = today;
+                <%_ } _%>
+            <%_ } _%>
+            }
+       <%_ } _%>
+            this.<%= entityInstance %> = <%= entityInstance %>;
+            if (<%= entityInstance %>) {
+                this.updateForm(<%= entityInstance %>);
+            }
+        });
+    }
+
+<%_ if (anyFieldIsBlobDerived) { _%>
+    byteSize(base64String: string): string {
+        return this.dataUtils.byteSize(base64String);
+    }
+
+    openFile(base64String: string, contentType: string | null | undefined): void {
+        this.dataUtils.openFile(base64String, contentType);
+    }
+
+    setFileData(event: Event, field: string, isImage: boolean): void {
+        this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
+            error: (err: FileLoadError) =>
+                this.eventManager.broadcast(
+                    new EventWithContent<AlertError>('<%= frontendAppName %>.error', { <% if (enableTranslation) { %>...err, key: 'error.file.' + err.key<% } else { %>message: err.message<% } %> })
+                )
+        });
+    }
+
+  <%_ if (anyFieldHasImageContentType) { _%>
+    clearInputImage(field: string, fieldContentType: string, idInput: string): void {
+        this.editForm.patchValue({
+            [field]: null,
+            [fieldContentType]: null
+        });
+        if (idInput && this.elementRef.nativeElement.querySelector('#' + idInput)) {
+            this.elementRef.nativeElement.querySelector('#' + idInput).value = null;
+        }
+    }
+  <%_ } _%>
+<%_ } _%>
+
+    previousState(): void {
+        this.router.navigate(['/<%= microserviceName.toLowerCase() %>/<%= entityFileName %>']);
+    }
+
+    save(): void {
+        this.isSaving = true;
+        const <%= entityInstance %> = this.<%= entityInstance %>FormService.get<%= entityAngularName %>(this.editForm);
+        
+        <%_ if(primaryKeySaathratri.composite) { _%>
+            <%_ if (updatableEntity) { _%>
+                    if (this.isNew) {
+                        this.subscribeToSaveResponse(this.<%= entityInstance %>Service.create(<%= entityInstance %>));
+                    } else {
+            <%_ } _%>
+
+                        this.subscribeToSaveResponse(this.<%= entityInstance %>Service.update(<%= entityInstance %>));
+            <%_ if (updatableEntity) { _%>
+                    }
+            <%_ } _%>
+        <%_ } else { _%>
+            <%_ if (updatableEntity) { _%>
+                    // Single-value Primary Key  
+                    if(this.isNew) {
+                        this.subscribeToSaveResponse(this.<%= entityInstance %>Service.create(<%= entityInstance %>));
+                    } else {
+                        this.subscribeToSaveResponse(this.<%= entityInstance %>Service.update(<%= entityInstance %>)); 
+                    }
+            <%_ } _%>
+        <%_ } _%>
+    }
+
+    protected subscribeToSaveResponse(result: Observable<HttpResponse<I<%= entityAngularName %>>>): void {
+        result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
+            next: () => this.onSaveSuccess(),
+            error: () => this.onSaveError()
+        });
+    }
+
+    protected onSaveSuccess(): void {
+        this.previousState();
+    }
+
+    protected onSaveError(): void {
+        // Api for inheritance.
+    }
+
+    protected onSaveFinalize(): void {
+        this.isSaving = false;
+    }
+
+    protected updateForm(<%= entityInstance %>: I<%= entityAngularName %>): void {
+        this.<%= entityInstance %> = <%= entityInstance %>;
+        this.<%= entityInstance %>FormService.resetForm(this.editForm, <%= entityInstance %>);
+    }
+}
