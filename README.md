@@ -1,1 +1,1 @@
-# generator-jhipster-cassandra-composite-primary-key-
+# generator-jhipster-cassandra-composite-primary-key
