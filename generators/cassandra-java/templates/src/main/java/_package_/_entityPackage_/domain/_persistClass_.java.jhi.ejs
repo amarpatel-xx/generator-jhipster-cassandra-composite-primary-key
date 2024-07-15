@@ -103,15 +103,15 @@ public class <%= persistClass %> <&- fragments.extendsSection() -&>implements Se
   const pkName = primaryKeySaathratri.ids.length > 1 ? 'id' : primaryKeySaathratri.name;
   const pkNameCapitalized = this._.upperFirst(pkName); _%>
 _%>
-  @Id
+    @Id
   private <%= entityClass %>Id <%= primaryKeySaathratri.name %>;
 <%_ } else { _%>
   @Id
   @Column("<%- primaryKey.fields[0].fieldNameAsDatabaseColumn %>")
   @CassandraType(type = <%= primaryKey.fields[0].options.customAnnotation[1] %>)
-  private <%= primaryKey.type %> <%= primaryKey.name %>;
-<%_ } _%>
+    private <%= primaryKey.type %> <%= primaryKey.name %>;
 
+<%_ } _%>
 <&- fragments.classStaticFieldsSection() -&>
 <&- fragments.classFieldsSection() -&>
 <%_ for (const field of fields.filter(field => !field.javaInherited && !field.transient && (embedded || !field.id))) { _%>
@@ -136,7 +136,6 @@ _%>
   <%_
     }
   _%> 
-
 <&_ } -&>
 <%_ } _%>
 <%_ } _%>
@@ -156,22 +155,22 @@ _%>
         this.<%= primaryKeySaathratri.name %> = <%= primaryKeySaathratri.name %>;
         return this;
     }
-  <%_ } _%>
-<%_ } else { _%>
+    <%_ } _%>
+
+  <%_ } else { _%>
     public <%= primaryKey.type %> get<%= primaryKey.nameCapitalized %>() {
         return this.<%= primaryKey.name %>;
     }
-
     public void set<%= primaryKey.nameCapitalized %>(<%= primaryKey.type %> <%= primaryKey.name %>) {
         this.<%= primaryKey.name %> = <%= primaryKey.name %>;
     }
-
     <%_ if (fluentMethods) { _%>
       public <%= persistClass %> <%= primaryKey.name %>(<%= primaryKey.type %> <%= primaryKey.name %>) {
           this.<%= primaryKey.name %> = <%= primaryKey.name %>;
           return this;
       }
-    <%_ } _%>
+  <%_ } _%>
+
 <%_ } _%>
     // jhipster-needle-entity-add-field - JHipster will add fields here
 <%_ for (const field of fields.filter(field => !field.transient && (embedded || !field.id || !primaryKey.composite))) { _%>
@@ -204,7 +203,7 @@ _%>
         this.set<%= field.fieldInJavaBeanMethod %>(<%= field.fieldName %>);
         return this;
     }
-    <%_ } _%>
+  <%_ } _%>
     <%_ } _%>
   <%_
     }
@@ -229,6 +228,7 @@ _%>
   <%_ } _%> 
   <&_ } -&>
   <%_ if (field.fieldWithContentType) { _%>
+
     public String get<%= field.fieldInJavaBeanMethod %>ContentType() {
         return this.<%= field.fieldName %>ContentType;
     }
@@ -246,7 +246,14 @@ _%>
   <%_ } _%>
 <&_ } -&>
 <%_ } _%>
-<%_ } _%>
+
+
+
+  <%_ } _%>
+
+
+
+
 
 <&- fragments.classAdditionalFieldsMethodsSection('\n\n') -&>
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -263,7 +270,7 @@ _%>
   <%_ if (primaryKeySaathratri.composite) { _%>
         return get<%= primaryKeySaathratri.nameCapitalized %>() != null && get<%= primaryKeySaathratri.nameCapitalized %>().equals(((<%= persistClass %>) o).get<%= primaryKeySaathratri.nameCapitalized %>());
   <%_ } else { _%>
-    return get<%= primaryKey.nameCapitalized %>() != null && get<%= primaryKey.nameCapitalized %>().equals(((<%= persistClass %>) o).get<%= primaryKey.nameCapitalized %>());
+        return get<%= primaryKey.nameCapitalized %>() != null && get<%= primaryKey.nameCapitalized %>().equals(((<%= persistClass %>) o).get<%= primaryKey.nameCapitalized %>());
   <%_ } _%>
 <%_ } else { _%>
         return false;

@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.springframework.data.cassandra.repository.<% if (reactive) { %>Reactive<% } %>CassandraRepository;
 import org.springframework.stereotype.Repository;
-
 import <%= entityAbsolutePackage %>.domain.<%= persistClass %>;
 <%_ if (primaryKeySaathratri.composite) { _%>
 import <%= entityAbsolutePackage %>.domain.<%= persistClass %>Id;

@@ -29,19 +29,19 @@ const <%= entityInstance %>Resolve = (route: ActivatedRouteSnapshot): Observable
   <%_ if(primaryKeySaathratri.composite) { _%> 
     <%- primaryKeySaathratri.ids.map(field => `const ${field.fieldName} =  route.params['${field.fieldName}'];`).join('\n') %>
   <%_ } else { _%>
-      const id = route.params['<%= primaryKey.name %>'];
+  const id = route.params['<%= primaryKey.name %>'];
   <%_ } _%>
   
   <%_ if(primaryKeySaathratri.composite) { _%> 
   if (<%- primaryKeySaathratri.ids.map(field => field.fieldName).join(' && ') %>) {
   <%_ } else { _%>
-  if (id) { 
+  if (id) {
   <%_ } _%>
     return inject(<%= entityAngularName %>Service)
     <%_ if(primaryKeySaathratri.composite) { _%> 
       .find(<%- primaryKeySaathratri.ids.map(field => field.fieldName).join(', ') %>)
     <%_ } else { _%> 
-      .find(id) 
+      .find(id)
     <%_ } _%>
       .pipe(
         mergeMap((<%= entityInstance %>: HttpResponse<I<%= entityAngularName %>>) => {

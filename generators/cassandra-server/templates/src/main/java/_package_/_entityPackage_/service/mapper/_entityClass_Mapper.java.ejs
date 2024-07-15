@@ -28,7 +28,9 @@ import java.util.TreeSet;
 import <%= entityAbsoluteClass %>;
 import <%= entityAbsolutePackage %>.service.dto.<%= dtoClass %>;
 
+
 import org.mapstruct.*;
+
 
 /**
  * Mapper for the entity {@link <%= persistClass %>} and its DTO {@link <%= dtoClass %>}.
@@ -57,19 +59,19 @@ public interface <%= entityClass %>Mapper extends EntityMapper<<%= dtoClass %>, 
       @Mapping(target = "<%= primaryKeySaathratri.name %>.<%= field.fieldName %>", source = "<%= primaryKeySaathratri.name %>.<%= field.fieldName %>")
       <%_ } _%>
     <%= dtoClass %> toDto(<%= persistClass %> <%= entityInstance %>);
-  <%_ } _%>
+      <%_ } _%>
 
     default Set<String> map(String value) {
       Set<String> theSet = new TreeSet<String>();
       if (value != null) {
           theSet.add(value);
-      }
+    }
       return theSet;
+
     }
 
     default String map(Set<String> value) {
       if (value == null || value.isEmpty()) { return null; }
-
       return value.iterator().next();
     }
 <%_ } _%>

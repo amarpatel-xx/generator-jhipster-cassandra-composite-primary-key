@@ -18,18 +18,15 @@
 -%>
 <%_
   let formDefaultProperties = [];
-
   if(primaryKeySaathratri.composite) { 
-
     formDefaultProperties = [
       ...fields.filter(field => !field.isCompositePrimaryKeyField && (field.fieldTypeTimed || field.fieldTypeTimedSaathratri || field.fieldTypeBoolean)).map(field => field.fieldName),
     ];
-
     formDefaultProperties.push(primaryKeySaathratri.name);
 } else { 
     formDefaultProperties = [
       ...fields.filter(field => field.fieldTypeTimed || field.fieldTypeTimedSaathratri || field.fieldTypeBoolean || field.id).map(field => field.fieldName),
-    ];
+  ];
 }
   const containDefaultProperties = formDefaultProperties.length > 0;
   const entityFormName = anyFieldIsTimeDerived || anyFieldIsTimeDerivedSaathratri ? `${entityAngularName}FormRawValue` : `I${entityAngularName}`;
@@ -74,6 +71,7 @@ type <%= entityAngularName %>FormRawValue =  FormValueOf<I<%= entityAngularName 
 type New<%= entityAngularName %>FormRawValue =  FormValueOf<New<%= entityAngularName %>>;
 <%_ } _%>
 <%_ if (containDefaultProperties) { _%>
+
 type <%= entityAngularName %>FormDefaults = Pick<New<%= entityAngularName %>, '<%- formDefaultProperties.join("' | '") %>'>;
 <%_ } _%>
 
@@ -284,7 +282,7 @@ _%>
   },
 <%_ } else { _%>
 <%_ for (const field of fields.filter(field => field.id)) { _%>
-  <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= field.fieldName %>, disabled: <% if (field.autoGenerate) { %>true<% } else { %><%= entityInstance %>RawValue.<%= field.fieldName %> !== null<% } %> },
+      <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= field.fieldName %>, disabled: <% if (field.autoGenerate) { %>true<% } else { %><%= entityInstance %>RawValue.<%= field.fieldName %> !== null<% } %> },
 <%_ } _%>
 <%_ } _%>
     } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */);
@@ -307,7 +305,7 @@ _%>
     <%_ } else if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
       <%= fieldName %>: currentTime,
     <%_ } else { _%>
-      <%= fieldName %>: null,
+        <%= fieldName %>: null,
     <%_ } _%>
   <%_ } _%>
   },
@@ -315,11 +313,11 @@ _%>
     const { fieldName, fieldTypeBoolean, fieldTypeTimed, fieldTypeLocalDate } = field;
 _%>
 <%_ if (fieldTypeBoolean) { _%>
-  <%= fieldName %>: false,
+        <%= fieldName %>: false,
 <%_ } else if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-  <%= fieldName %>: currentTime,
-<%_ } _%>
-<%_ } _%>
+        <%= fieldName %>: currentTime,
+      <%_ } _%>
+    <%_ } _%>
   <%_ } else { _%>
   <%_ for (field of fields) {
         const { fieldName, fieldTypeBoolean, fieldTypeTimed, fieldTypeLocalDate } = field;
@@ -389,7 +387,7 @@ _%>
       const { fieldName, fieldTypeTimed } = field;
 _%>
   <%_ if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-    <%= fieldName %>: <%= entityInstance %>.<%= fieldName %> ? <%= entityInstance %>.<%= fieldName %>.format(DATE_TIME_FORMAT) : undefined,
+      <%= fieldName %>: <%= entityInstance %>.<%= fieldName %> ? <%= entityInstance %>.<%= fieldName %>.format(DATE_TIME_FORMAT) : undefined,
   <%_ } _%>
 <%_ } _%>
 <%_ } else { _%>

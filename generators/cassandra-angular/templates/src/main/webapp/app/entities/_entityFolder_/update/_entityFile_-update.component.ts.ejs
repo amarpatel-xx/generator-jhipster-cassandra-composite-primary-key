@@ -58,6 +58,7 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
     <%- this._.lowerFirst(importedType) %>Values = Object.keys(<%- importedType %>);
 <%_ }); _%>
 
+
 <%_ if (anyFieldIsBlobDerived) { _%>
     protected dataUtils = inject(DataUtils);
     protected eventManager = inject(EventManager);
@@ -80,7 +81,7 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
               this.isNew = this.activatedRoute.snapshot.routeConfig?.path === 'new' ? true : false;
       <%_
         // End of Saathratri Modification
-      _%>
+_%>
         this.activatedRoute.data.subscribe(({ <%= entityInstance %> }) => {
        <%_ if (anyFieldIsDateDerived || anyFieldIsDateDerivedSaathratri) { _%>
 	    <%_ 
@@ -105,7 +106,7 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
             _%>
                 <%_ if (field.fieldTypeTimed) { _%>
                 <%= entityInstance %>.<%= fieldName %> = today;
-                <%_ } _%>
+<%_ } _%>
             <%_ } _%>
             }
        <%_ } _%>
@@ -113,6 +114,7 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
             if (<%= entityInstance %>) {
                 this.updateForm(<%= entityInstance %>);
             }
+
         });
     }
 
@@ -154,17 +156,15 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
     save(): void {
         this.isSaving = true;
         const <%= entityInstance %> = this.<%= entityInstance %>FormService.get<%= entityAngularName %>(this.editForm);
-        
         <%_ if(primaryKeySaathratri.composite) { _%>
-            <%_ if (updatableEntity) { _%>
+<%_ if (updatableEntity) { _%>
                     if (this.isNew) {
                         this.subscribeToSaveResponse(this.<%= entityInstance %>Service.create(<%= entityInstance %>));
-                    } else {
-            <%_ } _%>
-
+        } else {
+<%_ } _%>
                         this.subscribeToSaveResponse(this.<%= entityInstance %>Service.update(<%= entityInstance %>));
-            <%_ if (updatableEntity) { _%>
-                    }
+<%_ if (updatableEntity) { _%>
+        }
             <%_ } _%>
         <%_ } else { _%>
             <%_ if (updatableEntity) { _%>
@@ -175,7 +175,7 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
                         this.subscribeToSaveResponse(this.<%= entityInstance %>Service.update(<%= entityInstance %>)); 
                     }
             <%_ } _%>
-        <%_ } _%>
+<%_ } _%>
     }
 
     protected subscribeToSaveResponse(result: Observable<HttpResponse<I<%= entityAngularName %>>>): void {
@@ -200,5 +200,8 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
     protected updateForm(<%= entityInstance %>: I<%= entityAngularName %>): void {
         this.<%= entityInstance %> = <%= entityInstance %>;
         this.<%= entityInstance %>FormService.resetForm(this.editForm, <%= entityInstance %>);
+
     }
+
+
 }

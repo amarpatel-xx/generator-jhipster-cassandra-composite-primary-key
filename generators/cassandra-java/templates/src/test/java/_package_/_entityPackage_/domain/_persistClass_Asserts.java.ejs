@@ -82,7 +82,7 @@ public class <%= persistClass %>Asserts {
   <%_ for (const field of fields.filter(field => !field.transient && field.autoGenerate)) { _%>
             .satisfies(e -> assertThat(e.get<%- field.fieldInJavaBeanMethod %>()).as("check <%- field.propertyName %>").isEqualTo(actual.get<%- field.fieldInJavaBeanMethod %>()))
   <%_ } _%>
-<%_ } _%>
+  <%_ } _%>
         ;
 <%_ } _%>
     }
@@ -111,6 +111,7 @@ public class <%= persistClass %>Asserts {
     <%_ } -%>
   <%_ } -%>
 <%_ } _%>
+
         ;
 <%_ } _%>
     }

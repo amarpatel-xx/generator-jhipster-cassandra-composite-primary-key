@@ -87,7 +87,7 @@ import { ParseLinks } from 'app/core/util/parse-links.service';
 import { FilterComponent, FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter';
 <%_ } _%>
 <%_ if (paginationInfiniteScroll) { _%>
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 <%_ } _%>
 
 @Component({
@@ -113,7 +113,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
       ItemCountComponent,
 <%_ } _%>
 <%_ if (paginationInfiniteScroll) { _%>
-      InfiniteScrollModule,
+      InfiniteScrollDirective,
 <%_ } _%>
     ],
 })
@@ -163,7 +163,7 @@ export class <%= componentName %> implements OnInit {
     	track<%= primaryKeySaathratri.nameCapitalized %> = (_index: number, item: I<%= entityAngularName %>Id): I<%= entityAngularName %>Id => this.<%= entityInstance %>Service.get<%= entityAngularName %>Identifier( { <%= primaryKeySaathratri.name %>: item } );
 <%_ } else { _%>
       // Saathratri: Single-value Primary Key Code
-    	track<%= primaryKey.nameCapitalized %> = (_index: number, item: I<%= entityAngularName %>): <%= primaryKey.tsType %> => this.<%= entityInstance %>Service.get<%= entityAngularName %>Identifier(item);
+    track<%= primaryKey.nameCapitalized %> = (_index: number, item: I<%= entityAngularName %>): <%= primaryKey.tsType %> => this.<%= entityInstance %>Service.get<%= entityAngularName %>Identifier(item);
 <%_ } _%>
 
     ngOnInit(): void {

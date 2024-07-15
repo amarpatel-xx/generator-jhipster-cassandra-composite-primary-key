@@ -115,6 +115,8 @@ public interface <%= entityClass %>Service {
       public Mono<Long> countByCriteria(<%= entityClass %>Criteria criteria);
 <%_ } _%>
 
+
+
 <%_ if (reactive) { _%>
     /**
     * Returns the number of <%= entityInstancePlural %> available.

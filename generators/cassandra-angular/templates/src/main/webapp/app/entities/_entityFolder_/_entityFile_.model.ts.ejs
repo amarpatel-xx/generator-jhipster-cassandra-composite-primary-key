@@ -41,7 +41,6 @@ export interface I<%= entityAngularName %> {
     <%- variablesWithType %>;
 <%_ }); _%>
 }
-
 export interface I<%= entityAngularName %>Id {
 <%_ variablesWithTypesPrimaryKey.forEach(variablesWithType => { _%>
     <%- variablesWithType %>;
@@ -49,24 +48,23 @@ export interface I<%= entityAngularName %>Id {
 }
 
 export type New<%= entityAngularName %> = Omit<I<%= entityAngularName %>, '<%= primaryKeySaathratri.name %>'> & { <%= primaryKeySaathratri.name %>: I<%= entityAngularName %>Id; };
-
 <%_ 
     } else {
     // Single-value Primary Key
 _%>
 export interface I<%= entityAngularName %> {
-    <%_ for (const field of fields) {
-          const { fieldName, fieldValidationRequired, id } = field;
-          const tsType = `${field.fieldIsEnum ? 'keyof typeof ' : ''}${field.tsType}`;
-    _%>
+<%_ for (const field of fields) {
+      const { fieldName, fieldValidationRequired, id } = field;
+      const tsType = `${field.fieldIsEnum ? 'keyof typeof ' : ''}${field.tsType}`;
+_%>
       <%= fieldName %><% if (!id /* && !fieldValidationRequired */) { %>?<% } %>: <%_ if(field.fieldTypeLocalDateSaathratri || field.fieldTypeTimedSaathratri) { _%>dayjs.Dayjs<%_ } else{ _%><%= tsType %><%_ } _%><% if (!id /* && !fieldValidationRequired */) { %> | null<% } %>;
-      <%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
-      <%= fieldName %>ContentType<% if (!id /* && !fieldValidationRequired */) { %>?<% } %>: string<% if (!id /* && !fieldValidationRequired */) { %> | null<% } %>,
-      <%_ } _%>
-    <%_ } _%>
-    }
-    <%_ if (!readOnly && primaryKey) { _%>
-    
+  <%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
+  <%= fieldName %>ContentType<% if (!id /* && !fieldValidationRequired */) { %>?<% } %>: string<% if (!id /* && !fieldValidationRequired */) { %> | null<% } %>,
+  <%_ } _%>
+<%_ } _%>
+}
+<%_ if (!readOnly && primaryKey) { _%>
+
     export type New<%= entityAngularName %> = Omit<I<%= entityAngularName %>, '<%= primaryKey.name %>'> & { <%= primaryKey.name %>: string };
     <%_ } _%>
 <%_ } _%>

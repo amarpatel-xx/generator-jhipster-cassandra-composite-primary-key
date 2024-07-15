@@ -503,6 +503,7 @@ if (field.fieldTypeString || field.blobContentTypeText) {
 
     private <%= persistClass %> <%= persistInstance %>;
 
+
 <%_ ['DEFAULT_', 'UPDATED_'].forEach((fieldStatus) => { _%>
     /**
      * Create an <% if (fieldStatus === 'UPDATED_') { %>updated <% } %>entity for this test.
@@ -546,7 +547,7 @@ if (field.fieldTypeString || field.blobContentTypeText) {
   _%>
   	<%_ if (primaryKeySaathratri.composite) { _%>
 	  <%- getCompositePrimaryKeyTestSetIdStatement(fieldStatus, entityInstance, entityClass, primaryKeySaathratri) %>
-	<%_ } _%>
+  <%_ } _%>
         return <%= persistInstance %>;
     }
 <%_ }); _%>
@@ -566,7 +567,6 @@ _%>
     public void cleanup() {
         deleteEntities(em);
     }
-
 <%_ } _%>
 <%_ if (searchEngineElasticsearch) { _%>
     @AfterEach
@@ -586,6 +586,7 @@ _%>
     @BeforeEach
     public void initTest() {
 <%_ if (databaseTypeMongodb || databaseTypeCouchbase || databaseTypeCassandra || databaseTypeNeo4j) { _%>
+
         <%= entityInstance %>Repository.deleteAll()<%= callBlock %>;
 <%_ } else if (databaseTypeSql && reactive) {  _%>
         deleteEntities(em);
@@ -656,6 +657,8 @@ _%>
             assertThat(searchDatabaseSizeAfter).isEqualTo(searchDatabaseSizeBefore + 1);
         });
   <%_ } _%>
+
+
     }
 
     @Test<%= transactionalAnnotation %>
@@ -766,10 +769,12 @@ _%>
         assertSameRepositoryCount(databaseSizeBeforeCreate);
         <%= persistClass %> test<%= entityClass %> = <%= entityInstance %>List.get(<%= entityInstance %>List.size() - 1);
 
-        // Validate the id for MapsId, the ids must be same
-        // Uncomment the following line for assertion. However, please note that there is a known issue and uncommenting will fail the test.
-        // Please look at https://github.com/jhipster/generator-jhipster/issues/9100. You can modify this test as necessary.
-        // assertThat(test<%= entityClass %>.get<%= primaryKey.nameCapitalized %>()).isEqualTo(test<%= entityClass %>.get<%= mapsIdEntity %>().get<%= primaryKey.nameCapitalized %>());
+        /**
+         * Validate the id for MapsId, the ids must be same
+         * Uncomment the following line for assertion. However, please note that there is a known issue and uncommenting will fail the test.
+         * Please look at https://github.com/jhipster/generator-jhipster/issues/9100. You can modify this test as necessary.
+         * assertThat(test<%= entityClass %>.get<%= primaryKey.nameCapitalized %>()).isEqualTo(test<%= entityClass %>.get<%= mapsIdEntity %>().get<%= primaryKey.nameCapitalized %>());
+         */
     <%_ if (searchEngineElasticsearch) { _%>
         int searchDatabaseSizeAfter = IterableUtil.sizeOf(<%= entityInstance %>SearchRepository.findAll()<%= callListBlock %>);
         assertThat(searchDatabaseSizeAfter).isEqualTo(searchDatabaseSizeBefore);
@@ -820,7 +825,6 @@ _%>
         int searchDatabaseSizeAfter = IterableUtil.sizeOf(<%= entityInstance %>SearchRepository.findAll()<%= callListBlock %>);
         assertThat(searchDatabaseSizeAfter).isEqualTo(searchDatabaseSizeBefore);
         <%_ } _%>
-
     }
       <%_ } _%>
     <%_ } _%>
@@ -837,8 +841,8 @@ _%>
             <%= persistInstance %>.get<%= primaryKeySaathratri.nameCapitalized %>().set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } else { _%>
-        <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
-          <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
+    <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
+        <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } _%>
   <%_ } _%>
@@ -881,7 +885,7 @@ _%>
           <%= persistInstance %>.get<%= primaryKeySaathratri.nameCapitalized %>().set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
     <%_ } _%>
   <%_ } else { _%>
-      <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
+  <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
         <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
     <%_ } _%>
   <%_ } _%>
@@ -911,10 +915,10 @@ _%>
   <%_ } _%>
   <% for (field of fieldsToTest) { %>
     <%_ if( !field.isCompositePrimaryKeyField ) { _%>
-<%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
-  <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>ContentType").value(hasItem(<%= 'DEFAULT_' + field.fieldNameUnderscored.toUpperCase() %>_CONTENT_TYPE))<%= !reactive ? ')' : '' %>
-<%_ } _%>
-  <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>").value(hasItem(<%
+  <%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
+            <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>ContentType").value(hasItem(<%= 'DEFAULT_' + field.fieldNameUnderscored.toUpperCase() %>_CONTENT_TYPE))<%= !reactive ? ')' : '' %>
+  <%_ } _%>
+            <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>").value(hasItem(<%
   if (field.fieldTypeBinary && !field.blobContentTypeText) { %>Base64.getEncoder().encodeToString(<% } else
   if (field.fieldTypeZonedDateTime) { %>sameInstant(<% } else
   if (field.fieldTypeBigDecimal) { %>sameNumber(<% } %><%= 'DEFAULT_' + field.fieldNameUnderscored.toUpperCase() %><%
@@ -928,7 +932,11 @@ _%>
   if (field.fieldTypeZonedDateTime) { %>)<% } else
   if (!field.fieldTypeString) { %>.toString()<% } %>))<%= !reactive ? ')' : '' %><%_ } _%>
   <%_ } _%>;
+
+
     }
+
+
 
     @Test<%= transactionalAnnotation %>
     void get<%= entityClass %>() <% if (!reactive) { %>throws Exception <% } %>{
@@ -939,7 +947,7 @@ _%>
           <%= persistInstance %>.get<%= primaryKeySaathratri.nameCapitalized %>().set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
     <%_ } _%>
   <%_ } else { _%>
-      <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
+  <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
         <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
     <%_ } _%>
   <%_ } _%>
@@ -981,9 +989,9 @@ _%>
   <%_ } _%>
   <% for (field of fieldsToTest) { %>
     <%_ if( !field.isCompositePrimaryKeyField ) { _%>
-<%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
+  <%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
   <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>ContentType").value(hasItem(<%= 'DEFAULT_' + field.fieldNameUnderscored.toUpperCase() %>_CONTENT_TYPE))<%= !reactive ? ')' : '' %>
-<%_ } _%>
+  <%_ } _%>
   <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>").value(hasItem(<%
   if (field.fieldTypeBinary && !field.blobContentTypeText) { %>Base64.getEncoder().encodeToString(<% } else
   if (field.fieldTypeZonedDateTime) { %>sameInstant(<% } else
@@ -1148,6 +1156,9 @@ _%>
     }
 
     <%_ } _%>
+
+
+
   <%_ }); _%>
     private void default<%= entityClass %>Filtering (String shouldBeFound, String shouldNotBeFound) <% if (!reactive) { %>throws Exception <% } %>{
         default<%= entityClass %>ShouldBeFound(shouldBeFound);
@@ -1314,8 +1325,8 @@ _%>
             <%= persistInstance %>.get<%= primaryKeySaathratri.nameCapitalized %>().set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } else { _%>
-        <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
-          <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
+    <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
+        <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } _%>
   <%_ } _%>
@@ -1337,7 +1348,7 @@ _%>
         // Single-value Primary Key Code
         } else { 
       _%>
-      <%= persistClass %> updated<%= persistClass %> = <%= entityInstance %>Repository.findById(<%= persistInstance %>.get<%= primaryKey.nameCapitalized %>())<%= reactive ? '.block()' : '.orElseThrow()' %>;
+        <%= persistClass %> updated<%= persistClass %> = <%= entityInstance %>Repository.findById(<%= persistInstance %>.get<%= primaryKey.nameCapitalized %>())<%= reactive ? '.block()' : '.orElseThrow()' %>;
       <%_ 
         } 
       _%>
@@ -1549,7 +1560,7 @@ _%>
     // Single-value Primary Key Code
     } else { 
   _%>
-  <%= persistInstance %>.set<%= primaryKey.nameCapitalized %>(<%- primaryKey.javaValueGenerator %>);
+        <%= persistInstance %>.set<%= primaryKey.nameCapitalized %>(<%- primaryKey.javaValueGenerator %>);
   <%_ 
     } 
   _%>
@@ -1602,8 +1613,8 @@ _%>
             <%= persistInstance %>.get<%= primaryKeySaathratri.nameCapitalized %>().set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } else { _%>
-        <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
-          <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
+    <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
+        <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } _%>
   <%_ } _%>
@@ -1628,8 +1639,8 @@ _%>
             <%= persistInstance %>.get<%= primaryKeySaathratri.nameCapitalized %>().set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } else { _%>
-        <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
-          <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
+    <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
+        <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } _%>
   <%_ } _%>
@@ -1832,7 +1843,7 @@ _%>
         <%= persistInstance %>.get<%= primaryKeySaathratri.nameCapitalized %>().set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } else { _%>
-      <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
+    <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
         <%= persistInstance %>.set<%= primaryKey.nameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } _%>
@@ -1899,8 +1910,8 @@ _%>
             <%= persistInstance %>.get<%= primaryKeySaathratri.nameCapitalized %>().set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } else { _%>
-        <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
-          <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
+    <%_ for (field of primaryKey.fields.filter(f => !f.autoGenerateByRepository)) { _%>
+        <%= persistInstance %>.set<%= field.fieldNameCapitalized %>(<%- field.fieldJavaValueGenerator %>);
       <%_ } _%>
     <%_ } _%>
   <%_ } _%>
@@ -1935,20 +1946,20 @@ _%>
     <% for (field of fieldsToTest) { %>
       <%_ if( !field.isCompositePrimaryKeyField ) { _%>
   <%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
-    <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>ContentType").value(hasItem(<%= 'DEFAULT_' + field.fieldNameUnderscored.toUpperCase() %>_CONTENT_TYPE))<%= !reactive ? ')' : '' %>
+            <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>ContentType").value(hasItem(<%= 'DEFAULT_' + field.fieldNameUnderscored.toUpperCase() %>_CONTENT_TYPE))<%= !reactive ? ')' : '' %>
   <%_ } _%>
-    <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>").value(hasItem(<%
-    if (field.fieldTypeBinary && !field.blobContentTypeText) { %>Base64.getEncoder().encodeToString(<% } else
-    if (field.fieldTypeZonedDateTime) { %>sameInstant(<% } else
-    if (field.fieldTypeBigDecimal) { %>sameNumber(<% } %><%= 'DEFAULT_' + field.fieldNameUnderscored.toUpperCase() %><%
-    if (field.fieldTypeBinary && !field.blobContentTypeText) { %><%
-      if (databaseTypeCassandra) { %>.array()<% } %>)<% } else
-    if (field.fieldTypeInteger) { %><% } else
-    if (field.fieldTypeLong) { %>.intValue()<% } else
-    if (field.fieldTypeFloat || field.fieldTypeDouble) { %>.doubleValue()<% } else
-    if (field.fieldTypeBigDecimal) { %>)<% } else
-    if (field.fieldTypeBoolean) { %>.booleanValue()<% } else
-    if (field.fieldTypeZonedDateTime) { %>)<% } else
+            <%= !reactive ? '.andExpect(' : '.' %>jsonPath("$.[*].<%= field.fieldName %>").value(hasItem(<%
+  if (field.fieldTypeBinary && !field.blobContentTypeText) { %>Base64.getEncoder().encodeToString(<% } else
+  if (field.fieldTypeZonedDateTime) { %>sameInstant(<% } else
+  if (field.fieldTypeBigDecimal) { %>sameNumber(<% } %><%= 'DEFAULT_' + field.fieldNameUnderscored.toUpperCase() %><%
+  if (field.fieldTypeBinary && !field.blobContentTypeText) { %><%
+    if (databaseTypeCassandra) { %>.array()<% } %>)<% } else
+  if (field.fieldTypeInteger) { %><% } else
+  if (field.fieldTypeLong) { %>.intValue()<% } else
+  if (field.fieldTypeFloat || field.fieldTypeDouble) { %>.doubleValue()<% } else
+  if (field.fieldTypeBigDecimal) { %>)<% } else
+  if (field.fieldTypeBoolean) { %>.booleanValue()<% } else
+  if (field.fieldTypeZonedDateTime) { %>)<% } else
     if (!field.fieldTypeString) { %>.toString()<% } %>))<%= !reactive ? ')' : '' %><%_ } _%>
     <%_ } _%>;
     }
@@ -1980,7 +1991,7 @@ _%>
         // Single-value Primary Key Code
         } else { 
       _%>
-       return <%= entityInstance %>Repository.findById(<%- entityInstance %>.get<%- primaryKey.nameCapitalized %>()).<%- reactive ? 'block()' : 'orElseThrow()' %>;
+        return <%= entityInstance %>Repository.findById(<%- entityInstance %>.get<%- primaryKey.nameCapitalized %>()).<%- reactive ? 'block()' : 'orElseThrow()' %>;
       <%_ 
         } 
       _%>        

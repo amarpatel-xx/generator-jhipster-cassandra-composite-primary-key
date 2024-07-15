@@ -134,7 +134,6 @@ import java.util.stream.StreamSupport;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-
 /**
  * REST controller for managing {@link <%= entityAbsoluteClass %>}.
  */
@@ -145,7 +144,7 @@ import java.nio.charset.StandardCharsets;
 <%_ } _%>
 public class <%= entityClass %>Resource {
 
-    private final Logger log = LoggerFactory.getLogger(<%= entityClass %>Resource.class);
+    private static final Logger log = LoggerFactory.getLogger(<%= entityClass %>Resource.class);
 <%_ if (!readOnly) { _%>
 
   <%_ let entityName = entityInstance;
@@ -735,17 +734,14 @@ public class <%= entityClass %>Resource {
 %>
 <%- methodsOutput %>
 <% } %>
-
   private String getUrlEncodedParameterValue(String parameterValue) {
     String encodedValue = null;
-
     try {
         encodedValue = URLEncoder.encode(parameterValue, StandardCharsets.UTF_8);
         log.info("Encoded String '{}' is '{}'.", parameterValue, encodedValue);
     } catch (Exception e) {
         log.error(e.getMessage(), e);
     }
-
     return encodedValue;
   }
 }

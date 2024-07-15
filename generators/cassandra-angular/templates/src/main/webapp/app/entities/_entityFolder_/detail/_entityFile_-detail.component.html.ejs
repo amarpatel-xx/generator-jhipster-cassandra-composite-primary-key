@@ -29,9 +29,7 @@
       <<%= jhiPrefixDashed %>-alert></<%= jhiPrefixDashed %>-alert>
 
       <dl class="row-md jh-entity-details">
-<%_ for (const field of fields.filter(field => !field.hidden && ((primaryKeySaathratri.composite && field.fieldName !== 'id') || !primaryKeySaathratri.composite)
-
-)) {
+<%_ for (const field of fields.filter(field => !field.hidden && ((primaryKeySaathratri.composite && field.fieldName !== 'id') || !primaryKeySaathratri.composite))) {
     const fieldName = field.fieldName;
     const fieldType = field.fieldType;
 _%>

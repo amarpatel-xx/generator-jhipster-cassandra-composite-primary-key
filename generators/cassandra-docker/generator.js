@@ -108,7 +108,8 @@ export default class extends BaseApplicationGenerator {
           await this.writeFiles({
             sections: {
               files: [{ templates: [
-                  'src/main/docker/cassandra.yml'
+                  'src/main/docker/cassandra.yml',
+                  'src/main/docker/cassandra-cluster.yml'
                 ] 
               }],
             },

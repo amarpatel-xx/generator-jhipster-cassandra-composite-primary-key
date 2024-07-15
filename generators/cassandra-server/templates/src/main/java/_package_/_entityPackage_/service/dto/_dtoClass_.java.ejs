@@ -58,6 +58,7 @@ import jakarta.persistence.Lob;
 import <%- entityAbsolutePackage %>.domain.enumeration.<%- element %>;
 <%_ }); _%>
 
+
 /**
  * A DTO for the {@link <%- entityAbsolutePackage %>.domain.<%- persistClass %>} entity.
  */
@@ -72,23 +73,20 @@ public class <%- dtoClass %> implements Serializable {
 <%_ } else { _%>
     private <%= primaryKey.type %> <%= primaryKey.name %>;
 <%_ } _%>
-
 <%_ for (property of restProperties) { _%>
   <%_ if (!isCompositePrimaryKeyServerProperty(primaryKeySaathratri, property) && property.propertyName !== 'id') { _%>
     private <%- property.propertyDtoJavaType %> <%- property.propertyName %>;
   <%_ } _%>
 <%_ } _%>
-
 <%_ for(const field of fields) { _%>
     <%_ if(field.fieldTypeBlobContent === 'image') { _%>
             private String <%= field.fieldName %>ContentType;
     <%_ } _%>
-<%_ } _%>
+  <%_ } _%>
 public <%- dtoClass %> () {
     // Empty constructor needed for Jackson.
 }
 <%_ if (primaryKeySaathratri.composite) { _%>
-  
     public <%= dtoClass %>Id get<%= primaryKeySaathratri.nameCapitalized %>() {
         return this.<%= primaryKeySaathratri.name %>;
     }
@@ -96,41 +94,36 @@ public <%- dtoClass %> () {
     public void set<%= primaryKeySaathratri.nameCapitalized %>(<%= dtoClass %>Id <%= primaryKeySaathratri.name %>) {
         this.<%= primaryKeySaathratri.name %> = <%= primaryKeySaathratri.name %>;
     }
-
     <%_ if (fluentMethods) { _%>
         public <%= dtoClass %> <%= primaryKeySaathratri.name %>(<%= dtoClass %>Id <%= primaryKeySaathratri.name %>) {
             this.<%= primaryKeySaathratri.name %> = <%= primaryKeySaathratri.name %>;
             return this;
         }
-    <%_ } _%>
+  <%_ } _%>
 <%_ } else { _%>
 
     public <%= primaryKey.type %> get<%= primaryKey.nameCapitalized %>() {
         return this.<%= primaryKey.name %>;
     }
-
     public void set<%= primaryKey.nameCapitalized %>(<%= primaryKey.type %> <%= primaryKey.name %>) {
         this.<%= primaryKey.name %> = <%= primaryKey.name %>;
     }
-
     <%_ if (fluentMethods) { _%>
         public <%= dtoClass %> <%= primaryKey.name %>(<%= primaryKey.type %> <%= primaryKey.name %>) {
             this.<%= primaryKey.name %> = <%= primaryKey.name %>;
             return this;
         }
-      <%_ } _%>
-<%_ } _%>
+  <%_ } _%>
+  <%_ } _%>
 
 <%_ for(const field of fields) { _%>
     <%_ if(field.fieldTypeBlobContent === 'image') { _%>
             public String get<%= field.fieldInJavaBeanMethod %>ContentType() {
                 return this.<%= field.fieldName %>ContentType;
             }
-
             public void set<%= field.fieldInJavaBeanMethod %>ContentType(String <%= field.fieldName %>ContentType) {
                 this.<%= field.fieldName %>ContentType = <%= field.fieldName %>ContentType;
-            }
-
+}
             <%_ if (fluentMethods) { _%>
                 public <%= dtoClass %> <%= field.fieldName %>ContentType(String <%= field.fieldName %>ContentType) {
                     this.<%= field.fieldName %>ContentType = <%= field.fieldName %>ContentType;
@@ -142,20 +135,21 @@ public <%- dtoClass %> () {
 
 <%_ for (property of restProperties) { _%>
   <%_ if (!isCompositePrimaryKeyServerProperty(primaryKeySaathratri, property) && property.propertyName !== 'id') { _%>
-      public <%- property.propertyDtoJavaType %> get<%- property.propertyJavaBeanName %>() {
-          return <%- property.propertyName %>;
-      }
+    public <%- property.propertyDtoJavaType %> get<%- property.propertyJavaBeanName %>() {
+        return <%- property.propertyName %>;
+    }
 
-      public void set<%- property.propertyJavaBeanName %>(<%- property.propertyDtoJavaType %> <%- property.propertyName %>) %> {
-          this.<%- property.propertyName %> = <%- property.propertyName %>;
-      }
-
+    public void set<%- property.propertyJavaBeanName %>(<%- property.propertyDtoJavaType %> <%- property.propertyName %>) %> {
+        this.<%- property.propertyName %> = <%- property.propertyName %>;
+    }
       <%_ if (fluentMethods) { _%>
+
+
         public <%= dtoClass %> <%= property.propertyName %>(<%= property.propertyDtoJavaType %> <%= property.propertyName %>) {
             this.<%= property.propertyName %> = <%= property.propertyName %>;
             return this;
-        }
-      <%_ } _%>
+    }
+  <%_ } _%>
     <%_ } _%>
 <%_ } _%>
 
@@ -163,12 +157,13 @@ public <%- dtoClass %> () {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof <%- dtoClass %>)) return false;
+
         <%- dtoClass %> that = (<%- dtoClass %>) o;
         <%_ if (primaryKeySaathratri.composite) { _%>
         return Objects.equals(get<%= primaryKeySaathratri.nameCapitalized %>(), that.get<%= primaryKeySaathratri.nameCapitalized %>());
-        <%_ } else { _%>
+<%_ } else { _%>
         return Objects.equals(get<%= primaryKey.nameCapitalized %>(), that.get<%= primaryKey.nameCapitalized %>());
-        <%_ } _%>
+<%_ } _%>
     }
 
     @Override
@@ -186,13 +181,11 @@ public <%- dtoClass %> () {
             "<%= idx === 0 ? '' : ', ' %><%= reference.name %>=<% if (isQuoted) { %>'<% } %>" + <%= buildJavaGet(reference) %> <% if (isQuoted) { %>+ "'" <% } %>+
             <%_ if(reference.type === 'ByteBuffer') { _%>
             ", <%= reference.name %>ContentType='" + get<%= this._.upperFirst(reference.name) %>ContentType() + "'" +
-            <%_ } _%>
+<%_ } _%>
 <%_
       }
     }
 _%>
             "}";
     }
-  
 }
-

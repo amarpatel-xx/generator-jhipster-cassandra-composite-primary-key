@@ -111,7 +111,6 @@ export default class extends BaseApplicationGenerator {
                   ...javaMainPackageTemplatesBlock('_entityPackage_/'),
                   templates: [
                     'domain/_persistClass_Id.java',
-                    'service/dto/_dtoClass_Id.java',
                   ]
                 },
                 {
@@ -119,8 +118,6 @@ export default class extends BaseApplicationGenerator {
                   ...javaMainPackageTemplatesBlock('_entityPackage_/'),
                   templates: [
                     'domain/_persistClass_.java.jhi',
-                    'service/dto/_dtoClass_.java',
-                    'service/mapper/_entityClass_Mapper.java',
                   ]
                 },
                 {
@@ -130,7 +127,6 @@ export default class extends BaseApplicationGenerator {
                     'domain/_persistClass_Asserts.java',
                     'domain/_persistClass_Test.java',
                     'domain/_persistClass_TestSamples.java',
-                    'service/dto/_dtoClass_Test.java',
                   ]
                 }
               ],

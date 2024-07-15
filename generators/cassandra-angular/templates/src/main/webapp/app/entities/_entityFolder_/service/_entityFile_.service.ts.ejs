@@ -53,7 +53,6 @@ import { createRequestOption } from 'app/core/request/request-util';
 import { <%= searchType %> } from 'app/core/request/request.model';
 <%_ } _%>
 import { I<%= entityAngularName %><% if (!readOnly) { %>, New<%= entityAngularName %><% } %> } from '../<%= entityFileName %>.model';
-
 <%_ 
     // Saathratri:
     if (anyFieldIsDateDerived || anyFieldIsDateDerivedSaathratri) { 
@@ -63,9 +62,7 @@ _%>
     }     
     // Saathratri 
 _%>
-
 import { I<%= entityAngularName %>, I<%= entityAngularName %>Id, <%= entityAngularName %>Id, get<%= entityAngularName %>Identifier } from '../<%= entityFileName %>.model';
-
 <%_ if (!readOnly && updatableEntity) { _%>
 <%_ if (primaryKeySaathratri.composite) { _%>
 export type PartialUpdate<%= entityAngularName %> = Partial<I<%= entityAngularName %>> & Pick<I<%= entityAngularName %>, '<%= primaryKeySaathratri.name %>'>;
@@ -90,7 +87,7 @@ type RestOf<T extends I<%= entityAngularName %><% if (!readOnly) { %> | New<%= e
     <%_ if (field.fieldTypeLocalDateSaathratri || field.fieldTypeTimedSaathratri) { _%>
         <%= field.fieldName %>?: number | null;
     <%_ } else if (field.fieldTypeSetSaathratri) { _%>
-        <%= field.fieldName %>?: string | null;
+  <%= field.fieldName %>?: string | null;
     <%_ } _%>
   <%_ } _%>
   };
@@ -152,7 +149,7 @@ export class <%= entityAngularName %>Service {
         // Saathratri: Single-value Primary Key Code
         } else { 
     _%>
-    	return this.http.put<<%= entityRestName %>>(`${this.resourceUrl}/${this.get<%= entityAngularName %>Identifier(<%= entityInstance %>)}`,
+        return this.http.put<<%= entityRestName %>>(`${this.resourceUrl}/${this.get<%= entityAngularName %>Identifier(<%= entityInstance %>)}`,
     <%_ 
         } 
         // Saathratri 
@@ -178,7 +175,7 @@ export class <%= entityAngularName %>Service {
         // Saathratri: Single-value Primary Key Code
         } else { 
     _%>
-    	return this.http.patch<<%= entityRestName %>>(`${this.resourceUrl}/${this.get<%= entityAngularName %>Identifier(<%= entityInstance %>)}`,
+        return this.http.patch<<%= entityRestName %>>(`${this.resourceUrl}/${this.get<%= entityAngularName %>Identifier(<%= entityInstance %>)}`,
     <%_ 
         } 
         // Saathratri 
@@ -205,7 +202,7 @@ export class <%= entityAngularName %>Service {
             // Saathratri: Single-value Primary Key Code
             } else { 
         _%>
-            return this.http.get<<%= entityRestName %>>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+        return this.http.get<<%= entityRestName %>>(`${this.resourceUrl}/${id}`, { observe: 'response' })
         <%_ } _%>
             <% if (anyFieldIsDateDerived || anyFieldIsDateDerivedSaathratri) { %>.pipe(map(res => this.convertResponseFromServer(res)))<% } %>
             <% if (builtInUserManagement) { %>.pipe(map(res => this.convertUserManagementResponseFromServer(res)))<% } %>;
@@ -257,14 +254,11 @@ export class <%= entityAngularName %>Service {
     get<%= entityAngularName %>Identifier(<%= entityInstance %>: Pick<I<%= entityAngularName %>, '<%= primaryKeySaathratri.name %>'>): I<%= primaryKeySaathratri.type %> {
         return <%= entityInstance %>.<%= primaryKeySaathratri.name %>;
     }
-
     compare<%= entityAngularName %>(o1: Pick<I<%= entityAngularName %>, '<%= primaryKeySaathratri.name %>'> | null, o2: Pick<I<%= entityAngularName %>, '<%= primaryKeySaathratri.name %>'> | null): boolean {
         return o1 && o2 ? this.get<%= entityAngularName %>Identifier(o1) === this.get<%= entityAngularName %>Identifier(o2) : o1 === o2;
     }
-
     add<%= entityAngularName %>ToCollectionIfMissing<Type extends Pick<I<%= entityAngularName %>, '<%= primaryKeySaathratri.name %>'>>(<%= entityInstance %>Collection: Type[], ...<%= entityInstancePlural %>ToCheck: (Type | null | undefined)[]): Type[] {
 <%_ } else { _%>
-
     get<%= entityAngularName %>Identifier(<%= entityInstance %>: Pick<I<%= entityAngularName %>, '<%= primaryKey.name %>'>): <%= primaryKey.tsType %> {
         return <%= entityInstance %>.<%= primaryKey.name %>;
     }
@@ -275,7 +269,6 @@ export class <%= entityAngularName %>Service {
 
     add<%= entityAngularName %>ToCollectionIfMissing<Type extends Pick<I<%= entityAngularName %>, '<%= primaryKey.name %>'>>(<%= entityInstance %>Collection: Type[], ...<%= entityInstancePlural %>ToCheck: (Type | null | undefined)[]): Type[] {
 <%_ } _%>
-
         const <%= entityInstancePlural %>: Type[] = <%= entityInstancePlural %>ToCheck.filter(isPresent);
         if (<%= entityInstancePlural %>.length > 0) {
             const <%= entityInstance %>CollectionIdentifiers = <%= entityInstance %>Collection.map(<%= entityInstance %>Item => this.get<%= entityAngularName %>Identifier(<%= entityInstance %>Item));
@@ -305,7 +298,7 @@ export class <%= entityAngularName %>Service {
                         <%_ } else if (field.fieldTypeLocalDateSaathratri) { _%>
                             <%= field.fieldName %>: <%= entityInstance %>.<%= primaryKeySaathratri.name %>.<%= field.fieldName %> ? <%= entityInstance %>.<%= primaryKeySaathratri.name %>.<%= field.fieldName %>.valueOf() : null,
                         <%_ } %>
-                    <%_ } _%>
+        <%_ } _%>
                 },
             <%_ } _%>
     <%_ for (const field of fields.filter(field => !field.isCompositePrimaryKeyField)) { _%>
@@ -343,7 +336,7 @@ export class <%= entityAngularName %>Service {
     <%_ } _%>
         };
     }
-    
+
   protected convertResponseFromServer(res: HttpResponse<<%= entityRestName %>>): HttpResponse<I<%= entityAngularName %>> {
     return res.clone({
       body: res.body ? this.convertDateFromServer(res.body) : null,
@@ -355,9 +348,7 @@ export class <%= entityAngularName %>Service {
       body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
     });
   }
-
 <%_ } _%>
-
 <%_ if (builtInUserManagement) { _%>
 
   protected convertUserManagementFromClient<T extends I<%= entityAngularName %><% if (!readOnly) { %> | New<%= entityAngularName %><% } %><% if (!readOnly && updatableEntity) { %> | PartialUpdate<%= entityAngularName %><% } %>>(<%= entityInstance %>: T): any {

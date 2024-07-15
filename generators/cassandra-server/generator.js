@@ -1,6 +1,9 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
+import { javaMainPackageTemplatesBlock, javaTestPackageTemplatesBlock } from 'generator-jhipster/generators/java/support';
 import command from './command.js';
 import { serverUtils } from '../server/server-utils.js';
+import { serverSaathratriUtils } from './cassandra-server-utils.js';
+import { buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue } from 'generator-jhipster/generators/server/support';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
@@ -100,6 +103,7 @@ export default class extends BaseApplicationGenerator {
         if (application.applicationTypeMicroservice) {
 
           let lastUsedPorts = serverUtils.getLastUsedPorts(this.destinationPath());
+          
           lastUsedPorts.lastUsedInterNodeCommunicationNonSslPort += 100;
           lastUsedPorts.lastUsedInterNodeCommunicationSslPort += 100
           lastUsedPorts.lastUsedJmxMonitoringPort += 100;
@@ -130,7 +134,41 @@ export default class extends BaseApplicationGenerator {
 
   get [BaseApplicationGenerator.WRITING_ENTITIES]() {
     return this.asWritingEntitiesTaskGroup({
-      async writingEntitiesTemplateTask() {},
+      async writingEntitiesTemplateTask({ application, entities }) {
+        
+        for (const entity of entities.filter(e => !e.builtIn)) { 
+
+          await this.writeFiles({
+            sections: {
+              files: [
+                {
+                  condition: generator => generator.databaseTypeCassandra && !entity.skipServer && entity.primaryKeySaathratri.composite,
+                  ...javaMainPackageTemplatesBlock('_entityPackage_/'),
+                  templates: [
+                    'service/dto/_dtoClass_Id.java',
+                  ]
+                },
+                {
+                  condition: generator => generator.databaseTypeCassandra && !entity.skipServer,
+                  ...javaMainPackageTemplatesBlock('_entityPackage_/'),
+                  templates: [
+                    'service/dto/_dtoClass_.java',
+                    'service/mapper/_entityClass_Mapper.java',
+                  ]
+                },
+                {
+                  condition: generator => generator.databaseTypeCassandra && !entity.skipServer,
+                  ...javaTestPackageTemplatesBlock('_entityPackage_/'),
+                  templates: [
+                    'service/dto/_dtoClass_Test.java',
+                  ]
+                }
+              ],
+            },
+            context: { ...application, ...entity, ...serverUtils, ...serverSaathratriUtils, buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue },
+          });
+        }
+      },
     });
   }
 
