@@ -4,9 +4,9 @@
 ### About this example
 
 This code was generated using the JHipster blueprint `generator-jhipster-cassandra-composite-primary-key` 
-(the source code is available at: https://github.com/amarpatel-xx/generator-jhipster-cassandra-composite-primary-key).  
+(the source code is available at: https://github.com/amarpatel-xx/generator-jhipster-cassandra-composite-primary-key.  
 
-The blueprint for generating the composite primary key with Cassandra entities is open source software made with love by `Amar Premsaran Patel`.
+The example and blueprint for generating the composite primary key with Cassandra entities is open source software made with love by `Amar Premsaran Patel`.
 
 
 This code in this example has a `JDL` which shows 
@@ -25,7 +25,7 @@ There are no relationships between Cassandra entities, as such relationships can
 Below is the example using the `@customAnnotation` methodology to specify the details of the Cassandra composite primary key.
 
 
-```shell
+```
 // Composite Primary Key Example:
 entity Post {
   @Id @customAnnotation("PrimaryKeyType.PARTITIONED") @customAnnotation("CassandraType.Name.BIGINT") @customAnnotation("UTC_DATE") @customAnnotation("0") createdDate Long 
@@ -53,7 +53,7 @@ entity Product {
 - https://sdkman.io/[Java] 21+
 - https://nodejs.com/[Node.js] 20+
 - https://www.docker.com/products/docker-desktop/[Docker Desktop]
-- https://www.jhipster.tech/installation/[JHipster] 8.5.0
+- https://www.jhipster.tech/installation/[JHipster] 8.6.0
 
 ### Build
 
@@ -125,10 +125,13 @@ Notice the Blog entity shows the required category and blogId composite primary 
 
 I hope you enjoyed this demo, and it helped you understand how to build better microservice architectures with human-readable foreign key fields.
 
-☕️ Find the code on GitHub: https://github.com/amarpatel-xx/jhipster-cassandra-composite-primary-key-example-8-oss
+☕️ Find the code for this blueprint on GitHub: https://github.com/amarpatel-xx/generator-jhipster-cassandra-composite-primary-key
 
-🤓 Read the following blog post, by Matt Raible, that was used as inspiration for this project: https://auth0.com/blog/micro-frontends-for-java-microservices/[Micro Frontends for Java Microservices]
+☕️ Find the example code that uses this blueprint to generate a JHipster application on GitHub: https://github.com/amarpatel-xx/jhipster-cassandra-composite-primary-key-example
+
+🤓 Read the following blog post, by Matt Raible, that was used as inspiration for this project: [Micro Frontends for Java Microservices](https://auth0.com/blog/micro-frontends-for-java-microservices/)
+
 
 ### Acknowledgements
 
-Thank you to yelhouti (https://github.com/yelhouti), Jeremy Artero (https://www.linkedin.com/in/jeremyartero/), Matt Raible (https://github.com/mraible), Gaël Marziou (https://github.com/gmarziou), [Cedrick](https://github.com/clun) , Christophe, and Disha Patel (https://www.linkedin.com/in/dishapatel860/) for your invaluable contributions to this example and the underlying JHipster blueprint.
+Thank you to [yelhouti](https://github.com/yelhouti), [Jeremy Artero](https://www.linkedin.com/in/jeremyartero/), [Matt Raible](https://github.com/mraible), [Gaël Marziou](https://github.com/gmarziou), [Cedrick Lunven](https://www.linkedin.com/in/clunven/), [Christophe Borne](https://www.linkedin.com/in/christophe-bornet-bab1193/ ), [Disha Patel](https://www.linkedin.com/in/dishapatel860/) and [Catherine Guevara](https://www.linkedin.com/in/catherine-guevara-1a5375b1/) for your invaluable contributions to this example and the underlying JHipster blueprint.
