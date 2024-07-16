@@ -16,7 +16,7 @@ As this is a [JHipster](https://www.jhipster.tech/) blueprint, we expect you hav
 
 To install or update this blueprint:
 
-```bash
+```console
 npm install -g generator-jhipster-cassandra-composite-primary-key
 ```
 
@@ -24,13 +24,13 @@ npm install -g generator-jhipster-cassandra-composite-primary-key
 
 To use this blueprint, run the below command
 
-```bash
+```console
 jhipster --blueprints cassandra-composite-primary-key
 ```
 
 You can look for updated cassandra-composite-primary-key blueprint specific options by running
 
-```bash
+```console
 jhipster app --blueprints cassandra-composite-primary-key --help
 ```
 
