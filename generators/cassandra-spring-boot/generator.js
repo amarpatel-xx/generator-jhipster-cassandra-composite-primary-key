@@ -1,7 +1,7 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import { javaMainPackageTemplatesBlock, javaTestPackageTemplatesBlock } from 'generator-jhipster/generators/java/support';
 import command from './command.js';
-import { serverUtils } from '../server/server-utils.js';
+import { cassandraServerUtils } from '../cassandra-server/cassandra-server-utils.js';
 import { javaSaathratriUtils } from '../cassandra-java/cassandra-java-utils.js';
 import { springDataCassandraSaathratriUtils } from '../cassandra-spring-data-cassandra/cassandra-spring-data-cassandra-utils.js';
 import { springBootSaathratriUtils } from './cassandra-spring-boot-utils.js';
@@ -139,7 +139,7 @@ export default class extends BaseApplicationGenerator {
                 },
               ],
             },
-            context: { ...application, ...entity, ...serverUtils, ...springDataCassandraSaathratriUtils, ...javaSaathratriUtils, ...springBootSaathratriUtils },
+            context: { ...application, ...entity, ...cassandraServerUtils, ...springDataCassandraSaathratriUtils, ...javaSaathratriUtils, ...springBootSaathratriUtils },
           });
         }
       },

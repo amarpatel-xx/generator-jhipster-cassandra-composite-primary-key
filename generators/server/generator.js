@@ -1,8 +1,6 @@
 
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import command from './command.js';
-import { getPrimaryKeyValue, getJavaValueGeneratorForType } from 'generator-jhipster/generators/server/support';
-import { serverUtils } from './server-utils.js';
 import _ from 'lodash';
 
 export default class extends BaseApplicationGenerator {
@@ -100,9 +98,7 @@ export default class extends BaseApplicationGenerator {
 
   get [BaseApplicationGenerator.PREPARING_EACH_ENTITY]() {
     return this.asPreparingEachEntityTaskGroup({
-      async preparingEachEntityTemplateTask( { entity } ) {
-        serverUtils.setSaathratriPrimaryKeyAttributesOnEntityAndFields(entity);
-      },
+      async preparingEachEntityTemplateTask() {},
     });
   }
 

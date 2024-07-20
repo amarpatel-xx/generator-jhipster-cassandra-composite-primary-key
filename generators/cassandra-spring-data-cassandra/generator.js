@@ -3,7 +3,7 @@ import { javaMainPackageTemplatesBlock } from 'generator-jhipster/generators/jav
 import { getJavaValueGeneratorForType } from 'generator-jhipster/generators/server/support';
 import command from './command.js';
 import { springDataCassandraSaathratriUtils } from './cassandra-spring-data-cassandra-utils.js';
-import { serverUtils } from '../server/server-utils.js';
+import { cassandraServerUtils } from '../cassandra-server/cassandra-server-utils.js';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
@@ -64,7 +64,7 @@ export default class extends BaseApplicationGenerator {
   get [BaseApplicationGenerator.PREPARING_EACH_ENTITY]() {
     return this.asPreparingEachEntityTaskGroup({
       async preparingEachEntityTemplateTask( { entity } ) {
-        serverUtils.setSaathratriPrimaryKeyAttributesOnEntityAndFields(entity);
+        cassandraServerUtils.setSaathratriPrimaryKeyAttributesOnEntityAndFields(entity);
       },
     });
   }
@@ -126,7 +126,7 @@ export default class extends BaseApplicationGenerator {
               ],
             },
 
-            context: { ...application, ...entity, ...serverUtils, ...springDataCassandraSaathratriUtils, getJavaValueGeneratorForType },
+            context: { ...application, ...entity, ...cassandraServerUtils, ...springDataCassandraSaathratriUtils, getJavaValueGeneratorForType },
           });
         }
       },

@@ -1,7 +1,7 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import command from './command.js';
 import { generateEntityClientFields, generateEntityClientEnumImports, clientApplicationTemplatesBlock, generateEntityClientImports } from 'generator-jhipster/generators/client/support';
-import { serverUtils } from '../server/server-utils.js';
+import { cassandraServerUtils } from '../cassandra-server/cassandra-server-utils.js';
 import { angularSaathratriUtils } from './cassandra-angular-utils.js';
 
 export default class extends BaseApplicationGenerator {
@@ -68,7 +68,7 @@ export default class extends BaseApplicationGenerator {
   get [BaseApplicationGenerator.PREPARING_EACH_ENTITY]() {
     return this.asPreparingEachEntityTaskGroup({
       async preparingEachEntityTemplateTask( { entity } ) {
-        serverUtils.setSaathratriPrimaryKeyAttributesOnEntityAndFields(entity);
+        cassandraServerUtils.setSaathratriPrimaryKeyAttributesOnEntityAndFields(entity);
       },
     });
   }

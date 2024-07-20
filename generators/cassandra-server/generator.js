@@ -1,8 +1,7 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import { javaMainPackageTemplatesBlock, javaTestPackageTemplatesBlock } from 'generator-jhipster/generators/java/support';
 import command from './command.js';
-import { serverUtils } from '../server/server-utils.js';
-import { serverSaathratriUtils } from './cassandra-server-utils.js';
+import { cassandraServerUtils } from './cassandra-server-utils.js';
 import { buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue } from 'generator-jhipster/generators/server/support';
 
 export default class extends BaseApplicationGenerator {
@@ -68,7 +67,9 @@ export default class extends BaseApplicationGenerator {
 
   get [BaseApplicationGenerator.PREPARING_EACH_ENTITY]() {
     return this.asPreparingEachEntityTaskGroup({
-      async preparingEachEntityTemplateTask() {},
+      async preparingEachEntityTemplateTask( { entity } ) {
+        cassandraServerUtils.setSaathratriPrimaryKeyAttributesOnEntityAndFields(entity);
+      },
     });
   }
 
@@ -102,7 +103,7 @@ export default class extends BaseApplicationGenerator {
 
         if (application.applicationTypeMicroservice) {
 
-          let lastUsedPorts = serverUtils.getLastUsedPorts(this.destinationPath());
+          let lastUsedPorts = cassandraServerUtils.getLastUsedPorts(this.destinationPath());
           
           lastUsedPorts.lastUsedInterNodeCommunicationNonSslPort += 100;
           lastUsedPorts.lastUsedInterNodeCommunicationSslPort += 100
@@ -110,7 +111,7 @@ export default class extends BaseApplicationGenerator {
           lastUsedPorts.lastUsedNativeTransportCqlPort += 100;
           lastUsedPorts.lastUsedThriftTransportPort += 100;
 
-          serverUtils.setLastUsedPorts(this.destinationPath(), lastUsedPorts, this.appname);
+          cassandraServerUtils.setLastUsedPorts(this.destinationPath(), lastUsedPorts, this.appname);
       
           // Usage of the ports in your configuration files
           this.log(`The server ports are: ${JSON.stringify(lastUsedPorts)}`);
@@ -146,6 +147,7 @@ export default class extends BaseApplicationGenerator {
                   ...javaMainPackageTemplatesBlock('_entityPackage_/'),
                   templates: [
                     'service/dto/_dtoClass_Id.java',
+                    /* saathratri-needle-cassandra-copy-dto-id-class */
                   ]
                 },
                 {
@@ -153,6 +155,7 @@ export default class extends BaseApplicationGenerator {
                   ...javaMainPackageTemplatesBlock('_entityPackage_/'),
                   templates: [
                     'service/dto/_dtoClass_.java',
+                    /* saathratri-needle-cassandra-copy-dto-class */
                     'service/mapper/_entityClass_Mapper.java',
                   ]
                 },
@@ -165,7 +168,7 @@ export default class extends BaseApplicationGenerator {
                 }
               ],
             },
-            context: { ...application, ...entity, ...serverUtils, ...serverSaathratriUtils, buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue },
+            context: { ...application, ...entity, ...cassandraServerUtils, buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue },
           });
         }
       },
