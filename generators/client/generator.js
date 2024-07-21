@@ -29,7 +29,7 @@ export default class extends BaseApplicationGenerator {
 
   get [BaseApplicationGenerator.COMPOSING]() {
     return this.asComposingTaskGroup({
-      async composeTask() {
+      async composingTemplateTask() {
         if (['angularX', 'angular'].includes(this.jhipsterConfigWithDefaults.clientFramework)) {
          // Delegate the client sub-generator to the angular blueprint.
          await this.composeWithJHipster('jhipster-cassandra-composite-primary-key:cassandra-angular');

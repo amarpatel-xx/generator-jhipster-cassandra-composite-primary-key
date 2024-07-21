@@ -1,7 +1,6 @@
 
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import command from './command.js';
-import _ from 'lodash';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
