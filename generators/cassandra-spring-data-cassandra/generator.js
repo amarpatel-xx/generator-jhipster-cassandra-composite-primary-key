@@ -4,6 +4,7 @@ import { getJavaValueGeneratorForType } from 'generator-jhipster/generators/serv
 import command from './command.js';
 import { springDataCassandraSaathratriUtils } from './cassandra-spring-data-cassandra-utils.js';
 import { cassandraServerUtils } from '../cassandra-server/cassandra-server-utils.js';
+import { snakeCase } from 'lodash-es';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
@@ -123,10 +124,26 @@ export default class extends BaseApplicationGenerator {
                     'repository/_entityClass_Repository.java',
                   ]
                 },
+                {
+                  condition: ctx => !ctx.skipDbChangelog,
+                  path: 'src/main/resources/',
+                  templates: [
+                      {
+                          file: 'config/cql/changelog/added_entity.cql',
+                          renameTo: ctx => `config/cql/changelog/${ctx.changelogDate}_added_entity_${ctx.entityClass}.cql`,
+                      },
+                  ],
+                },
               ],
             },
 
-            context: { ...application, ...entity, ...cassandraServerUtils, ...springDataCassandraSaathratriUtils, getJavaValueGeneratorForType },
+            context: { 
+              ...application, 
+              ...entity, 
+              ...cassandraServerUtils, 
+              ...springDataCassandraSaathratriUtils, 
+              getJavaValueGeneratorForType, 
+              entityInstanceSnakeCase: snakeCase(entity.entityInstance) },
           });
         }
       },

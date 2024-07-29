@@ -152,6 +152,8 @@ export const cassandraServerUtils = {
     entity.primaryKeySaathratri.composite = false;
     entity.primaryKeySaathratri.ids.push(field);
     field.isCompositePrimaryKeyField = true;
+    field.isPartitionedKeySaathratri = true;
+    field.isClusteredKeySaathratri = false;
   },
   
   handleClusteredKey(entity, field) {
@@ -171,6 +173,8 @@ export const cassandraServerUtils = {
   
     entity.primaryKeySaathratri.ids.push(field);
     field.isCompositePrimaryKeyField = true;
+    field.isPartitionedKeySaathratri = false;
+    field.isClusteredKeySaathratri = true;
   },  
 
   initializeSaathratriFieldAttributes(entity) {
