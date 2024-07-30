@@ -54,9 +54,9 @@ CREATE TABLE IF NOT EXISTS <%= entityInstanceSnakeCase %> (
   <%_ } _%>
 <%_ } _%>
 <%_ if (primaryKeySaathratri.composite) { _%>
-  primary key ((<%_ primaryKeySaathratri.ids.filter(field => field.isPartitionedKeySaathratri).forEach((field, index) => { _%><%= index === 0 ? `${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>),<%_ primaryKeySaathratri.ids.filter(field => field.isClusteredKeySaathratri).forEach((field, index) => { _%><%= index === 0 ? ` ${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>)
+  primary key ((<%_ primaryKeySaathratri.ids.filter(field => field.isPartitionedKeySaathratri).forEach((field, index) => { _%><%= index === 0 ? `${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>),<%_ primaryKeySaathratri.ids.filter(field => field.isClusteredKeySaathratri).forEach((field, index) => { _%><%= index === 0 ? ` ${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>))
   with clustering order by (<%_ primaryKeySaathratri.ids.filter(field => field.isClusteredKeySaathratri).forEach((field, index) => { _%><%= index === 0 ? `${field.fieldNameUnderscored} desc` : `, ${field.fieldNameUnderscored} asc` %><%_ }) _%>);
 <%_ } else { _%>
-  primary key (<%= primaryKey.name %>);
+  primary key (<%= primaryKeyNameSnakeCase %>));
 <%_ } _%>
 
