@@ -38,15 +38,16 @@ export const springDataCassandraSaathratriUtils = {
             const { fieldName, fieldType, fieldNameHumanized } = primaryKey.ids[index];
 
             if(methodNameString != "") {
-                methodNameString += "And" + primaryKey.nameCapitalized;
+                methodNameString += "And" + primaryKey.nameCapitalized + _.upperFirst(fieldName);
                 methodParametersDeclarationsString += ", ";
                 methodParametersInstancesString += ", ";
                 methodJavaDocParametersString += "\n";
                 methodLogSubstitutionParameters += ", ";
                 methodResourceParametersDeclarationsString += ", ";
+            } else {
+                methodNameString = 'findAllBy' + primaryKey.nameCapitalized + _.upperFirst(fieldName);                
             }
 
-            methodNameString += _.upperFirst(fieldName);
             methodParametersDeclarationsString += `final ${fieldType} ${fieldName}`;
             methodParametersInstancesString += fieldName;
             methodJavaDocParametersString += ` * @param ${fieldName} the ${fieldNameHumanized} of the ${entityInstance} to retrieve.`;
@@ -125,8 +126,8 @@ export const springDataCassandraSaathratriUtils = {
 
     generatePrimaryKeyServiceMethodImplementation(primaryKey, entityClass, methodNameString, operatorString, methodParametersDeclarationsString, methodParametersInstancesString) {
         let methodImplementationString = "@Override \npublic " + this.getPrimaryKeyMethodSignature(primaryKey, entityClass, methodNameString, operatorString, methodParametersDeclarationsString) + `{\n`;
-        methodImplementationString += `log.debug("Request to findBy${primaryKey.nameCapitalized}${methodNameString}${operatorString}(${methodParametersDeclarationsString}) service in ${entityClass}ServiceImpl.");\n`;
-        methodImplementationString += `return ${_.lowerFirst(entityClass)}Repository.findBy${primaryKey.nameCapitalized}${methodNameString}${operatorString}(${methodParametersInstancesString})\n`;
+        methodImplementationString += `log.debug("Request to ${methodNameString}${operatorString}(${methodParametersDeclarationsString}) service in ${entityClass}ServiceImpl.");\n`;
+        methodImplementationString += `return ${_.lowerFirst(entityClass)}Repository.${methodNameString}${operatorString}(${methodParametersInstancesString})\n`;
         methodImplementationString += `.stream()\n`;
         methodImplementationString += `.map(${_.lowerFirst(entityClass)}Mapper::toDto)\n`;
         methodImplementationString += `.collect(Collectors.toCollection(LinkedList::new));\n`;
@@ -159,19 +160,19 @@ export const springDataCassandraSaathratriUtils = {
         methodImplementationString += `@GetMapping("/${this.getCompositePrimaryKeyGetMappingUrl(methodNameString + operatorString)}")\n`;
         methodImplementationString += "public " + this.getPrimaryKeyMethodSignature(primaryKey, entityClass, methodNameString, operatorString, methodResourceParametersDeclarationsString) + `{ \n`;
         methodImplementationString += "  // Composite Primary Key Code \n";
-        methodImplementationString += `  log.debug("REST request to findBy${primaryKey.nameCapitalized}${methodNameString + operatorString} method for ${entityClass}s with parameteres ${methodLogSubstitutionParameters}", ${methodParametersInstancesString}); \n`;
-        methodImplementationString += `  return  ${entityInstance}Service.findBy${primaryKey.nameCapitalized}${methodNameString + operatorString}(${methodParametersInstancesString}); \n`;
+        methodImplementationString += `  log.debug("REST request to ${methodNameString + operatorString} method for ${entityClass}s with parameteres ${methodLogSubstitutionParameters}", ${methodParametersInstancesString}); \n`;
+        methodImplementationString += `  return  ${entityInstance}Service.${methodNameString + operatorString}(${methodParametersInstancesString}); \n`;
         methodImplementationString += '}\n';
 
         return methodImplementationString;
     },
 
     getPrimaryKeyMethodSignature(primaryKey, entityClass, methodNameString, operatorString, methodParametersDeclarationsString) {
-        return `List<${entityClass}DTO> findBy${primaryKey.nameCapitalized}${methodNameString}${operatorString}(${methodParametersDeclarationsString})`;
+        return `List<${entityClass}DTO> ${methodNameString}${operatorString}(${methodParametersDeclarationsString})`;
     },
 
     getPrimaryKeyRepositoryMethodSignature(primaryKey, entityClass, methodNameString, operatorString, methodParametersDeclarationsString) {
-        return `List<${entityClass}> findBy${primaryKey.nameCapitalized}${methodNameString}${operatorString}(${methodParametersDeclarationsString})`;
+        return `List<${entityClass}> ${methodNameString}${operatorString}(${methodParametersDeclarationsString})`;
     },
 
     getCompositePrimaryKeyGetMappingUrl(methodName) {
