@@ -103,18 +103,13 @@ export default class extends BaseApplicationGenerator {
 
         if (application.applicationTypeMicroservice) {
 
-          let lastUsedPorts = cassandraServerUtils.getLastUsedPorts(this.destinationPath());
-          
-          lastUsedPorts.lastUsedInterNodeCommunicationNonSslPort += 100;
-          lastUsedPorts.lastUsedInterNodeCommunicationSslPort += 100
-          lastUsedPorts.lastUsedJmxMonitoringPort += 100;
-          lastUsedPorts.lastUsedNativeTransportCqlPort += 100;
-          lastUsedPorts.lastUsedThriftTransportPort += 100;
+          cassandraServerUtils.getApplicationPortData(this.destinationPath(), this.appname);
 
-          cassandraServerUtils.setLastUsedPorts(this.destinationPath(), lastUsedPorts, this.appname);
-      
+          // Increment the last used port and set it in the port data
+          const portData = cassandraServerUtils.incrementAndSetLastUsedPort(this.destinationPath(), this.appname);
+
           // Usage of the ports in your configuration files
-          this.log(`The server ports are: ${JSON.stringify(lastUsedPorts)}`);
+          this.log(`The server ports are: ${JSON.stringify(portData[this.appname])}`);
 
           await this.writeFiles({
             sections: {
@@ -125,7 +120,7 @@ export default class extends BaseApplicationGenerator {
             },
             context: {
               ...application,
-              nativeTransportCqlPortSaathratri: lastUsedPorts.lastUsedNativeTransportCqlPort,
+              nativeTransportCqlPortSaathratri: portData[this.appname].nativeTransportCqlPort,
             }
           });
         }

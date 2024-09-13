@@ -296,39 +296,7 @@ export const cassandraServerUtils = {
     return path.join(destinationPath, '..', LAST_USED_PORT_FILE);
   },
 
-  getLastUsedPorts(destinationPath) {
-    // Path to the last-used-port.json file
-    const portFilePath = this.getLastUsedPortsFile(destinationPath);
-
-    // Read the last used port
-    let portData;
-    
-    try {
-        portData = JSON.parse(fs.readFileSync(portFilePath, 'utf8'));
-    
-    } catch (error) {
-      portData = {};
-
-      portData.lastUsedInterNodeCommunicationNonSslPort = 7000;
-      portData.lastUsedInterNodeCommunicationSslPort = 7001;
-      portData.lastUsedJmxMonitoringPort = 7199;
-      portData.lastUsedNativeTransportCqlPort = 9042;
-      portData.lastUsedThriftTransportPort = 9160;
-
-      // Write the last used port
-      fs.writeFileSync(portFilePath, JSON.stringify(portData, null, 2));
-    }
-
-    return { 
-      lastUsedInterNodeCommunicationNonSslPort: portData.lastUsedInterNodeCommunicationNonSslPort,
-      lastUsedInterNodeCommunicationSslPort: portData.lastUsedInterNodeCommunicationSslPort,
-      lastUsedJmxMonitoringPort: portData.lastUsedJmxMonitoringPort,
-      lastUsedNativeTransportCqlPort: portData.lastUsedNativeTransportCqlPort,
-      lastUsedThriftTransportPort: portData.lastUsedThriftTransportPort
-    };
-  },
-
-  setLastUsedPorts(destinationPath, ports, appName) {
+  getApplicationPortData(destinationPath, appName) {
     // Path to the last-used-port.json file
     const portFilePath = this.getLastUsedPortsFile(destinationPath);
 
@@ -336,68 +304,66 @@ export const cassandraServerUtils = {
     let portData;
     try {
         portData = JSON.parse(fs.readFileSync(portFilePath, 'utf8'));
+
     } catch (error) {
         portData = {};
     }
 
     // Ensure the appName key exists
-    if (!portData[appName]) {
-        portData[appName] = {};
+    if (!portData.lastUsedInterNodeCommunicationNonSslPort ||
+        !portData.lastUsedInterNodeCommunicationSslPort ||
+        !portData.lastUsedJmxMonitoringPort ||
+        !portData.lastUsedNativeTransportCqlPort ||
+        !portData.lastUsedThriftTransportPort) {
+
+        portData.lastUsedInterNodeCommunicationNonSslPort = 7000;
+        portData.lastUsedInterNodeCommunicationSslPort = 7001;
+        portData.lastUsedJmxMonitoringPort = 7199;
+        portData.lastUsedNativeTransportCqlPort = 9042;
+        portData.lastUsedThriftTransportPort = 9160;
     }
-
-    // Update the app ports
-    portData[appName]= {
-      interNodeCommunicationNonSslPort: ports.lastUsedInterNodeCommunicationNonSslPort,
-      interNodeCommunicationSslPort: ports.lastUsedInterNodeCommunicationSslPort,
-      jmxMonitoringPort: ports.lastUsedJmxMonitoringPort,
-      nativeTransportCqlPort: ports.lastUsedNativeTransportCqlPort,
-      thriftTransportPort: ports.lastUsedThriftTransportPort
-    };
-
-    // Update the last used ports
-    portData.lastUsedInterNodeCommunicationNonSslPort = ports.lastUsedInterNodeCommunicationNonSslPort;
-    portData.lastUsedInterNodeCommunicationSslPort = ports.lastUsedInterNodeCommunicationSslPort;
-    portData.lastUsedJmxMonitoringPort = ports.lastUsedJmxMonitoringPort;
-    portData.lastUsedNativeTransportCqlPort = ports.lastUsedNativeTransportCqlPort;
-    portData.lastUsedThriftTransportPort = ports.lastUsedThriftTransportPort;
 
     // Write the last used port
     fs.writeFileSync(portFilePath, JSON.stringify(portData, null, 2));
+    
+    return portData;
   },
 
-  getApplicationPorts(destinationPath, appName) {
+  incrementAndSetLastUsedPort(destinationPath, appName) {
     // Path to the last-used-port.json file
     const portFilePath = this.getLastUsedPortsFile(destinationPath);
 
     // Read the last used port
     let portData;
     try {
-        portData = JSON.parse(fs.readFileSync(portFilePath, 'utf8'));
+      portData = JSON.parse(fs.readFileSync(portFilePath, 'utf8'));
 
-    } catch (error) {
-        portData = {};
-    }
-
-    // Ensure the appName key exists
-    if (!portData[appName]) {
+      // Check if the appName exists in portData
+      if (!portData[appName]) {
         portData[appName] = {
-          interNodeCommunicationNonSslPort: 7000,
-          interNodeCommunicationSslPort: 7001,
-          jmxMonitoringPort: 7199,
-          nativeTransportCqlPort: 9042,
-          thriftTransportPort: 9160
-        }
-    }
+          interNodeCommunicationNonSslPort: portData.lastUsedInterNodeCommunicationNonSslPort,
+          interNodeCommunicationSslPort: portData.lastUsedInterNodeCommunicationSslPort,
+          jmxMonitoringPort: portData.lastUsedJmxMonitoringPort,
+          nativeTransportCqlPort: portData.lastUsedNativeTransportCqlPort,
+          thriftTransportPort: portData.lastUsedThriftTransportPort
+        };
 
-    // Write the last used port
-    fs.writeFileSync(portFilePath, JSON.stringify(portData, null, 2));
-    
-    return {
-        interNodeCommunicationNonSslPort: portData[appName].interNodeCommunicationNonSslPort,
-        interNodeCommunicationSslPort: portData[appName].interNodeCommunicationSslPort,
-        jmxMonitoringPort: portData[appName].jmxMonitoringPort,
-        nativeTransportCqlPort: portData[appName].nativeTransportCqlPort,
-        thriftTransportPort: portData[appName].thriftTransportPort
-    };
+        // Increment the last used port for the next microservice
+        portData.lastUsedInterNodeCommunicationNonSslPort += 100;
+        portData.lastUsedInterNodeCommunicationSslPort += 100;
+        portData.lastUsedJmxMonitoringPort += 100;
+        portData.lastUsedNativeTransportCqlPort += 100;
+        portData.lastUsedThriftTransportPort += 100;
+
+      }
+
+      // Write the updated port data to the file
+      fs.writeFileSync(portFilePath, JSON.stringify(portData, null, 2));
+
+      return portData;
+    } catch (error) {
+      console.error(`Failed to update port data: ${error.message}`);
+      throw error;
+    }
   }
 }

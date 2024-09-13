@@ -100,10 +100,10 @@ export default class extends BaseApplicationGenerator {
 
         if (application.applicationTypeMicroservice) {
 
-          const appPorts = cassandraServerUtils.getApplicationPorts(this.destinationPath(), this.appname);
+          const portData = cassandraServerUtils.getApplicationPortData(this.destinationPath(), this.appname);
 
           // Usage of the ports in your configuration files:
-          this.log(`The server ports are: ${JSON.stringify(appPorts)}`);
+          this.log(`The server ports are: ${JSON.stringify(portData[this.appname])}`);
 
           await this.writeFiles({
             sections: {
@@ -114,11 +114,11 @@ export default class extends BaseApplicationGenerator {
             },
             context: {
               ...application,
-              interNodeCommunicationNonSslPortSaathratri: appPorts.interNodeCommunicationNonSslPort,
-              interNodeCommunicationSslPortSaathratri: appPorts.interNodeCommunicationSslPort,
-              jmxMonitoringPortSaathratri: appPorts.jmxMonitoringPort,
-              nativeTransportCqlPortSaathratri: appPorts.nativeTransportCqlPort,
-              thriftTransportPortSaathratri: appPorts.thriftTransportPort,
+              interNodeCommunicationNonSslPortSaathratri: portData[this.appname].interNodeCommunicationNonSslPort,
+              interNodeCommunicationSslPortSaathratri: portData[this.appname].interNodeCommunicationSslPort,
+              jmxMonitoringPortSaathratri: portData[this.appname].jmxMonitoringPort,
+              nativeTransportCqlPortSaathratri: portData[this.appname].nativeTransportCqlPort,
+              thriftTransportPortSaathratri: portData[this.appname].thriftTransportPort,
             }
           });
         }
