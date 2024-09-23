@@ -163,6 +163,9 @@ spring:
     keyspace-name: <%= baseName %>
     local-datacenter: datacenter1
     port: <%= nativeTransportCqlPortSaathratri %>
+    connection:
+      connect-timeout: 5000 # Connection timeout in milliseconds
+      request-timeout: 10000 # Query timeout in milliseconds
 <%_ } _%>
 <%_ if (searchEngineElasticsearch) { _%>
   elasticsearch:
