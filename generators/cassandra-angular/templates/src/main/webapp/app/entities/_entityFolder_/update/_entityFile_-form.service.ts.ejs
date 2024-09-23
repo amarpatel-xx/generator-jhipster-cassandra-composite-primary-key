@@ -81,7 +81,7 @@ type <%= entityAngularName %>FormGroupContent = {
 <%_ for (field of fields.filter(field => field.isCompositePrimaryKeyField)) {
       const { fieldName, fieldType, fieldTypeBlobContent, fieldValidationRequired, tsType, fieldIsEnum } = field;
 _%>
-  <%= fieldName %>: FormControl<<%= entityFormName %>['<%= primaryKeySaathratri.name %>']['<%= fieldName %>'] | New<%= entityAngularName %>['<%= primaryKeySaathratri.name %>']['<%= fieldName %>']>;
+  <%= fieldName %>: FormControl<<%= entityFormName %>['<%= primaryKeySaathratri.name %>']['<%= fieldName %>']>;
 <%_ } _%>
 }>;
 <%_ for (field of fields.filter(field => !field.isCompositePrimaryKeyField && field.fieldName !== 'id')) {
@@ -96,7 +96,7 @@ _%>
 <%_ for (field of fields) {
       const { fieldName, fieldType, fieldTypeBlobContent, fieldValidationRequired, tsType, fieldIsEnum } = field;
 _%>
-  <%= fieldName %>: FormControl<<%= entityFormName %>['<%= fieldName %>']<% if (field.id) { %> | New<%= entityAngularName %>['<%= fieldName %>']<% } %>>;
+  <%= fieldName %>: FormControl<<%= entityFormName %>['<%= fieldName %>']>;
   <%_ if ((field.fieldTypeBinary || field.fieldTypeBinarySaathratri) && !field.blobContentTypeText) { _%>
   <%= fieldName %>ContentType: FormControl<<%= entityFormName %>['<%= fieldName %>ContentType']>;
   <%_ } _%>
@@ -138,7 +138,7 @@ export class <%= entityAngularName %>FormService {
       const usesValidators = fieldValidationRequired || fieldValidationRequiredSaathratri || fieldValidationMinLength || fieldValidationMaxLength || fieldValidationMin || fieldValidationMax || fieldValidationPattern || field.id;
 _%>
       <%= fieldName %>: new FormControl(
-        { value: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>?.<%= fieldName %>, disabled: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>?.<%= fieldName %> !== null },
+        { value: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= fieldName %>, disabled: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= fieldName %> !== null },
   <%_ if (usesValidators) { _%>
         {
           nonNullable: true,
@@ -277,7 +277,7 @@ _%>
 <%_ if(primaryKeySaathratri.composite) { _%>
   <%= primaryKeySaathratri.name %>: {
 <%_ for (const field of primaryKeySaathratri.ids) { _%>
-      <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>?.<%= field.fieldName %>, disabled: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>?.<%= field.fieldName %> !== null },
+      <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %>, disabled: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %> !== null },
 <%_ } _%>
   },
 <%_ } else { _%>
@@ -346,7 +346,7 @@ _%>
       const { fieldName, fieldTypeTimed } = field;
 _%>
   <%_ if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-      <%= fieldName %>: dayjs(raw<%= entityAngularName %>.<%= primaryKeySaathratri.name %>?.<%= fieldName %>, DATE_TIME_FORMAT),
+      <%= fieldName %>: dayjs(raw<%= entityAngularName %>.<%= primaryKeySaathratri.name %>.<%= fieldName %>, DATE_TIME_FORMAT),
   <%_ } _%>
 <%_ } _%>
     },
@@ -379,7 +379,7 @@ _%>
       const { fieldName, fieldTypeTimed } = field;
 _%>
   <%_ if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-      <%= fieldName %>: <%= entityInstance %>.<%= primaryKeySaathratri.name %>?.<%= fieldName %> ? <%= entityInstance %>.<%= primaryKeySaathratri.name %>?.<%= fieldName %> : null,
+      <%= fieldName %>: <%= entityInstance %>.<%= primaryKeySaathratri.name %>.<%= fieldName %> ? <%= entityInstance %>.<%= primaryKeySaathratri.name %>.<%= fieldName %> : null,
   <%_ } _%>
 <%_ } _%>
    },  
