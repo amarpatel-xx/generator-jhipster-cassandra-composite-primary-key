@@ -1,6 +1,6 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import command from './command.js';
-import { cassandraServerUtils } from '../cassandra-server/cassandra-server-utils.js';
+import { cassandraSpringBootUtils } from '../cassandra-spring-boot/cassandra-spring-boot-utils.js';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
@@ -100,7 +100,7 @@ export default class extends BaseApplicationGenerator {
 
         if (application.applicationTypeMicroservice) {
 
-          const portData = cassandraServerUtils.getApplicationPortData(this.destinationPath(), this.appname);
+          const portData = cassandraSpringBootUtils.getApplicationPortData(this.destinationPath(), this.appname);
 
           // Usage of the ports in your configuration files:
           this.log(`The server ports are: ${JSON.stringify(portData[this.appname])}`);

@@ -3,7 +3,7 @@ import { javaMainPackageTemplatesBlock, javaTestPackageTemplatesBlock } from 'ge
 import { buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue } from 'generator-jhipster/generators/server/support';
 import command from './command.js';
 import { javaSaathratriUtils } from './cassandra-java-utils.js';
-import { cassandraServerUtils } from '../cassandra-server/cassandra-server-utils.js';
+import { cassandraSpringBootUtils } from '../cassandra-spring-boot/cassandra-spring-boot-utils.js';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
@@ -131,7 +131,7 @@ export default class extends BaseApplicationGenerator {
                 }
               ],
             },
-            context: { ...application, ...entity, ...cassandraServerUtils, ...javaSaathratriUtils, buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue },
+            context: { ...application, ...entity, ...cassandraSpringBootUtils, ...javaSaathratriUtils, buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue },
           });
         }
       },

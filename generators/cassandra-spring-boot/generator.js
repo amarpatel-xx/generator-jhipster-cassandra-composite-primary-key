@@ -1,10 +1,10 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import { javaMainPackageTemplatesBlock, javaTestPackageTemplatesBlock } from 'generator-jhipster/generators/java/support';
 import command from './command.js';
-import { cassandraServerUtils } from '../cassandra-server/cassandra-server-utils.js';
 import { javaSaathratriUtils } from '../cassandra-java/cassandra-java-utils.js';
 import { springDataCassandraSaathratriUtils } from '../cassandra-spring-data-cassandra/cassandra-spring-data-cassandra-utils.js';
-import { springBootSaathratriUtils } from './cassandra-spring-boot-utils.js';
+import { cassandraSpringBootUtils } from './cassandra-spring-boot-utils.js';
+import { buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue } from 'generator-jhipster/generators/server/support';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
@@ -88,7 +88,7 @@ export default class extends BaseApplicationGenerator {
   get [BaseApplicationGenerator.POST_PREPARING_EACH_ENTITY]() {
     return this.asPostPreparingEachEntityTaskGroup({
       async postPreparingEachEntityTemplateTask( { entity } ) {
-        springBootSaathratriUtils.setSaathratriNonPrimaryKeyBooleanSampleValues(entity);
+        cassandraSpringBootUtils.setSaathratriNonPrimaryKeyBooleanSampleValues(entity);
       },
     });
   }
@@ -101,13 +101,31 @@ export default class extends BaseApplicationGenerator {
 
   get [BaseApplicationGenerator.WRITING]() {
     return this.asWritingTaskGroup({
-      async writingTemplateTask({ application }) {
-        await this.writeFiles({
-          sections: {
-            files: [{ templates: ['template-file-cassandra-spring-boot'] }],
-          },
-          context: application,
-        });
+      async writingTemplateTask( { application } ) {
+
+        if (application.applicationTypeMicroservice) {
+
+          cassandraSpringBootUtils.getApplicationPortData(this.destinationPath(), this.appname);
+
+          // Increment the last used port and set it in the port data
+          const portData = cassandraSpringBootUtils.incrementAndSetLastUsedPort(this.destinationPath(), this.appname);
+
+          // Usage of the ports in your configuration files
+          this.log(`The server ports are: ${JSON.stringify(portData[this.appname])}`);
+
+          await this.writeFiles({
+            sections: {
+              files: [{ templates: [
+                  'src/main/resources/config/application-dev.yml'
+                ] 
+              }],
+            },
+            context: {
+              ...application,
+              nativeTransportCqlPortSaathratri: portData[this.appname].nativeTransportCqlPort,
+            }
+          });
+        }
       },
     });
   }
@@ -137,9 +155,33 @@ export default class extends BaseApplicationGenerator {
                     'web/rest/_entityClass_ResourceIT.java',
                   ]
                 },
+                {
+                  condition: generator => generator.databaseTypeCassandra && !entity.skipServer && entity.primaryKeySaathratri.composite,
+                  ...javaMainPackageTemplatesBlock('_entityPackage_/'),
+                  templates: [
+                    'service/dto/_dtoClass_Id.java',
+                    /* saathratri-needle-cassandra-copy-dto-id-class */
+                  ]
+                },
+                {
+                  condition: generator => generator.databaseTypeCassandra && !entity.skipServer,
+                  ...javaMainPackageTemplatesBlock('_entityPackage_/'),
+                  templates: [
+                    'service/dto/_dtoClass_.java',
+                    /* saathratri-needle-cassandra-copy-dto-class */
+                    'service/mapper/_entityClass_Mapper.java',
+                  ]
+                },
+                {
+                  condition: generator => generator.databaseTypeCassandra && !entity.skipServer,
+                  ...javaTestPackageTemplatesBlock('_entityPackage_/'),
+                  templates: [
+                    'service/dto/_dtoClass_Test.java',
+                  ]
+                }
               ],
             },
-            context: { ...application, ...entity, ...cassandraServerUtils, ...springDataCassandraSaathratriUtils, ...javaSaathratriUtils, ...springBootSaathratriUtils },
+            context: { ...application, ...entity, ...cassandraSpringBootUtils, ...springDataCassandraSaathratriUtils, ...javaSaathratriUtils, ...cassandraSpringBootUtils, buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue },
           });
         }
       },

@@ -144,7 +144,7 @@ import java.nio.charset.StandardCharsets;
 <%_ } _%>
 public class <%= entityClass %>Resource {
 
-    private static final Logger log = LoggerFactory.getLogger(<%= entityClass %>Resource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(<%= entityClass %>Resource.class);
 <%_ if (!readOnly) { _%>
 
   <%_ let entityName = entityInstance;
@@ -176,7 +176,7 @@ public class <%= entityClass %>Resource {
     @PreAuthorize("<%- entitySpringPreAuthorize %>")
   <%_ } _%>
     public <% if (reactive) { %>Mono<<% } %>ResponseEntity<<%= instanceType %>><% if (reactive) { %>><% } %> create<%= entityClass %>(<% if (anyPropertyHasValidation) { %>@Valid <% } %>@RequestBody <%= instanceType %> <%= instanceName %>) throws URISyntaxException {
-        log.debug("REST request to save <%= entityClass %> : {}", <%= instanceName %>);
+        LOG.debug("REST request to save <%= entityClass %> : {}", <%= instanceName %>);
   <%_ if (primaryKey.autoGenerate) { _%>
         <%_ if (primaryKeySaathratri.composite) { _%>
           // Composite Primary Key Code
@@ -312,7 +312,7 @@ public class <%= entityClass %>Resource {
           log.debug("REST request to update <%= entityClass%> with parameters <%= getCompositePrimaryKeyLogStatement(primaryKeySaathratri) %>, <%= instanceName %>: {}", <%= getCompositePrimaryKeyInstanceVariables(primaryKeySaathratri) %>, <%= instanceName %>);
         <%_ } else { _%>
           // Single-value Primary Key Code
-        log.debug("REST request to update <%= entityClass %> : {}, {}", <%= primaryKey.name %>, <%= instanceName %>);
+        LOG.debug("REST request to update <%= entityClass %> : {}, {}", <%= primaryKey.name %>, <%= instanceName %>);
         <%_ } _%>
         <%_ if (primaryKeySaathratri.composite) { _%>
           // Composite Primary Key Code
@@ -452,7 +452,7 @@ public class <%= entityClass %>Resource {
           log.debug("REST request to partially update <%= entityClass%> with the parameters <%= getCompositePrimaryKeyLogStatement(primaryKeySaathratri) %>, <%= instanceName %>: {}", <%= getCompositePrimaryKeyInstanceVariables(primaryKeySaathratri) %>, <%= instanceName %>);
         <%_ } else { _%>
           // Single-value Primary Key Code
-        log.debug("REST request to partial update <%= entityClass %> partially : {}, {}", <%= primaryKey.name %>, <%= instanceName %>);
+        LOG.debug("REST request to partial update <%= entityClass %> partially : {}, {}", <%= primaryKey.name %>, <%= instanceName %>);
         <%_ } _%>
         <%_ if (primaryKeySaathratri.composite) { _%>
           // Composite Primary Key Code
@@ -579,7 +579,7 @@ public class <%= entityClass %>Resource {
     @PreAuthorize("<%- entitySpringReadPreAuthorize %>")
 <%_ } _%>
     public Flux<<%= instanceType %>> getAll<%= entityClassPlural %>AsStream() {
-        log.debug("REST request to get all <%= entityClassPlural %> as a stream");
+        LOG.debug("REST request to get all <%= entityClassPlural %> as a stream");
   <%_ if (viaService) { _%>
         return <%= entityInstance %>Service.findAll();
   <%_ } else { _%>
@@ -683,7 +683,7 @@ public class <%= entityClass %>Resource {
           log.debug("REST request to delete <%= entityClass %> with parameters <%= getCompositePrimaryKeyLogStatement(primaryKeySaathratri)%>", <%= getCompositePrimaryKeyInstanceVariables(primaryKeySaathratri) %>);
         <%_ } else { _%>
           // Single-value Primary Key Code
-        log.debug("REST request to delete <%= entityClass %> : {}", <%= primaryKey.name %>);
+        LOG.debug("REST request to delete <%= entityClass %> : {}", <%= primaryKey.name %>);
         <%_ } _%>
         <%_ if (primaryKeySaathratri.composite) { _%>
           // Composite Primary Key Code
