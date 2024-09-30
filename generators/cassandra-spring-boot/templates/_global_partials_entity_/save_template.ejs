@@ -31,7 +31,7 @@
         <%- entityInstance %>SearchRepository.index(<%- persistInstance %>);
 <%_ } _%>
 <%_ if (dtoMapstruct) { _%>
-        log.debug("Saved <%= entityInstance %> : {}", <%= persistInstance %>);
+        LOG.debug("Saved <%= entityInstance %> : {}", <%= persistInstance %>);
         <%- returnDirectly ? 'return' : `${dtoInstance} =` %> <%- entityInstance %>Mapper.toDto(<%- persistInstance %>);
 <%_ } else if (returnDirectly && searchEngineElasticsearch) { _%>
         return <%- persistInstance %>;

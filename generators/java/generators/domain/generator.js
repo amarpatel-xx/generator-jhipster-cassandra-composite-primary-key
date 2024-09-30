@@ -1,12 +1,41 @@
+
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
-import { javaMainPackageTemplatesBlock, javaTestPackageTemplatesBlock } from 'generator-jhipster/generators/java/support';
-import { buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue } from 'generator-jhipster/generators/server/support';
 import command from './command.js';
-import { javaSaathratriUtils } from './cassandra-java-utils.js';
-import { cassandraSpringBootUtils } from '../cassandra-spring-boot/cassandra-spring-boot-utils.js';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
+    /******************************************************************/
+    // Important: The checkBlueprint: true flag is used to check if the 
+    // blueprint is installed and uses it to process the generator.
+    // The base generator is called where the properties are defined.
+    // The other option is sbsBlueprint: true, which is used to delegate
+    // the client sub-generator to the spring boot blueprint.
+    // I ended up modifying the JDL to not include multiple @Id fields.
+    // That "tricks" the base generator into thinking it's a regular entity.
+    // I will handle the other elements that compose the composite primary
+    // key using custom annotations.  I could not figure out how to get
+    // past the getJavaValueGeneratorForType() method's "Java type ...
+    // does not have a random generator implemented" error.  It was 
+    // getting too complicated to try to figure that out.  
+    // Also, if I changed checkBlueprint to true, it would require me
+    // to put extra code in this generator to include all the Java
+    // code and configuration files; that is also too complicated.
+    // Here is the example of using a single @Id with custom annotations:
+    // entity CustomerReservationByHotelAndAccount (customer_reservation_by_hotel_and_account) {
+    //   @Id @customAnnotation("PrimaryKeyType.PARTITIONED") @customAnnotation("CassandraType.Name.UUID") @customAnnotation("") hotelId UUID,
+    //   @customAnnotation("PrimaryKeyType.CLUSTERED") @customAnnotation("CassandraType.Name.BIGINT") @customAnnotation("") yearOfDateAdded Long,
+    //   @customAnnotation("PrimaryKeyType.CLUSTERED") @customAnnotation("CassandraType.Name.TEXT") @customAnnotation("") accountNumber String,
+    //   @customAnnotation("") @customAnnotation("CassandraType.Name.BIGINT") @customAnnotation("UTC_DATE") dateAdded Long,
+    //   @customAnnotation("") @customAnnotation("CassandraType.Name.TEXT") @customAnnotation("") status String,
+    //   ...
+    // versus:
+    // entity CustomerReservationByHotelAndAccount (customer_reservation_by_hotel_and_account) {
+    //   @Id @customAnnotation("PrimaryKeyType.PARTITIONED") @customAnnotation("CassandraType.Name.UUID") @customAnnotation("") hotelId UUID,
+    //   @Id @customAnnotation("PrimaryKeyType.CLUSTERED") @customAnnotation("CassandraType.Name.BIGINT") @customAnnotation("") yearOfDateAdded Long,
+    //   @Id @customAnnotation("PrimaryKeyType.CLUSTERED") @customAnnotation("CassandraType.Name.TEXT") @customAnnotation("") accountNumber String,
+    //   @customAnnotation("") @customAnnotation("CassandraType.Name.BIGINT") @customAnnotation("UTC_DATE") dateAdded Long,
+    //   @customAnnotation("") @customAnnotation("CassandraType.Name.TEXT") @customAnnotation("") status String,
+    /******************************************************************/
     super(args, opts, { ...features, sbsBlueprint: true });
   }
 
@@ -33,7 +62,12 @@ export default class extends BaseApplicationGenerator {
 
   get [BaseApplicationGenerator.COMPOSING]() {
     return this.asComposingTaskGroup({
-      async composingTemplateTask() {},
+      async composeTask() {
+        if (['cassandra'].includes(this.jhipsterConfigWithDefaults.databaseType)) {
+         // Delegate the client sub-generator to the angular blueprint.
+         await this.composeWithJHipster('jhipster-cassandra-composite-primary-key:cassandra-java-domain');
+        }
+      },
     });
   }
 
@@ -93,48 +127,20 @@ export default class extends BaseApplicationGenerator {
 
   get [BaseApplicationGenerator.WRITING]() {
     return this.asWritingTaskGroup({
-      async writingTemplateTask() {},
+      async writingTemplateTask({ application }) {
+        await this.writeFiles({
+          sections: {
+            files: [{ templates: ['template-file-java'] }],
+          },
+          context: application,
+        });
+      },
     });
   }
 
   get [BaseApplicationGenerator.WRITING_ENTITIES]() {
     return this.asWritingEntitiesTaskGroup({
-      async writingEntitiesTemplateTask({ application, entities }) {
-        
-        for (const entity of entities.filter(e => !e.builtIn)) { 
-
-          await this.writeFiles({
-            sections: {
-              files: [
-                {
-                  condition: generator => generator.databaseTypeCassandra && !entity.skipServer && entity.primaryKeySaathratri.composite,
-                  ...javaMainPackageTemplatesBlock('_entityPackage_/'),
-                  templates: [
-                    'domain/_persistClass_Id.java',
-                  ]
-                },
-                {
-                  condition: generator => generator.databaseTypeCassandra && !entity.skipServer,
-                  ...javaMainPackageTemplatesBlock('_entityPackage_/'),
-                  templates: [
-                    'domain/_persistClass_.java.jhi',
-                  ]
-                },
-                {
-                  condition: generator => generator.databaseTypeCassandra && !entity.skipServer,
-                  ...javaTestPackageTemplatesBlock('_entityPackage_/'),
-                  templates: [
-                    'domain/_persistClass_Asserts.java',
-                    'domain/_persistClass_Test.java',
-                    'domain/_persistClass_TestSamples.java',
-                  ]
-                }
-              ],
-            },
-            context: { ...application, ...entity, ...cassandraSpringBootUtils, ...javaSaathratriUtils, buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue },
-          });
-        }
-      },
+      async writingEntitiesTemplateTask() {},
     });
   }
 

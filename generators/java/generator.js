@@ -62,12 +62,7 @@ export default class extends BaseApplicationGenerator {
 
   get [BaseApplicationGenerator.COMPOSING]() {
     return this.asComposingTaskGroup({
-      async composeTask() {
-        if (['cassandra'].includes(this.jhipsterConfigWithDefaults.databaseType)) {
-         // Delegate the client sub-generator to the angular blueprint.
-         await this.composeWithJHipster('jhipster-cassandra-composite-primary-key:cassandra-java');
-        }
-      },
+      async composingTemplateTask() {},
     });
   }
 
@@ -130,7 +125,7 @@ export default class extends BaseApplicationGenerator {
       async writingTemplateTask({ application }) {
         await this.writeFiles({
           sections: {
-            files: [{ templates: ['template-file-server'] }],
+            files: [{ templates: ['template-file-java'] }],
           },
           context: application,
         });
