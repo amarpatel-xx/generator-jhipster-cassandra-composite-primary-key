@@ -309,7 +309,7 @@ public class <%= entityClass %>Resource {
     ) throws URISyntaxException {
         <%_ if (primaryKeySaathratri.composite) { _%>
           // Composite Primary Key Code
-          log.debug("REST request to update <%= entityClass%> with parameters <%= getCompositePrimaryKeyLogStatement(primaryKeySaathratri) %>, <%= instanceName %>: {}", <%= getCompositePrimaryKeyInstanceVariables(primaryKeySaathratri) %>, <%= instanceName %>);
+          LOG.debug("REST request to update <%= entityClass%> with parameters <%= getCompositePrimaryKeyLogStatement(primaryKeySaathratri) %>, <%= instanceName %>: {}", <%= getCompositePrimaryKeyInstanceVariables(primaryKeySaathratri) %>, <%= instanceName %>);
         <%_ } else { _%>
           // Single-value Primary Key Code
         LOG.debug("REST request to update <%= entityClass %> : {}, {}", <%= primaryKey.name %>, <%= instanceName %>);

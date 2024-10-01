@@ -126,7 +126,7 @@ export const springDataCassandraSaathratriUtils = {
 
     generatePrimaryKeyServiceMethodImplementation(primaryKey, entityClass, methodNameString, operatorString, methodParametersDeclarationsString, methodParametersInstancesString) {
         let methodImplementationString = "@Override \npublic " + this.getPrimaryKeyMethodSignature(primaryKey, entityClass, methodNameString, operatorString, methodParametersDeclarationsString) + `{\n`;
-        methodImplementationString += `log.debug("Request to ${methodNameString}${operatorString}(${methodParametersDeclarationsString}) service in ${entityClass}ServiceImpl.");\n`;
+        methodImplementationString += `LOG.debug("Request to ${methodNameString}${operatorString}(${methodParametersDeclarationsString}) service in ${entityClass}ServiceImpl.");\n`;
         methodImplementationString += `return ${_.lowerFirst(entityClass)}Repository.${methodNameString}${operatorString}(${methodParametersInstancesString})\n`;
         methodImplementationString += `.stream()\n`;
         methodImplementationString += `.map(${_.lowerFirst(entityClass)}Mapper::toDto)\n`;
@@ -160,7 +160,7 @@ export const springDataCassandraSaathratriUtils = {
         methodImplementationString += `@GetMapping("/${this.getCompositePrimaryKeyGetMappingUrl(methodNameString + operatorString)}")\n`;
         methodImplementationString += "public " + this.getPrimaryKeyMethodSignature(primaryKey, entityClass, methodNameString, operatorString, methodResourceParametersDeclarationsString) + `{ \n`;
         methodImplementationString += "  // Composite Primary Key Code \n";
-        methodImplementationString += `  log.debug("REST request to ${methodNameString + operatorString} method for ${entityClass}s with parameteres ${methodLogSubstitutionParameters}", ${methodParametersInstancesString}); \n`;
+        methodImplementationString += `  LOG.debug("REST request to ${methodNameString + operatorString} method for ${entityClass}s with parameteres ${methodLogSubstitutionParameters}", ${methodParametersInstancesString}); \n`;
         methodImplementationString += `  return  ${entityInstance}Service.${methodNameString + operatorString}(${methodParametersInstancesString}); \n`;
         methodImplementationString += '}\n';
 

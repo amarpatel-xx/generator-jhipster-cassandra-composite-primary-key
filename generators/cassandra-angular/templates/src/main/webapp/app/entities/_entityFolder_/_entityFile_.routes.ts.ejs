@@ -47,11 +47,11 @@ const <%= entityInstance %>Route: Routes = [
             } else { 
         _%>
     path: ':<%= primaryKey.name %>/view',
-    loadComponent: () => import('./detail/<%= entityFileName %>-detail.component').then(m => m.<%= entityAngularName %>DetailComponent),
     	<%_ 
     	    } 
     	    // Saathratri 
     	_%>
+    loadComponent: () => import('./detail/<%= entityFileName %>-detail.component').then(m => m.<%= entityAngularName %>DetailComponent),
     resolve: {
       <%= entityInstance %>: <%= entityAngularName %>Resolve
     },
@@ -89,11 +89,11 @@ const <%= entityInstance %>Route: Routes = [
             } else { 
         _%>
     path: ':<%= primaryKey.name %>/edit',
-    loadComponent: () => import('./update/<%= entityFileName %>-update.component').then(m => m.<%= entityAngularName %>UpdateComponent),
     	<%_ 
     	    } 
     	    // Saathratri 
     	_%>
+    loadComponent: () => import('./update/<%= entityFileName %>-update.component').then(m => m.<%= entityAngularName %>UpdateComponent),
     resolve: {
       <%= entityInstance %>: <%= entityAngularName %>Resolve
     },
