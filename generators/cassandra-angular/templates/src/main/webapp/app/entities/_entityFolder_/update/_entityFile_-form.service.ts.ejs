@@ -277,12 +277,12 @@ _%>
 <%_ if(primaryKeySaathratri.composite) { _%>
   <%= primaryKeySaathratri.name %>: {
 <%_ for (const field of primaryKeySaathratri.ids) { _%>
-      <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %>, disabled: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %> !== null },
+      <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %>, disabled: !<%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %> },
 <%_ } _%>
   },
 <%_ } else { _%>
 <%_ for (const field of fields.filter(field => field.id)) { _%>
-      <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= field.fieldName %>, disabled: <% if (field.autoGenerate) { %>true<% } else { %><%= entityInstance %>RawValue.<%= field.fieldName %> !== null<% } %> },
+      <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= field.fieldName %>, disabled: <% if (field.autoGenerate) { %>true<% } else { %>!<%= entityInstance %>RawValue.<%= field.fieldName %><% } %> },
 <%_ } _%>
 <%_ } _%>
     } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */);
