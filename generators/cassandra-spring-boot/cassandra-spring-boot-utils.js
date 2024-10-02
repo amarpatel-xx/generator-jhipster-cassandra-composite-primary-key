@@ -7,7 +7,7 @@ const LAST_USED_PORT_FILE = 'last-used-ports.json';
 export const cassandraSpringBootUtils = {
 
     /*******************************************
-     * spring-boot-saathtratri Helper Functions
+     * cassandra-spring-boot-utils Helper Functions
      *******************************************/
     getFieldPrimitiveType(field) {
         switch (field.fieldType) {
