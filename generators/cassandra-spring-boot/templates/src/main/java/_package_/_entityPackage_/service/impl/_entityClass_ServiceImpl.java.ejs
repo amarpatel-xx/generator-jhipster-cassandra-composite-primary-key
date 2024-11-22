@@ -311,7 +311,7 @@ public class <%= serviceClassName %><% if (serviceImpl) { %> implements <%= enti
     }
 <%_ } _%>
 <% if (primaryKeySaathratri.composite) { 
-  let methodsArray = generatePrimaryKeyMethods(entityClass, primaryKeySaathratri, "ServiceImpl");
+  let methodsArray = generatePrimaryKeyMethods(entityClass, entityInstance, entityInstanceSnakeCase, primaryKeySaathratri, "ServiceImpl");
   // Output all method names at once, joined by newlines for readability
   let methodsOutput = methodsArray.join('\n');
 %>

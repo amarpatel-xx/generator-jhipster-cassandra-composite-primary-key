@@ -166,8 +166,9 @@ public interface <%= entityClass %>Service {
      */
     <% if (!paginationNo) { %><%= pageOrFlux %><<%= instanceType %><% } else { %><%= listOrFlux %><<%= instanceType %><% } %>> search(String query<% if (!paginationNo) { %>, Pageable pageable<% } %>);
 <%_ } _%>
-<% if (primaryKeySaathratri.composite) { 
-  let methodsArray = generatePrimaryKeyMethods(entityClass, primaryKeySaathratri, "Service");
+
+<% if (primaryKeySaathratri.composite) {
+  let methodsArray = generatePrimaryKeyMethods(entityClass, entityInstance, entityInstanceSnakeCase, primaryKeySaathratri, "Service");
   // Output all method names at once, joined by newlines for readability
   let methodsOutput = methodsArray.join('\n');
 %>

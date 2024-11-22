@@ -5,6 +5,7 @@ import { javaSaathratriUtils } from '../cassandra-java-domain/cassandra-java-dom
 import { springDataCassandraSaathratriUtils } from '../cassandra-spring-data-cassandra/cassandra-spring-data-cassandra-utils.js';
 import { cassandraSpringBootUtils } from './cassandra-spring-boot-utils.js';
 import { buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue } from 'generator-jhipster/generators/server/support';
+import { snakeCase } from 'lodash-es';
 
 export default class extends BaseApplicationGenerator {
   constructor(args, opts, features) {
@@ -24,7 +25,7 @@ export default class extends BaseApplicationGenerator {
         this.parseJHipsterOptions(command.options);
       },
     });
-  }
+  } 
 
   get [BaseApplicationGenerator.PROMPTING]() {
     return this.asPromptingTaskGroup({
@@ -73,9 +74,17 @@ export default class extends BaseApplicationGenerator {
     });
   }
 
+  // get [BaseApplicationGenerator.PREPARING_EACH_ENTITY]() {
+  //   return this.asPreparingEachEntityTaskGroup({
+  //     async preparingEachEntityTemplateTask() {},
+  //   });
+  // }
+
   get [BaseApplicationGenerator.PREPARING_EACH_ENTITY]() {
     return this.asPreparingEachEntityTaskGroup({
-      async preparingEachEntityTemplateTask() {},
+      async preparingEachEntityTemplateTask( { entity } ) {
+        cassandraSpringBootUtils.setSaathratriPrimaryKeyAttributesOnEntityAndFields(entity);
+      },
     });
   }
 
@@ -181,7 +190,7 @@ export default class extends BaseApplicationGenerator {
                 }
               ],
             },
-            context: { ...application, ...entity, ...cassandraSpringBootUtils, ...springDataCassandraSaathratriUtils, ...javaSaathratriUtils, ...cassandraSpringBootUtils, buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue },
+            context: { ...application, ...entity, ...cassandraSpringBootUtils, ...springDataCassandraSaathratriUtils, ...javaSaathratriUtils, ...cassandraSpringBootUtils, buildJavaGetter, buildJavaSetter, buildJavaGet, getPrimaryKeyValue, entityInstanceSnakeCase: snakeCase(entity.entityInstance) },
           });
         }
       },

@@ -23,8 +23,16 @@ import java.util.UUID;
 import java.util.List;
 <%_ } _%>
 
+<%_ if (primaryKeySaathratri.hasTimeUUID) { _%>
+import java.util.Optional;
+<%_ }  _%>
+
 import org.springframework.data.cassandra.repository.<% if (reactive) { %>Reactive<% } %>CassandraRepository;
 import org.springframework.stereotype.Repository;
+<%_ if (primaryKeySaathratri.hasTimeUUID) { _%>
+import org.springframework.data.cassandra.repository.Query;
+<%_ } _%>
+
 import <%= entityAbsolutePackage %>.domain.<%= persistClass %>;
 <%_ if (primaryKeySaathratri.composite) { _%>
 import <%= entityAbsolutePackage %>.domain.<%= persistClass %>Id;
@@ -36,7 +44,7 @@ import <%= entityAbsolutePackage %>.domain.<%= persistClass %>Id;
 @Repository
 public interface <%= entityClass %>Repository extends <% if (reactive) { %>Reactive<% } %>CassandraRepository<<%= persistClass %>, <%_ if(primaryKeySaathratri.composite) { _%><%= entityClass %>Id<%_ } else { _%><%= primaryKey.type %><%_ } _%>> {
      <% if (primaryKeySaathratri.composite) { 
-          let methodsArray = generatePrimaryKeyMethods(entityClass, primaryKeySaathratri, "Repository");
+          let methodsArray = generatePrimaryKeyMethods(entityClass, entityInstance, entityInstanceSnakeCase, primaryKeySaathratri, "Repository");
           // Output all method names at once, joined by newlines for readability
           let methodsOutput = methodsArray.join('\n');
      %>

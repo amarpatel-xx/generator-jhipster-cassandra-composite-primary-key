@@ -46,17 +46,24 @@ CREATE TABLE IF NOT EXISTS <%= entityInstanceSnakeCase %> (
     <%= fieldNameUnderscored %> boolean,
   <%_ } else if (field.fieldTypeByteBuffer) { _%>
     <%_ if (!field.blobContentTypeText) { _%>
-    <%= fieldNameUnderscored %> blob,
-    <%= fieldNameUnderscored %>_content_type text,
+      <%= fieldNameUnderscored %> blob,
+      <%= fieldNameUnderscored %>_content_type text,
     <%_ } else { _%>
-    <%= fieldNameUnderscored %> text,
+      <%= fieldNameUnderscored %> text,
     <%_ } _%>
   <%_ } _%>
 <%_ } _%>
 <%_ if (primaryKeySaathratri.composite) { _%>
-  primary key ((<%_ primaryKeySaathratri.ids.filter(field => field.isPartitionedKeySaathratri).forEach((field, index) => { _%><%= index === 0 ? `${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>),<%_ primaryKeySaathratri.ids.filter(field => field.isClusteredKeySaathratri).forEach((field, index) => { _%><%= index === 0 ? ` ${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>))
-  with clustering order by (<%_ primaryKeySaathratri.ids.filter(field => field.isClusteredKeySaathratri).forEach((field, index) => { _%><%= index === 0 ? `${field.fieldNameUnderscored} desc` : `, ${field.fieldNameUnderscored} asc` %><%_ }) _%>);
+  primary key (
+    (<%_ primaryKeySaathratri.ids.filter(field => field.isPartitionedKeySaathratri)
+      .forEach((field, index) => { _%><%= index === 0 ? `${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>),
+    <%_ primaryKeySaathratri.ids.filter(field => field.isClusteredKeySaathratri)
+      .forEach((field, index) => { _%><%= index === 0 ? ` ${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>
+  )
+  WITH CLUSTERING ORDER BY (
+    <%_ primaryKeySaathratri.ids.filter(field => field.isClusteredKeySaathratri)
+      .forEach((field, index) => { _%><%= index === 0 ? `${field.fieldNameUnderscored} desc` : `, ${field.fieldNameUnderscored} asc` %><%_ }) _%>);
 <%_ } else { _%>
-  primary key (<%= primaryKeyNameSnakeCase %>));
+  primary key (<%= primaryKeyNameSnakeCase %>)
+);
 <%_ } _%>
-

@@ -181,9 +181,9 @@ export const cassandraSpringBootUtils = {
         const primaryKeyType = field.options?.customAnnotation[0];
     
         if (primaryKeyType === "PrimaryKeyType.PARTITIONED") {
-        this.handlePartitionedKey(entity, field);
+            this.handlePartitionedKey(entity, field);
         } else if (primaryKeyType === "PrimaryKeyType.CLUSTERED") {
-        this.handleClusteredKey(entity, field);
+            this.handleClusteredKey(entity, field);
         }
 
         field.fieldValidationRequiredSaathratri = true;
@@ -191,10 +191,16 @@ export const cassandraSpringBootUtils = {
     
     handlePartitionedKey(entity, field) {
         entity.primaryKeySaathratri.composite = false;
-        entity.primaryKeySaathratri.ids.push(field);
         field.isCompositePrimaryKeyField = true;
         field.isPartitionedKeySaathratri = true;
         field.isClusteredKeySaathratri = false;
+
+        if(this.isTimeUuidField(field)) {
+            field.fieldIsTimeUuidField = true;
+            entity.primaryKeySaathratri.hasTimeUUID = true;
+        }
+
+        entity.primaryKeySaathratri.ids.push(field);
     },
     
     handleClusteredKey(entity, field) {
@@ -205,79 +211,89 @@ export const cassandraSpringBootUtils = {
         entity.primaryKeySaathratri.typeString = false;
         
         if (field.fieldType === "Long") {
-        entity.primaryKeySaathratri.hasLong = true;
+            entity.primaryKeySaathratri.hasLong = true;
         } else if (field.fieldType === "Integer") {
-        entity.primaryKeySaathratri.hasInteger = true;
+            entity.primaryKeySaathratri.hasInteger = true;
+        } else if(this.isTimeUuidField(field)) {
+            // This check should be berfore the field.fieldType === "UUID" check,
+            // because TimeUUID is a UUID.
+            field.fieldIsTimeUuidField = true;
+            entity.primaryKeySaathratri.hasTimeUUID = true;        
         } else if (field.fieldType === "UUID") {
-        entity.primaryKeySaathratri.hasUUID = true;
-        }
+            entity.primaryKeySaathratri.hasUUID = true;
+        } 
     
-        entity.primaryKeySaathratri.ids.push(field);
         field.isCompositePrimaryKeyField = true;
         field.isPartitionedKeySaathratri = false;
         field.isClusteredKeySaathratri = true;
+    
+        entity.primaryKeySaathratri.ids.push(field);
     },  
 
     initializeSaathratriFieldAttributes(entity) {
         for (const field of entity.fields) {
-        if (!field.hidden) {
-            this.processEntityAttributes(entity, field);
-            this.processFieldTypeAttributes(field);
-        }
+            if (!field.hidden) {
+                this.processEntityAttributes(entity, field);
+                this.processFieldTypeAttributes(field);
+            }
         }
     },
     
     processEntityAttributes(entity, field) {
         if (entity?.anyFieldIsDateDerivedSaathratri !== true) {
-        if (this.isDateField(field)) {
-            field.fieldTypeTemporal = true;
-            entity.anyFieldIsDateDerivedSaathratri = true;
-        } else {
-            entity.anyFieldIsDateDerivedSaathratri = false;
-        }
+            if (this.isDateField(field)) {
+                field.fieldTypeTemporal = true;
+                entity.anyFieldIsDateDerivedSaathratri = true;
+            } else {
+                entity.anyFieldIsDateDerivedSaathratri = false;
+            }
         }
         
         if (entity?.anyFieldIsTimeDerivedSaathratri !== true) {
-        if (this.isTimeField(field)) {
-            field.fieldTypeTemporal = true;
-            entity.anyFieldIsTimeDerivedSaathratri = true;
-            // Any field which is time derived is also date derived.
-            entity.anyFieldIsDateDerivedSaathratri = true;
-        } else {
-            entity.anyFieldIsTimeDerivedSaathratri = false;
-        }
+            if (this.isTimeField(field)) {
+                field.fieldTypeTemporal = true;
+                entity.anyFieldIsTimeDerivedSaathratri = true;
+                // Any field which is time derived is also date derived.
+                entity.anyFieldIsDateDerivedSaathratri = true;
+            } else {
+                entity.anyFieldIsTimeDerivedSaathratri = false;
+            }
         }
 
         if (entity?.anyFieldHasImageContentType !== true) {
-        if(this.isBlobFieldContentType(field, 'image')) { 
-            field.fieldTypeBlobContent = 'image';
-            field.fieldTypeByteBuffer = true;
-            field.fieldWithContentType = true;
-            field.fieldTypeBinarySaathratri = true;
-            field.blobContentTypeTextSaathratri = false;
-            field.blobContentTypeImage = true;
-            entity.anyFieldHasImageContentType = true;
-            entity.anyFieldHasFileBasedContentType = true;
-            entity.anyFieldIsBlobDerived = true;
-        } else  {
-            entity.anyFieldHasImageContentType = false;
-        }
+            if(this.isBlobFieldContentType(field, 'image')) { 
+                field.fieldTypeBlobContent = 'image';
+                field.fieldTypeByteBuffer = true;
+                field.fieldWithContentType = true;
+                field.fieldTypeBinarySaathratri = true;
+                field.blobContentTypeTextSaathratri = false;
+                field.blobContentTypeImage = true;
+                entity.anyFieldHasImageContentType = true;
+                entity.anyFieldHasFileBasedContentType = true;
+                entity.anyFieldIsBlobDerived = true;
+            } else  {
+                entity.anyFieldHasImageContentType = false;
+            }
         }
 
         if (entity?.anyFieldHasTextContentType !== true) {
-        if(this.isBlobFieldContentType(field, 'text')) {
-            field.fieldTypeBlobContent = 'text';
-            field.fieldTypeByteBuffer = true;
-            field.fieldWithContentType = true;
-            field.fieldTypeBinarySaathratri = true;
-            field.blobContentTypeTextSaathratri = true;
-            field.javaValueSample1 = `"${field.fieldName}1"`;
-            entity.anyFieldHasTextContentType = true;
-            entity.anyFieldIsBlobDerived = true;
-        } else  {
-            entity.anyFieldHasTextContentType = false;
+            if(this.isBlobFieldContentType(field, 'text')) {
+                field.fieldTypeBlobContent = 'text';
+                field.fieldTypeByteBuffer = true;
+                field.fieldWithContentType = true;
+                field.fieldTypeBinarySaathratri = true;
+                field.blobContentTypeTextSaathratri = true;
+                field.javaValueSample1 = `"${field.fieldName}1"`;
+                entity.anyFieldHasTextContentType = true;
+                entity.anyFieldIsBlobDerived = true;
+            } else  {
+                entity.anyFieldHasTextContentType = false;
+            }
         }
-        }
+
+        // if(this.isTimeUuidField(field)) {
+        //     entity.anyFieldhasTimeUUID = true;
+        // }
     },
     
     isDateField(field) {
@@ -297,21 +313,29 @@ export const cassandraSpringBootUtils = {
         return cassandraNameAnnotation === "CassandraType.Name.BLOB" && contentTypeAnnotation === contentType;
     },
 
+    isTimeUuidField(field) {
+        const annotation = field.options?.customAnnotation[2];
+        return annotation === "TIMEUUID";
+    },
+
     processFieldTypeAttributes(field) {
         if (field.options?.customAnnotation[0] === "CassandraType.Name.SET") {
-        field.fieldTypeSetSaathratri = true;
+            field.fieldTypeSetSaathratri = true;
         }
 
-        if (field.options?.customAnnotation[2] === "UTC_DATE") {
-        field.fieldTypeLocalDateSaathratri = true;
-        field.fieldContainsUtcSaathratri = true;
-        } else if (field.options?.customAnnotation[2] === "UTC_DATETIME") {
-        field.fieldTypeTimedSaathratri = true;
-        field.fieldContainsUtcSaathratri = true;
+        if (this.isDateField(field.fieldType)) {
+            field.fieldTypeLocalDateSaathratri = true;
+            field.fieldContainsUtcSaathratri = true;
+        } else if (this.isTimeField(field)) {
+            field.fieldTypeTimedSaathratri = true;
+            field.fieldContainsUtcSaathratri = true;
         }
+        // } else if (this.isTimeUuidField(field)) {
+        //     field.fieldTypeTimeUuidSaathratri = true;
+        // }
 
         if (field.options?.customAnnotation[3]) {
-        field.fieldOrdinalSaathratri = field.options.customAnnotation[3];
+            field.fieldOrdinalSaathratri = field.options.customAnnotation[3];
         }
     },  
 

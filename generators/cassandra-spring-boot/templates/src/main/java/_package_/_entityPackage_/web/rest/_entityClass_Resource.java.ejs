@@ -120,7 +120,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-<%_ if (primaryKey.hasUUID || primaryKeySaathratri.hasUUID) { _%>
+<%_ if (primaryKey.hasUUID || primaryKeySaathratri.hasUUID || primaryKeySaathratri.hasTimeUUID) { _%>
 import java.util.UUID;
 <%_ } _%>
 <%_ if ((searchEngineAny || fieldsContainNoOwnerOneToOne) && !reactive) { _%>
@@ -728,7 +728,7 @@ public class <%= entityClass %>Resource {
 <%- include('../../_partials_entity_/search_template', {viaService}); -%>
 <%_ } _%>
 <% if (primaryKeySaathratri.composite) { 
-  let methodsArray = generatePrimaryKeyMethods(entityClass, primaryKeySaathratri, "Resource", entityInstance);
+  let methodsArray = generatePrimaryKeyMethods(entityClass, entityInstance, entityInstanceSnakeCase, primaryKeySaathratri, "Resource");
   // Output all method names at once, joined by newlines for readability
   let methodsOutput = methodsArray.join('\n');
 %>
