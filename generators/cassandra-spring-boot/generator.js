@@ -97,7 +97,7 @@ export default class extends BaseApplicationGenerator {
   get [BaseApplicationGenerator.POST_PREPARING_EACH_ENTITY]() {
     return this.asPostPreparingEachEntityTaskGroup({
       async postPreparingEachEntityTemplateTask( { entity } ) {
-        cassandraSpringBootUtils.setSaathratriNonPrimaryKeyBooleanSampleValues(entity);
+        cassandraSpringBootUtils.setSaathratriNonPrimaryKeySampleValues(entity);
       },
     });
   }

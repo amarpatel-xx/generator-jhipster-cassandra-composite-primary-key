@@ -28,7 +28,7 @@ export const cassandraSpringBootUtils = {
         }
     },
 
-    setSaathratriNonPrimaryKeyBooleanSampleValues(entity) {
+    setSaathratriNonPrimaryKeySampleValues(entity) {
         entity.fields.forEach(field => {
             if (field.fieldType === 'Boolean') {
                 field.javaValueSample1 = 'false';
@@ -39,6 +39,9 @@ export const cassandraSpringBootUtils = {
             } else if(field.fieldType === 'LocalDate') {
                 field.javaValueSample1 = 'java.time.LocalDate.now()';
                 field.javaValueSample2 = 'java.time.LocalDate.now()';
+            } else if(field.fieldTypeBigDecimalSaathratri) {
+                field.javaValueSample1 = 'new BigDecimal(1)';
+                field.javaValueSample2 = 'new BigDecimal(2)';
             }
 
             if(!field.isCompositePrimaryKeyField) {
@@ -290,10 +293,6 @@ export const cassandraSpringBootUtils = {
                 entity.anyFieldHasTextContentType = false;
             }
         }
-
-        // if(this.isTimeUuidField(field)) {
-        //     entity.anyFieldhasTimeUUID = true;
-        // }
     },
     
     isDateField(field) {
@@ -329,10 +328,11 @@ export const cassandraSpringBootUtils = {
         } else if (this.isTimeField(field)) {
             field.fieldTypeTimedSaathratri = true;
             field.fieldContainsUtcSaathratri = true;
+        } else if (this.isTimeUuidField(field)) {
+            field.fieldTypeTimeUuidSaathratri = true;
+        } else if (field.fieldType === "BigDecimal") {
+            field.fieldTypeBigDecimalSaathratri = true;
         }
-        // } else if (this.isTimeUuidField(field)) {
-        //     field.fieldTypeTimeUuidSaathratri = true;
-        // }
 
         if (field.options?.customAnnotation[3]) {
             field.fieldOrdinalSaathratri = field.options.customAnnotation[3];
