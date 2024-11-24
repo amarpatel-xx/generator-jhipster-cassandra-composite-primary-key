@@ -1,6 +1,6 @@
 {
   "name": "generator-jhipster-cassandra-composite-primary-key",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Description for Cassandra Composite Primary Keys",
   "keywords": [
     "yeoman-generator",

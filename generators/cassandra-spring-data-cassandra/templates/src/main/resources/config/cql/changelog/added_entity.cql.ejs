@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS <%= entityInstanceSnakeCase %> (
       .forEach((field, index) => { _%><%= index === 0 ? `${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>),
     <%_ primaryKeySaathratri.ids.filter(field => field.isClusteredKeySaathratri)
       .forEach((field, index) => { _%><%= index === 0 ? ` ${field.fieldNameUnderscored}` : `, ${field.fieldNameUnderscored}` %><%_ }) _%>
-  )
+  ))
   WITH CLUSTERING ORDER BY (
     <%_ primaryKeySaathratri.ids.filter(field => field.isClusteredKeySaathratri)
       .forEach((field, index) => { _%><%= index === 0 ? `${field.fieldNameUnderscored} desc` : `, ${field.fieldNameUnderscored} desc` %><%_ }) _%>);
