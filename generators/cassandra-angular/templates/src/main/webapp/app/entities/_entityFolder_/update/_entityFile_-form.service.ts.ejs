@@ -89,8 +89,8 @@ _%>
 _%>
 <%= fieldName %>: FormControl<<%= entityFormName %>['<%= fieldName %>']>;
 <%_ if ((field.fieldTypeBinary || field.fieldTypeBinarySaathratri) && !field.blobContentTypeText) { _%>
-<%= fieldName %>ContentType: FormControl<<%= entityFormName %>['<%= fieldName %>ContentType']>;
-<%_ } _%>
+  <%= fieldName %>ContentType: FormControl<<%= entityFormName %>['<%= fieldName %>ContentType']>;
+  <%_ } _%>
 <%_ } _%>
 <%_ } else { _%>
 <%_ for (field of fields) {
