@@ -1,6 +1,6 @@
 import BaseApplicationGenerator from 'generator-jhipster/generators/base-application';
 import command from './command.js';
-import { generateEntityClientFields, generateEntityClientEnumImports, clientRootTemplatesBlock, clientApplicationTemplatesBlock, generateEntityClientImports } from 'generator-jhipster/generators/client/support';
+import { generateEntityClientFields, generateEntityClientEnumImports, clientRootTemplatesBlock, clientApplicationTemplatesBlock, clientSrcTemplatesBlock, generateEntityClientImports } from 'generator-jhipster/generators/client/support';
 import { cassandraSpringBootUtils } from '../cassandra-spring-boot/cassandra-spring-boot-utils.js';
 import { angularSaathratriUtils } from './cassandra-angular-utils.js';
 
@@ -102,9 +102,31 @@ export default class extends BaseApplicationGenerator {
       async writingTemplateTask({ application }) {
         await this.writeFiles({
           sections: {
-            files: [{ templates: ['template-file-cassandra-angular'] }],
+            files: [
+              { 
+                templates: ['template-file-cassandra-angular'] 
+              },
+              {
+                ...clientRootTemplatesBlock(),
+                templates: [
+                  'package.json',
+                ]
+              },
+              {
+                ...clientSrcTemplatesBlock(),
+                templates: [
+                  'content/scss/global.scss',
+                ]
+              },
+              {
+                ...clientApplicationTemplatesBlock(),
+                templates: [
+                  'app.config.ts',
+                ]
+              },
+            ],
           },
-          context: application,
+          context: application
         });
       },
     });
@@ -118,13 +140,6 @@ export default class extends BaseApplicationGenerator {
           await this.writeFiles({
             sections: {
               files: [
-                {
-                  condition: generator => !generator.embedded && generator.databaseTypeCassandra && !entity.skipClient,
-                  ...clientRootTemplatesBlock(),
-                  templates: [
-                    'package.json',
-                  ]
-                },
                 {
                   condition: generator => !generator.embedded && generator.databaseTypeCassandra && !entity.skipClient,
                   ...clientApplicationTemplatesBlock(),

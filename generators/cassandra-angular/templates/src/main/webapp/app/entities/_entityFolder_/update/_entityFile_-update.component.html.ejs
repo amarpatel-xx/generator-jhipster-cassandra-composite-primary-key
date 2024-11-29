@@ -87,10 +87,19 @@ _%>
                         </div>
         <%_ } _%>
         <%_ if (field.fieldTypeLocalDate || field.fieldTypeLocalDateSaathratri) { _%>
-                        <div class="input-group">
-                            <input id="field_<%= fieldName %>" data-cy="<%= fieldName %>" type="text" class="form-control" name="<%= fieldName %>" ngbDatepicker #<%= fieldName %>Dp="ngbDatepicker" formControlName="<%= fieldName %>"<% if (readonly) { %> [readonly]="true"<% } %>/>
-                            <button type="button" class="btn btn-secondary" (click)="<%= fieldName %>Dp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
-                        </div>
+        
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label jhiTranslate="blogApp.blogSaathratriEntity2.arrivalDate">Arrival Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="<%= fieldName %>Picker"
+                id="field_<%= fieldName %>"
+                data-cy="<%= fieldName %>"
+                formControlName="<%= fieldName %>"
+              />
+              <mat-datepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mat-datepicker-toggle>
+              <mat-datepicker #<%= fieldName %>Picker></mat-datepicker>
+            </mat-form-field>
         <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
                         <div class="d-flex">
                             <input id="field_<%= fieldName %>" data-cy="<%= fieldName %>" type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" formControlName="<%= fieldName %>" placeholder="YYYY-MM-DD HH:mm"<% if (readonly) { %> [readonly]="true"<% } %>/>

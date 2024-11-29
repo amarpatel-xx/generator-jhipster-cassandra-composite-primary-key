@@ -199,7 +199,6 @@ export const cassandraSpringBootUtils = {
         field.isClusteredKeySaathratri = false;
 
         if(this.isTimeUuidField(field)) {
-            field.fieldIsTimeUuidField = true;
             entity.primaryKeySaathratri.hasTimeUUID = true;
         }
 
@@ -218,9 +217,6 @@ export const cassandraSpringBootUtils = {
         } else if (field.fieldType === "Integer") {
             entity.primaryKeySaathratri.hasInteger = true;
         } else if(this.isTimeUuidField(field)) {
-            // This check should be berfore the field.fieldType === "UUID" check,
-            // because TimeUUID is a UUID.
-            field.fieldIsTimeUuidField = true;
             entity.primaryKeySaathratri.hasTimeUUID = true;        
         } else if (field.fieldType === "UUID") {
             entity.primaryKeySaathratri.hasUUID = true;
@@ -245,7 +241,6 @@ export const cassandraSpringBootUtils = {
     processEntityAttributes(entity, field) {
         if (entity?.anyFieldIsDateDerivedSaathratri !== true) {
             if (this.isDateField(field)) {
-                field.fieldTypeTemporal = true;
                 entity.anyFieldIsDateDerivedSaathratri = true;
             } else {
                 entity.anyFieldIsDateDerivedSaathratri = false;
@@ -254,7 +249,6 @@ export const cassandraSpringBootUtils = {
         
         if (entity?.anyFieldIsTimeDerivedSaathratri !== true) {
             if (this.isTimeField(field)) {
-                field.fieldTypeTemporal = true;
                 entity.anyFieldIsTimeDerivedSaathratri = true;
                 // Any field which is time derived is also date derived.
                 entity.anyFieldIsDateDerivedSaathratri = true;
@@ -265,12 +259,6 @@ export const cassandraSpringBootUtils = {
 
         if (entity?.anyFieldHasImageContentType !== true) {
             if(this.isBlobFieldContentType(field, 'image')) { 
-                field.fieldTypeBlobContent = 'image';
-                field.fieldTypeByteBuffer = true;
-                field.fieldWithContentType = true;
-                field.fieldTypeBinarySaathratri = true;
-                field.blobContentTypeTextSaathratri = false;
-                field.blobContentTypeImage = true;
                 entity.anyFieldHasImageContentType = true;
                 entity.anyFieldHasFileBasedContentType = true;
                 entity.anyFieldIsBlobDerived = true;
@@ -281,12 +269,6 @@ export const cassandraSpringBootUtils = {
 
         if (entity?.anyFieldHasTextContentType !== true) {
             if(this.isBlobFieldContentType(field, 'text')) {
-                field.fieldTypeBlobContent = 'text';
-                field.fieldTypeByteBuffer = true;
-                field.fieldWithContentType = true;
-                field.fieldTypeBinarySaathratri = true;
-                field.blobContentTypeTextSaathratri = true;
-                field.javaValueSample1 = `"${field.fieldName}1"`;
                 entity.anyFieldHasTextContentType = true;
                 entity.anyFieldIsBlobDerived = true;
             } else  {
@@ -322,16 +304,32 @@ export const cassandraSpringBootUtils = {
             field.fieldTypeSetSaathratri = true;
         }
 
-        if (this.isDateField(field.fieldType)) {
+        if (this.isDateField(field)) {
             field.fieldTypeLocalDateSaathratri = true;
             field.fieldContainsUtcSaathratri = true;
+            field.fieldTypeTemporal = true;
         } else if (this.isTimeField(field)) {
             field.fieldTypeTimedSaathratri = true;
             field.fieldContainsUtcSaathratri = true;
+            field.fieldTypeTemporal = true;
         } else if (this.isTimeUuidField(field)) {
-            field.fieldTypeTimeUuidSaathratri = true;
+            field.fieldTypeTemporal = true;
         } else if (field.fieldType === "BigDecimal") {
             field.fieldTypeBigDecimalSaathratri = true;
+        } else if(this.isBlobFieldContentType(field, 'image')) { 
+            field.fieldTypeBlobContent = 'image';
+            field.fieldTypeByteBuffer = true;
+            field.fieldWithContentType = true;
+            field.fieldTypeBinarySaathratri = true;
+            field.blobContentTypeTextSaathratri = false;
+            field.blobContentTypeImage = true;
+        } else if(this.isBlobFieldContentType(field, 'text')) {
+            field.fieldTypeBlobContent = 'text';
+            field.fieldTypeByteBuffer = true;
+            field.fieldWithContentType = true;
+            field.fieldTypeBinarySaathratri = true;
+            field.blobContentTypeTextSaathratri = true;
+            field.javaValueSample1 = `"${field.fieldName}1"`;
         }
 
         if (field.options?.customAnnotation[3]) {
