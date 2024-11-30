@@ -27,7 +27,7 @@ export function dayjsToDateLongForPipe(datetimestamp: dayjs.Dayjs | number | nul
   name: 'convertFromDayjsToDateLong',
   standalone: true,
 })
-export default class ConvertFromDayjsToDateLongPipe implements PipeTransform {
+export class ConvertFromDayjsToDateLongPipe implements PipeTransform {
   transform(source: dayjs.Dayjs | number | null): number | null {
     return source ? dayjsToDateLongForPipe(source) : null;
   }

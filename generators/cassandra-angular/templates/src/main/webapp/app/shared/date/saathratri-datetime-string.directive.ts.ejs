@@ -1,7 +1,8 @@
 import { Directive, ElementRef, Renderer2, Input, OnInit } from '@angular/core';
-import { datetimeStringToFormattedString } from './saathratri-local-dayjs-and-utc-unix.pipe';
+import { datetimeStringToFormattedString } from './saathratri-local-dayjs-and-utc-unix-utils';
 
 @Directive({
+  standalone: true,
   selector: '[jhiSaathratriDatetimeString]',
 })
 export class SaathratriDatetimeStringDirective implements OnInit {
