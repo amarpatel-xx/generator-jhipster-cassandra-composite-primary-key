@@ -31,12 +31,6 @@ import dayjs from 'dayjs/esm';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { dateLongToFormattedString, datetimeLongToFormattedString } from '../../../../shared/date/saathratri-local-dayjs-and-utc-unix-utils';
 <%_ } _%>
-<%_ if (anyFieldIsDateDerivedSaathratri) { _%>
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
-<%_ } _%>
 import { I<%= entityAngularName %> } from '../<%= entityFileName %>.model';
 import { <%= entityAngularName %>Service } from '../service/<%= entityFileName %>.service';
 <%_ if (anyFieldIsBlobDerived) { _%>
@@ -52,7 +46,7 @@ import { <%- importedType %> } from '<%- importedPath %>';
     standalone: true,
     selector: '<%= jhiPrefixDashed %>-<%= entityFileName %>-update',
     templateUrl: './<%= entityFileName %>-update.component.html',
-    imports: [SharedModule, FormsModule, ReactiveFormsModule],
+    imports: [ SharedModule, FormsModule, ReactiveFormsModule ],
 })
 export class <%= entityAngularName %>UpdateComponent implements OnInit {
     isSaving = false;

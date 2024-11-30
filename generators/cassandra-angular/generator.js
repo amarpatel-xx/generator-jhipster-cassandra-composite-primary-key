@@ -122,6 +122,7 @@ export default class extends BaseApplicationGenerator {
                 ...clientApplicationTemplatesBlock(),
                 templates: [
                   'app.config.ts',
+                  'shared/shared.module.ts',
                 ]
               },
             ],

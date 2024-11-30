@@ -49,6 +49,11 @@ import { AlertErrorComponent } from './alert/alert-error.component';
 <%_
   // Saathratri Modification
 _%>
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+
 import { ConvertFromDayjsToDateLongPipe } from './date/convert-from-dayjs-to-date-long.pipe';
 import { SaathratriDatetimeStringDirective } from './date/saathratri-datetime-string.directive';
 <%_
@@ -68,6 +73,10 @@ _%>
 <%_
   // Saathratri Modification
 _%>
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatNativeDateModule,
     ConvertFromDayjsToDateLongPipe,
     SaathratriDatetimeStringDirective,
 <%_
