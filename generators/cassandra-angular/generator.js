@@ -127,7 +127,6 @@ export default class extends BaseApplicationGenerator {
                   'shared/date/convert-from-dayjs-to-date-long.pipe.ts',
                   'shared/date/format-medium-datetime.pipe.ts',
                   'shared/date/index.ts',
-                  'shared/date/saathratri-datetime-string.directive.ts',
                   'shared/date/saathratri-local-dayjs-and-utc-unix-utils.ts'
                 ]
               },
@@ -186,18 +185,6 @@ export default class extends BaseApplicationGenerator {
                     'entities/_entityFolder_/delete/_entityFile_-delete-dialog.component.ts',
                     //'entities/_entityFolder_/delete/_entityFile_-delete-dialog.component.spec.ts',
                   ]
-                },
-                {
-                  condition: generator => !generator.readOnly && !generator.embedded && generator.databaseTypeCassandra && !entity.skipClient,
-                  ...clientApplicationTemplatesBlock(),
-                  templates: [
-                    'shared/date/index.ts',
-                    'shared/date/convert-from-date-long-to-dayjs.pipe.ts',
-                    'shared/date/convert-from-dayjs-to-date-long.pipe.ts',
-                    'shared/date/saathratri-datetime-string.directive.ts',
-                    'shared/date/saathratri-local-dayjs-and-utc-unix-utils.ts',
-                    'shared/date/format-medium-datetime.pipe.ts',
-                  ],
                 },
               ],
             },

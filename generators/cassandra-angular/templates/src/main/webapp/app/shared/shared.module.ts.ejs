@@ -55,7 +55,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 
 import { ConvertFromDayjsToDateLongPipe } from './date/convert-from-dayjs-to-date-long.pipe';
-import { SaathratriDatetimeStringDirective } from './date/saathratri-datetime-string.directive';
 <%_
   // End of Saathratri Modification
 _%>
@@ -73,9 +72,11 @@ _%>
 <%_
   // Saathratri Modification
 _%>
+    MatDatepickerModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatNativeDateModule,
     ConvertFromDayjsToDateLongPipe,
-    //SaathratriDatetimeStringDirective,
-    MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule
 <%_
   // End of Saathratri Modification
 _%>
@@ -94,9 +95,11 @@ _%>
 <%_
   // Saathratri Modification
 _%>
+    MatDatepickerModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatNativeDateModule,
     ConvertFromDayjsToDateLongPipe,
-    //SaathratriDatetimeStringDirective,
-    MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule
 <%_
   // End of Saathratri Modification
 _%>
