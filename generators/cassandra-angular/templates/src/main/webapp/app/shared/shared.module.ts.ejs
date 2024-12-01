@@ -52,8 +52,9 @@ _%>
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
 
+import { DayjsDateAdapter } from './date/dayjs-date-adapter';
 import { ConvertFromDayjsToDateLongPipe } from './date/convert-from-dayjs-to-date-long.pipe';
 <%_
   // End of Saathratri Modification
@@ -103,6 +104,21 @@ _%>
 <%_
   // End of Saathratri Modification
 _%>
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: DayjsDateAdapter },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: { dateInput: 'MM/DD/YYYY' },
+        display: {
+          dateInput: 'MM/DD/YYYY',
+          monthYearLabel: 'MMMM YYYY',
+          dateA11yLabel: 'MM/DD/YYYY',
+          monthYearA11yLabel: 'MMMM YYYY',
+        },
+      },
+    },
   ],
 })
 export default class SharedModule {}

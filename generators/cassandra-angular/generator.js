@@ -127,7 +127,8 @@ export default class extends BaseApplicationGenerator {
                   'shared/date/convert-from-dayjs-to-date-long.pipe.ts',
                   'shared/date/format-medium-datetime.pipe.ts',
                   'shared/date/index.ts',
-                  'shared/date/saathratri-local-dayjs-and-utc-unix-utils.ts'
+                  'shared/date/saathratri-local-dayjs-and-utc-unix-utils.ts',
+                  'shared/date/dayjs-date-adapter.ts',
                 ]
               },
             ],

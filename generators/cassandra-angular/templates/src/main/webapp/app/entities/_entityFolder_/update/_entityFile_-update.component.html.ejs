@@ -48,7 +48,9 @@
 _%>
 
                 <div class="mb-3">
+                    <%_ if(!field.fieldTypeLocalDate && !field.fieldTypeLocalDateSaathratri) { _%>
                     <label class="form-label" for="field_<%= fieldName %>"<% if (field.documentation) { if (enableTranslation) { %> [ngbTooltip]="'<%= i18nKeyPrefix %>.help.<%= fieldName %>' | translate"<% } else { %> ngbTooltip="<%= field.documentation %>"<% } } %>>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</label>
+                    <%_ } _%>
   <%_ if (field.fieldIsEnum) { _%>
                     <select class="form-control" name="<%= fieldName %>" formControlName="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>">
     <%_ const enumPrefix = frontendAppName + '.'+ fieldType; _%>
@@ -89,7 +91,8 @@ _%>
         <%_ if (field.fieldTypeLocalDate || field.fieldTypeLocalDateSaathratri) { _%>
         
             <mat-form-field appearance="fill" class="full-width">
-              <mat-label jhiTranslate="blogApp.blogSaathratriEntity2.arrivalDate">Arrival Date</mat-label>
+              <mat-label>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</mat-label>
+              <br>
               <input
                 matInput
                 [matDatepicker]="<%= fieldName %>Picker"
@@ -100,6 +103,7 @@ _%>
               <mat-datepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mat-datepicker-toggle>
               <mat-datepicker #<%= fieldName %>Picker></mat-datepicker>
             </mat-form-field>
+
         <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
                         <div class="d-flex">
                             <input id="field_<%= fieldName %>" data-cy="<%= fieldName %>" type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" formControlName="<%= fieldName %>" placeholder="YYYY-MM-DD HH:mm"<% if (readonly) { %> [readonly]="true"<% } %>/>
