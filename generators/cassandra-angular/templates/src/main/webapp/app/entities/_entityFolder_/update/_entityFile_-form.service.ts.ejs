@@ -277,7 +277,7 @@ _%>
 <%_ if(primaryKeySaathratri.composite) { _%>
   <%= primaryKeySaathratri.name %>: {
 <%_ for (const field of primaryKeySaathratri.ids) { _%>
-      <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %>, disabled: !<%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %> },
+      <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %>, disabled: true },
 <%_ } _%>
   },
 <%_ } else { _%>
