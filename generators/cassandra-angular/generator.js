@@ -129,6 +129,7 @@ export default class extends BaseApplicationGenerator {
                   'shared/date/index.ts',
                   'shared/date/saathratri-local-dayjs-and-utc-unix-utils.ts',
                   'shared/date/dayjs-date-adapter.ts',
+                  'shared/date/dayjs-datetime-adapter.ts',
                 ]
               },
             ],

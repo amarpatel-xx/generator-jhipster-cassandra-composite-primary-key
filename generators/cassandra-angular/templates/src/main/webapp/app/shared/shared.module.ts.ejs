@@ -53,8 +53,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
+import { MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
+import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
+import { MtxMomentDatetimeModule, provideMomentDatetimeAdapter } from '@ng-matero/extensions-moment-adapter';
 
 import { DayjsDateAdapter } from './date/dayjs-date-adapter';
+import { DayjsDatetimeAdapter } from './date/dayjs-datetime-adapter'; // Adjust the path to match your project structure
+
 import { ConvertFromDayjsToDateLongPipe } from './date/convert-from-dayjs-to-date-long.pipe';
 <%_
   // End of Saathratri Modification
@@ -77,6 +82,8 @@ _%>
     MatFormFieldModule, 
     MatInputModule, 
     MatNativeDateModule,
+    MtxDatetimepickerModule,
+    MtxMomentDatetimeModule,
     ConvertFromDayjsToDateLongPipe,
 <%_
   // End of Saathratri Modification
@@ -100,6 +107,8 @@ _%>
     MatFormFieldModule, 
     MatInputModule, 
     MatNativeDateModule,
+    MtxDatetimepickerModule,
+    MtxMomentDatetimeModule,
     ConvertFromDayjsToDateLongPipe,
 <%_
   // End of Saathratri Modification
@@ -107,6 +116,7 @@ _%>
   ],
   providers: [
     { provide: DateAdapter, useClass: DayjsDateAdapter },
+    provideMomentDatetimeAdapter(),
     {
       provide: MAT_DATE_FORMATS,
       useValue: {
@@ -116,6 +126,29 @@ _%>
           monthYearLabel: 'MMMM YYYY',
           dateA11yLabel: 'MM/DD/YYYY',
           monthYearA11yLabel: 'MMMM YYYY',
+        },
+      },
+    },
+    {
+      provide: MTX_DATETIME_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: 'YYYY-MM-DD',
+          monthInput: 'MMMM',
+          yearInput: 'YYYY',
+          timeInput: 'HH:mm',
+          datetimeInput: 'YYYY-MM-DD HH:mm',
+        },
+        display: {
+          dateInput: 'YYYY-MM-DD',
+          monthInput: 'MMMM',
+          yearInput: 'YYYY',
+          timeInput: 'HH:mm',
+          datetimeInput: 'YYYY-MM-DD HH:mm',
+          monthYearLabel: 'YYYY MMMM',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
+          popupHeaderDateLabel: 'MMM DD, ddd',
         },
       },
     },

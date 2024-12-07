@@ -48,7 +48,7 @@
 _%>
 
                 <div class="mb-3">
-                    <%_ if(!field.fieldTypeLocalDate && !field.fieldTypeLocalDateSaathratri) { _%>
+                    <%_ if(!field.fieldTypeLocalDate && !field.fieldTypeLocalDateSaathratri && !field.fieldTypeTimed && !field.fieldTypeTimedSaathratri) { _%>
                     <label class="form-label" for="field_<%= fieldName %>"<% if (field.documentation) { if (enableTranslation) { %> [ngbTooltip]="'<%= i18nKeyPrefix %>.help.<%= fieldName %>' | translate"<% } else { %> ngbTooltip="<%= field.documentation %>"<% } } %>>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</label>
                     <%_ } _%>
   <%_ if (field.fieldIsEnum) { _%>
@@ -90,24 +90,37 @@ _%>
         <%_ } _%>
         <%_ if (field.fieldTypeLocalDate || field.fieldTypeLocalDateSaathratri) { _%>
         
-            <mat-form-field appearance="fill" class="full-width">
-              <mat-label>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</mat-label>
-              <br>
-              <input
-                matInput
-                [matDatepicker]="<%= fieldName %>Picker"
-                id="field_<%= fieldName %>"
-                data-cy="<%= fieldName %>"
-                formControlName="<%= fieldName %>"
-              />
-              <mat-datepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mat-datepicker-toggle>
-              <mat-datepicker #<%= fieldName %>Picker></mat-datepicker>
-            </mat-form-field>
+                        <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</mat-label>
+                        <br>
+                        <input
+                            matInput
+                            [matDatepicker]="<%= fieldName %>Picker"
+                            id="field_<%= fieldName %>"
+                            data-cy="<%= fieldName %>"
+                            formControlName="<%= fieldName %>"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mat-datepicker-toggle>
+                        <mat-datepicker #<%= fieldName %>Picker></mat-datepicker>
+                        </mat-form-field>
 
         <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-                        <div class="d-flex">
-                            <input id="field_<%= fieldName %>" data-cy="<%= fieldName %>" type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" formControlName="<%= fieldName %>" placeholder="YYYY-MM-DD HH:mm"<% if (readonly) { %> [readonly]="true"<% } %>/>
-                        </div>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</mat-label>
+                            <br>
+                            <input 
+                                matInput 
+                                [mtxDatetimepicker]="<%= fieldName %>Picker" 
+                                id="field_<%= fieldName %>"
+                                data-cy="<%= fieldName %>"
+                                formControlName="<%= fieldName %>"
+                                placeholder="YYYY-MM-DD HH:mm"
+                            />
+                            <mtx-datetimepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mtx-datetimepicker-toggle>
+                            <mtx-datetimepicker #<%= fieldName %>Picker></mtx-datetimepicker>
+                          </mat-form-field>
+                          
         <%_ } else if (field.blobContentTypeText) { _%>
                         <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                                 formControlName="<%= fieldName %>"<% if (readonly) { %> [readonly]="true"<% } %>></textarea>
@@ -193,8 +206,10 @@ _%>
 _%>
 
                 <div class="mb-3">
+                    <%_ if(!field.fieldTypeLocalDate && !field.fieldTypeLocalDateSaathratri && !field.fieldTypeTimed && !field.fieldTypeTimedSaathratri) { _%>
                     <label class="form-label" for="field_<%= fieldName %>"<% if (field.documentation) { if (enableTranslation) { %> [ngbTooltip]="'<%= i18nKeyPrefix %>.help.<%= fieldName %>' | translate"<% } else { %> ngbTooltip="<%= field.documentation %>"<% } } %>>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</label>
-  <%_ if (field.fieldIsEnum) { _%>
+                    <%_ } _%>
+                    <%_ if (field.fieldIsEnum) { _%>
                     <select class="form-control" name="<%= fieldName %>" formControlName="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>">
     <%_ const enumPrefix = frontendAppName + '.'+ fieldType; _%>
                         <option [ngValue]="null"><% if (enableTranslation) { %>{{ '<%= enumPrefix %>.null' | translate }}<% } %></option>
@@ -232,14 +247,34 @@ _%>
                     </div>
     <%_ } _%>
       <%_ if (field.fieldTypeLocalDate || field.fieldTypeLocalDateSaathratri) { _%>
-                    <div class="input-group">
-                        <input id="field_<%= fieldName %>" data-cy="<%= fieldName %>" type="text" class="form-control" name="<%= fieldName %>" ngbDatepicker #<%= fieldName %>Dp="ngbDatepicker" formControlName="<%= fieldName %>"<% if (readonly) { %> [readonly]="true"<% } %>/>
-                        <button type="button" class="btn btn-secondary" (click)="<%= fieldName %>Dp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
-                    </div>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</mat-label>
+                        <br>
+                        <input
+                        matInput
+                        [matDatepicker]="<%= fieldName %>Picker"
+                        id="field_<%= fieldName %>"
+                        data-cy="<%= fieldName %>"
+                        formControlName="<%= fieldName %>"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mat-datepicker-toggle>
+                        <mat-datepicker #<%= fieldName %>Picker></mat-datepicker>
+                    </mat-form-field>
       <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-                    <div class="d-flex">
-                        <input id="field_<%= fieldName %>" data-cy="<%= fieldName %>" type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" formControlName="<%= fieldName %>" placeholder="YYYY-MM-DD HH:mm"<% if (readonly) { %> [readonly]="true"<% } %>/>
-                    </div>
+                    <mat-form-field appearance="fill">
+                        <mat-label>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</mat-label>
+                        <br>
+                        <input 
+                            matInput 
+                            [mtxDatetimepicker]="<%= fieldName %>Picker" 
+                            id="field_<%= fieldName %>"
+                            data-cy="<%= fieldName %>"
+                            formControlName="<%= fieldName %>"
+                            placeholder="YYYY-MM-DD HH:mm"
+                        />
+                        <mtx-datetimepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mtx-datetimepicker-toggle>
+                        <mtx-datetimepicker #<%= fieldName %>Picker></mtx-datetimepicker>
+                    </mat-form-field>
     <%_ } else if (field.blobContentTypeText) { _%>
                     <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                               formControlName="<%= fieldName %>"<% if (readonly) { %> [readonly]="true"<% } %>></textarea>
