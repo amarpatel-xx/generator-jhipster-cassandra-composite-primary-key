@@ -122,7 +122,7 @@ export default class extends BaseApplicationGenerator {
                 ...clientApplicationTemplatesBlock(),
                 templates: [
                   'app.config.ts',
-                  'shared/shared.module.ts',
+                  'shared/material.module.ts',
                   'shared/date/convert-from-date-long-to-dayjs.pipe.ts',
                   'shared/date/convert-from-dayjs-to-date-long.pipe.ts',
                   'shared/date/format-medium-datetime.pipe.ts',
@@ -130,6 +130,10 @@ export default class extends BaseApplicationGenerator {
                   'shared/date/saathratri-local-dayjs-and-utc-unix-utils.ts',
                   'shared/date/dayjs-date-adapter.ts',
                   'shared/date/dayjs-datetime-adapter.ts',
+                  'components/date-time/date-time.component.css',
+                  'components/date-time/date-time.component.html',
+                  'components/date-time/date-time.component.spec.ts',
+                  'components/date-time/date-time.component.ts'
                 ]
               },
             ],
