@@ -3,16 +3,18 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
 
 import { DayjsDateAdapter } from './date/dayjs-date-adapter';
 import { ConvertFromDayjsToDateLongPipe } from './date/convert-from-dayjs-to-date-long.pipe';
 
 // Import the standalone DateTimeComponent
-import { DateTimeComponent } from './components/date-time/date-time.component';
+import { DateTimeComponent } from '../components/date-time/date-time.component';
 
 @NgModule({
   imports: [
@@ -25,7 +27,6 @@ import { DateTimeComponent } from './components/date-time/date-time.component';
     MatToolbarModule,
     MatSelectModule,
     ConvertFromDayjsToDateLongPipe,
-    DateTimeComponent,
   ],
   exports: [
     CommonModule,
@@ -37,11 +38,9 @@ import { DateTimeComponent } from './components/date-time/date-time.component';
     MatToolbarModule,
     MatSelectModule,
     ConvertFromDayjsToDateLongPipe,
-    DateTimeComponent,
   ],
   providers: [
     { provide: DateAdapter, useClass: DayjsDateAdapter },
-    provideMomentDatetimeAdapter(),
     {
       provide: MAT_DATE_FORMATS,
       useValue: {
