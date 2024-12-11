@@ -32,6 +32,10 @@ import dayjs from 'dayjs/esm';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { dateLongToFormattedString, datetimeLongToFormattedString } from '../../../../shared/date/saathratri-local-dayjs-and-utc-unix-utils';
 <%_ } _%>
+<%_ if (anyFieldIsTimeDerived || anyFieldIsTimeDerivedSaathratri) { _%>
+import { DateTimeComponent } from 'app/components/date-time/date-time.component';
+<%_ } _%>
+
 import { I<%= entityAngularName %> } from '../<%= entityFileName %>.model';
 import { <%= entityAngularName %>Service } from '../service/<%= entityFileName %>.service';
 <%_ if (anyFieldIsBlobDerived) { _%>
@@ -47,7 +51,7 @@ import { <%- importedType %> } from '<%- importedPath %>';
     standalone: true,
     selector: '<%= jhiPrefixDashed %>-<%= entityFileName %>-update',
     templateUrl: './<%= entityFileName %>-update.component.html',
-    imports: [ SharedModule, FormsModule, ReactiveFormsModule, MaterialModule ],
+    imports: [ SharedModule, FormsModule, ReactiveFormsModule, MaterialModule <%_ if (anyFieldIsTimeDerived || anyFieldIsTimeDerivedSaathratri) { _%>, DateTimeComponent<%_ } _%> ],
 })
 export class <%= entityAngularName %>UpdateComponent implements OnInit {
     isSaving = false;
