@@ -1,19 +1,36 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output, forwardRef, Input } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-date-time',
   standalone: true,
   imports: [ReactiveFormsModule, MaterialModule],
   templateUrl: './date-time.component.html',
   styleUrls: ['./date-time.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DateTimeComponent),
+      multi: true
+    }
+  ]
 })
-export class DateTimeComponent implements OnInit {
+export class DateTimeComponent implements OnInit, ControlValueAccessor {
   editForm: FormGroup;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onChange: any = () => { };
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onTouched: any = () => { };
+  
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  disabled = false;
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   @Output() timestampChange = new EventEmitter<number>(); // Emit the UTC timestamp
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   constructor() {
     const now = new Date();
 
@@ -29,18 +46,10 @@ export class DateTimeComponent implements OnInit {
 
   ngOnInit(): void {
     // Listen to changes on relevant fields and reset seconds and milliseconds
-    this.editForm.get('date')?.valueChanges.subscribe(() => this.resetTime());
-    this.editForm.get('hours')?.valueChanges.subscribe(() => this.resetTime());
-    this.editForm.get('minutes')?.valueChanges.subscribe(() => this.resetTime());
-    this.editForm.get('amPm')?.valueChanges.subscribe(() => this.resetTime());
-  }
-
-  resetTime(): void {
-    this.editForm.patchValue({
-      seconds: 0,
-      milliseconds: 0,
+    this.editForm.valueChanges.subscribe(() => {
+      this.updateTimestamp();
+      this.onTouched(); 
     });
-    this.updateTimestamp();
   }
 
   updateTimestamp(): void {
@@ -48,6 +57,7 @@ export class DateTimeComponent implements OnInit {
 
     let adjustedHours = hours;
     if (amPm === 'PM' && hours !== 12) {
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       adjustedHours += 12;
     } else if (amPm === 'AM' && hours === 12) {
       adjustedHours = 0;
@@ -60,6 +70,34 @@ export class DateTimeComponent implements OnInit {
     combinedDateTime.setMilliseconds(milliseconds);
 
     const timestamp = combinedDateTime.getTime();
+    this.onChange(timestamp); // Notify Angular forms of the change
     this.timestampChange.emit(timestamp);
+  }
+
+  // ControlValueAccessor implementation
+  writeValue(value: number): void {
+    if (value) {
+      const newDate = new Date(value);
+      this.editForm.setValue({
+        date: newDate,
+        hours: newDate.getHours() % 12 || 12,
+        minutes: newDate.getMinutes(),
+        amPm: newDate.getHours() >= 12 ? 'PM' : 'AM',
+        seconds: newDate.getSeconds(),
+        milliseconds: newDate.getMilliseconds()
+      });
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }

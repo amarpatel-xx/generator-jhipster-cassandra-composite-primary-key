@@ -107,7 +107,7 @@ _%>
         <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
 
                         <app-date-time
-                            formControlName="addedDateTime"
+                            formControlName="<%= fieldName %>"
                         ></app-date-time>
                           
         <%_ } else if (field.blobContentTypeText) { _%>
@@ -251,7 +251,7 @@ _%>
                     </mat-form-field>
       <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
                     <app-date-time
-                        formControlName="addedDateTime"
+                        formControlName="<%= fieldName %>"
                     ></app-date-time>
     <%_ } else if (field.blobContentTypeText) { _%>
                     <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"

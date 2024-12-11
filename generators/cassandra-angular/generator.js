@@ -110,6 +110,7 @@ export default class extends BaseApplicationGenerator {
                 ...clientRootTemplatesBlock(),
                 templates: [
                   'package.json',
+                  'webpack/webpack.microfrontend.js',
                 ]
               },
               {
@@ -129,7 +130,6 @@ export default class extends BaseApplicationGenerator {
                   'shared/date/index.ts',
                   'shared/date/saathratri-local-dayjs-and-utc-unix-utils.ts',
                   'shared/date/dayjs-date-adapter.ts',
-                  'shared/date/dayjs-datetime-adapter.ts',
                   'components/date-time/date-time.component.css',
                   'components/date-time/date-time.component.html',
                   'components/date-time/date-time.component.spec.ts',
