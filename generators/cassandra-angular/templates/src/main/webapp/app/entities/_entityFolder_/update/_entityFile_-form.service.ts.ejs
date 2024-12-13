@@ -290,10 +290,6 @@ _%>
 <%_ if (containDefaultProperties) { _%>
 
   private getFormDefaults(): <%= entityAngularName %>FormDefaults {
-  <%_ if (fields.some(field => field.fieldTypeTimed || field.fieldTypeTimedSaathratri)) { _%>
-      const currentTime = dayjs();
-  <%_ } _%>
-
     return {
   <%_ if(primaryKeySaathratri.composite) { _%>
   <%= primaryKeySaathratri.name %>: {  
@@ -302,8 +298,6 @@ _%>
   _%>
     <%_ if (fieldTypeBoolean) { _%>
       <%= fieldName %>: false,
-    <%_ } else if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-      <%= fieldName %>: currentTime,
     <%_ } else { _%>
         <%= fieldName %>: null,
     <%_ } _%>
@@ -312,10 +306,8 @@ _%>
 <%_ for (field of fields.filter( field => !field.isCompositePrimaryKeyField )) {
     const { fieldName, fieldTypeBoolean, fieldTypeTimed, fieldTypeLocalDate } = field;
 _%>
-<%_ if (fieldTypeBoolean) { _%>
+      <%_ if (fieldTypeBoolean) { _%>
         <%= fieldName %>: false,
-<%_ } else if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-        <%= fieldName %>: currentTime,
       <%_ } _%>
     <%_ } _%>
   <%_ } else { _%>
@@ -326,8 +318,6 @@ _%>
       <%= fieldName %>: '',
     <%_ } else if (fieldTypeBoolean) { _%>
       <%= fieldName %>: false,
-    <%_ } else if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-      <%= fieldName %>: currentTime,
   <%_ } _%>
     <%_ } _%>
   <%_ } _%>
