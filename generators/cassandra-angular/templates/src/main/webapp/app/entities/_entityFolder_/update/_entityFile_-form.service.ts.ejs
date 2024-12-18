@@ -279,15 +279,15 @@ _%>
 <%_ for (const field of primaryKeySaathratri.ids) { _%>
       <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= primaryKeySaathratri.name %>.<%= field.fieldName %>, disabled: true },
 <%_ } _%>
+  },
 <%_ for (field of fields.filter( field => !field.isCompositePrimaryKeyField )) {
       if(field.fieldTypeTimedSaathratri) {
 _%>
-      <%= fieldName %>: <%= entityInstance %>RawValue.<%= fieldName %>,
+      <%= field.fieldName %>: <%= entityInstance %>RawValue.<%= field.fieldName %>,
 <%_ 
       }
     } 
 _%>
-  },
 <%_ } else { _%>
 <%_ for (const field of fields.filter(field => field.id)) { _%>
       <%= field.fieldName %>: { value: <%= entityInstance %>RawValue.<%= field.fieldName %>, disabled: <% if (field.autoGenerate) { %>true<% } else { %>!<%= entityInstance %>RawValue.<%= field.fieldName %><% } %> },
