@@ -37,8 +37,8 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
       hours: new FormControl(),
       minutes: new FormControl(),
       amPm: new FormControl(),
-      seconds: new FormControl(),
-      milliseconds: new FormControl(),
+      seconds: new FormControl(0),
+      milliseconds: new FormControl(0),
     });
   }
 
@@ -51,7 +51,7 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
   }
 
   updateTimestamp(): void {
-    const { date, hours, minutes, amPm, seconds, milliseconds } = this.editForm.value;
+    const { date, hours, minutes, amPm } = this.editForm.value;
 
     let adjustedHours = hours;
     if (amPm === 'PM' && hours !== 12) {
@@ -64,8 +64,8 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
     const combinedDateTime = new Date(date);
     combinedDateTime.setHours(adjustedHours);
     combinedDateTime.setMinutes(minutes);
-    combinedDateTime.setSeconds(seconds);
-    combinedDateTime.setMilliseconds(milliseconds);
+    combinedDateTime.setSeconds(0);
+    combinedDateTime.setMilliseconds(0);
 
     const timestamp = combinedDateTime.getTime();
     this.onChange(timestamp); // Notify Angular forms of the change
