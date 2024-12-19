@@ -32,15 +32,13 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   constructor() {
-    const now = new Date();
-
     this.editForm = new FormGroup({
-      date: new FormControl(new Date(now.getFullYear(), now.getMonth(), now.getDate())),
-      hours: new FormControl(now.getHours() % 12 || 12), // Convert to 12-hour format
-      minutes: new FormControl(now.getMinutes()),
-      amPm: new FormControl(now.getHours() >= 12 ? 'PM' : 'AM'),
-      seconds: new FormControl(now.getSeconds()), // Hidden default value
-      milliseconds: new FormControl(now.getMilliseconds()), // Hidden default value
+      date: new FormControl(),
+      hours: new FormControl(),
+      minutes: new FormControl(),
+      amPm: new FormControl(),
+      seconds: new FormControl(),
+      milliseconds: new FormControl(),
     });
   }
 
