@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, forwardRef } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
 
@@ -19,6 +19,7 @@ import { MaterialModule } from '../../shared/material.module';
 })
 export class DateTimeComponent implements OnInit, ControlValueAccessor {
   editForm: FormGroup;
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange: any = () => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -26,6 +27,9 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   disabled = false;
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  @Input() dateTimeLabel = 'Date-Time Label'; // Input property for the label
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @Output() timestampChange = new EventEmitter<number>(); // Emit the UTC timestamp
@@ -105,5 +109,9 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
     } else {
       this.editForm.enable(); // Enable all controls
     }
+  }
+
+  updateLabel(newLabel: string): void {
+    this.dateTimeLabel = newLabel;
   }
 }
