@@ -1,6 +1,6 @@
 <div class="date-time-wrapper">
     <!-- Dynamic Label -->
-    <div class="date-time-label">
+    <div class="date-time-label" [ngClass]="labelClass">
       <h3>{{ dateTimeLabel }}</h3>
     </div>
 
@@ -43,6 +43,7 @@
         
             <!-- AM/PM Selector -->
             <mat-form-field appearance="outline" class="wide-box">
+                <mat-label>AM/PM</mat-label>
                 <mat-select formControlName="amPm">
                 <mat-option value="AM">AM</mat-option>
                 <mat-option value="PM">PM</mat-option>

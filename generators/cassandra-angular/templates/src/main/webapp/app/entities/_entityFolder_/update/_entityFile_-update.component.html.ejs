@@ -109,6 +109,7 @@ _%>
                         <app-date-time
                             formControlName="<%= fieldName %>"
                             [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
+                            [labelClass]="'form-label'"
                         ></app-date-time>
                           
         <%_ } else if (field.blobContentTypeText) { _%>
@@ -254,6 +255,7 @@ _%>
                     <app-date-time
                         formControlName="<%= fieldName %>"
                         [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
+                        [labelClass]="'form-label'"
                     ></app-date-time>
     <%_ } else if (field.blobContentTypeText) { _%>
                     <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
