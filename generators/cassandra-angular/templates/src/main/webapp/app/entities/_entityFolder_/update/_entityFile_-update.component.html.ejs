@@ -110,6 +110,7 @@ _%>
                             formControlName="<%= fieldName %>"
                             [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
                             [labelClass]="'form-label'"
+                            (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
                         ></app-date-time>
         <%_ } else if (field.blobContentTypeText) { _%>
                         <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
@@ -255,6 +256,7 @@ _%>
                         formControlName="<%= fieldName %>"
                         [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
                         [labelClass]="'form-label'"
+                        (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
                     ></app-date-time>
     <%_ } else if (field.blobContentTypeText) { _%>
                     <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
@@ -326,7 +328,7 @@ _%>
                     <fa-icon icon="ban"></fa-icon>&nbsp;<span>__jhiTranslateTag__('entity.action.cancel')</span>
                 </button>
 
-                <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" [disabled]="editForm.invalid || isSaving<%_ if( anyFieldIsTimeDerivedSaathratri ) { _%> || !isDateTimeValid <%_ } _%>" class="btn btn-primary">
                     <fa-icon icon="save"></fa-icon>&nbsp;<span>__jhiTranslateTag__('entity.action.save')</span>
                 </button>
             </div>

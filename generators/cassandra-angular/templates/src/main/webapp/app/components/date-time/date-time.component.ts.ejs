@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, forwardRef } from '@angular/core';
-import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../shared/material.module';
 
@@ -38,15 +38,21 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
   @Output() timestampChange = new EventEmitter<number>(); // Emit the UTC timestamp
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
+  @Output() isValid = new EventEmitter<boolean>();
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   constructor() {
-    this.editForm = new FormGroup({
-      date: new FormControl(null, Validators.required),
-      hours: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(12)]),
-      minutes: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(59)]),
-      amPm: new FormControl(null, Validators.required),
-      seconds: new FormControl(0),
-      milliseconds: new FormControl(0),
-    });
+    this.editForm = new FormGroup(
+      {
+        date: new FormControl(null, Validators.required),
+        hours: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(12)]),
+        minutes: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(59)]),
+        amPm: new FormControl(null, Validators.required),
+        seconds: new FormControl(0),
+        milliseconds: new FormControl(0),
+      },
+      { validators: this.dateTimeValidator }, // Attach the custom validator
+    );
   }
 
   ngOnInit(): void {
@@ -54,23 +60,23 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
     this.editForm.valueChanges.subscribe(() => {
       this.updateTimestamp();
       this.onTouched();
+      this.isValid.emit(this.editForm.valid); // Emit the valid property directly
     });
   }
 
   updateTimestamp(): void {
     const { date, hours, minutes, amPm } = this.editForm.value;
 
-    let adjustedHours = hours;
-    if (amPm === 'PM' && hours !== 12) {
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+    let adjustedHours = parseInt(hours, 10);
+    if (amPm === 'PM' && adjustedHours !== 12) {
       adjustedHours += 12;
-    } else if (amPm === 'AM' && hours === 12) {
+    } else if (amPm === 'AM' && adjustedHours === 12) {
       adjustedHours = 0;
     }
 
     const combinedDateTime = new Date(date);
     combinedDateTime.setHours(adjustedHours);
-    combinedDateTime.setMinutes(minutes);
+    combinedDateTime.setMinutes(parseInt(minutes, 10));
     combinedDateTime.setSeconds(0);
     combinedDateTime.setMilliseconds(0);
 
@@ -86,8 +92,8 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
       this.editForm.setValue(
         {
           date: newDate,
-          hours: newDate.getHours() % 12 || 12,
-          minutes: newDate.getMinutes(),
+          hours: this.padZero(newDate.getHours() % 12 || 12), // Format hours as 2 digits
+          minutes: this.padZero(newDate.getMinutes()), // Format minutes as 2 digits
           amPm: newDate.getHours() >= 12 ? 'PM' : 'AM',
           seconds: newDate.getSeconds(),
           milliseconds: newDate.getMilliseconds(),
@@ -121,4 +127,28 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
   setLabelClass(newClass: string): void {
     this.labelClass = newClass;
   }
+
+  private padZero(value: number): string {
+    return value < 10 ? `0${value}` : `${value}`;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  onInput(event: Event, field: string): void {
+    const input = event.target as HTMLInputElement;
+    const paddedValue = this.padZero(parseInt(input.value, 10));
+    this.editForm.get(field)?.setValue(paddedValue, { emitEvent: true });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  dateTimeValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
+    const date = formGroup.get('date')?.value;
+    const hours = formGroup.get('hours')?.value;
+    const minutes = formGroup.get('minutes')?.value;
+    const amPm = formGroup.get('amPm')?.value;
+  
+    if (!date || !hours || !minutes || !amPm) {
+      return { dateTimeInvalid: true }; // Return an error object
+    }
+    return null; // Return null if valid
+  };
 }

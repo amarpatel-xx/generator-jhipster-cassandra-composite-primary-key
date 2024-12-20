@@ -57,11 +57,13 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
     isSaving = false;
     // Saathratri:
     isNew = false;
+    <%_ if(anyFieldIsTimeDerivedSaathratri) { _%>
+        isDateTimeValid: Record<string, boolean> = {};
+    <%_ } _%>
     <%= entityInstance %>: I<%= entityAngularName %> | null = null;
 <%_ enumImports.forEach( (importedPath, importedType) => { _%>
     <%- this._.lowerFirst(importedType) %>Values = Object.keys(<%- importedType %>);
 <%_ }); _%>
-
 
 <%_ if (anyFieldIsBlobDerived) { _%>
     protected dataUtils = inject(DataUtils);
@@ -181,6 +183,17 @@ _%>
             <%_ } _%>
 <%_ } _%>
     }
+
+    <%_ if(anyFieldIsTimeDerivedSaathratri) { _%>
+        onDateTimeValid(controlName: string, isValid: boolean): void {
+            this.isDateTimeValid[controlName] = isValid;
+        }
+        
+        get areAllDateTimeFieldsValid(): boolean {
+            // Check if all date-time fields are valid
+            return Object.values(this.isDateTimeValid).every(valid => valid);
+        }             
+    <%_ } _%>
 
     protected subscribeToSaveResponse(result: Observable<HttpResponse<I<%= entityAngularName %>>>): void {
         result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
