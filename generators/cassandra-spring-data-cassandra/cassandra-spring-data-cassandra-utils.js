@@ -85,7 +85,7 @@ export const springDataCassandraSaathratriUtils = {
                     entityInstance));
             }
 
-            if(isClusteredKeySaathratri && (fieldType === 'Long')) {  
+            if(isClusteredKeySaathratri && (fieldType === 'Long' || fieldTypeTimeUuidSaathratri)) {  
                 if(fileType === 'Service') {
                     // Get Signature
                     methodsCode.push(this.getPrimaryKeyMethodSignature(entityClass, 'findAllBy', methodNameString, 'LessThan', methodParametersDeclarationsString) + ';\n');
