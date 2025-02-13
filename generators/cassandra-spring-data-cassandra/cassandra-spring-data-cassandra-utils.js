@@ -35,8 +35,8 @@ export const springDataCassandraSaathratriUtils = {
         // Iterate over each primary key ID with an index
         // We break out of the loop when we reach the second last index, because we do not
         // want to add a find method with all the composite primary key fields.
-        for (index = 0; index < totalIds - 1; index++) {
-            const { fieldName, fieldType, fieldNameHumanized, fieldNameUnderscored, isClusteredKeySaathratri } = primaryKey.ids[index];
+        for (index = 0; index <= totalIds - 1; index++) {
+            const { fieldName, fieldType, fieldNameHumanized, fieldNameUnderscored, isClusteredKeySaathratri, fieldTypeTimeUuidSaathratri } = primaryKey.ids[index];
 
             if(methodNameString != "") {
                 methodNameString += "And" + primaryKey.nameCapitalized + _.upperFirst(fieldName);
@@ -85,7 +85,7 @@ export const springDataCassandraSaathratriUtils = {
                     entityInstance));
             }
 
-            if(isClusteredKeySaathratri && fieldType === 'Long') {  
+            if(isClusteredKeySaathratri && (fieldType === 'Long')) {  
                 if(fileType === 'Service') {
                     // Get Signature
                     methodsCode.push(this.getPrimaryKeyMethodSignature(entityClass, 'findAllBy', methodNameString, 'LessThan', methodParametersDeclarationsString) + ';\n');

@@ -85,10 +85,18 @@ export const cassandraSpringBootUtils = {
     
     getCompositePrimaryKeyNullCheck(entityInstanceName, primaryKey, dtoMapstruct) {
         if (dtoMapstruct) {
-        return primaryKey.ids.map(pk => `${entityInstanceName}DTO.get${_.upperFirst(primaryKey.name)}().get${_.upperFirst(pk.fieldName)}() == null`).join(' || \n');
+            return primaryKey.ids.map(pk => `${entityInstanceName}DTO.get${_.upperFirst(primaryKey.name)}().get${_.upperFirst(pk.fieldName)}() == null`).join(' || \n');
         } else {
-        return primaryKey.ids.map(pk => `${entityInstanceName}.get${_.upperFirst(primaryKey.name)}().get${_.upperFirst(pk.fieldName)}() == null`).join(' || \n');
+            return primaryKey.ids.map(pk => `${entityInstanceName}.get${_.upperFirst(primaryKey.name)}().get${_.upperFirst(pk.fieldName)}() == null`).join(' || \n');
         }
+    },
+
+    getCompositePrimaryKeyTimeUuidInitializations(entityInstance, primaryKey) {
+        return primaryKey.ids.map(pk => {
+            if (pk.fieldTypeTimeUuidSaathratri) {
+                return `${entityInstance}DTO.get${_.upperFirst(primaryKey.name)}().set${_.upperFirst(pk.fieldName)}(Uuids.timeBased());`;
+            }
+        }).join('\n');
     },
     
     getCompositePrimaryKeyResponseEntityUri(entityInstanceName, primaryKey, dtoMapstruct) {
@@ -165,7 +173,7 @@ export const cassandraSpringBootUtils = {
     sortIdsByOrdinal(entity) {
         // Sort the ids array by fieldOrdinalSaathratri
         if(entity.primaryKeySaathratri.ids.length > 1) {
-        entity.primaryKeySaathratri.ids.sort((a, b) => a.fieldOrdinalSaathratri - b.fieldOrdinalSaathratri);
+            entity.primaryKeySaathratri.ids.sort((a, b) => a.fieldOrdinalSaathratri - b.fieldOrdinalSaathratri);
         }
     },
 
@@ -200,6 +208,7 @@ export const cassandraSpringBootUtils = {
 
         if(this.isTimeUuidField(field)) {
             entity.primaryKeySaathratri.hasTimeUUID = true;
+            field.fieldTypeTimeUuidSaathratri = true;
         }
 
         entity.primaryKeySaathratri.ids.push(field);
@@ -217,10 +226,12 @@ export const cassandraSpringBootUtils = {
         } else if (field.fieldType === "Integer") {
             entity.primaryKeySaathratri.hasInteger = true;
         } else if(this.isTimeUuidField(field)) {
-            entity.primaryKeySaathratri.hasTimeUUID = true;        
+            entity.primaryKeySaathratri.hasTimeUUID = true; 
+            field.fieldTypeTimeUuidSaathratri = true;   
+            console.log("in here");    
         } else if (field.fieldType === "UUID") {
             entity.primaryKeySaathratri.hasUUID = true;
-        } 
+        }
     
         field.isCompositePrimaryKeyField = true;
         field.isPartitionedKeySaathratri = false;
@@ -295,8 +306,8 @@ export const cassandraSpringBootUtils = {
     },
 
     isTimeUuidField(field) {
-        const annotation = field.options?.customAnnotation[2];
-        return annotation === "TIMEUUID";
+        const annotation = field.options?.customAnnotation[1];
+        return annotation === "CassandraType.Name.TIMEUUID";
     },
 
     processFieldTypeAttributes(field) {
@@ -314,6 +325,7 @@ export const cassandraSpringBootUtils = {
             field.fieldTypeTemporal = true;
         } else if (this.isTimeUuidField(field)) {
             field.fieldTypeTemporal = true;
+            field.fieldTypeTimeUuidSaathratri = true;
         } else if (field.fieldType === "BigDecimal") {
             field.fieldTypeBigDecimalSaathratri = true;
         } else if(this.isBlobFieldContentType(field, 'image')) { 

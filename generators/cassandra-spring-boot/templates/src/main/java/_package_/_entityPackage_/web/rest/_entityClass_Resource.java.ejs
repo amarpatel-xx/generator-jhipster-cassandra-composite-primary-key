@@ -123,6 +123,9 @@ import java.util.Optional;
 <%_ if (primaryKey.hasUUID || primaryKeySaathratri.hasUUID || primaryKeySaathratri.hasTimeUUID) { _%>
 import java.util.UUID;
 <%_ } _%>
+<%_ if (primaryKeySaathratri.hasTimeUUID) { _%>
+import com.datastax.oss.driver.api.core.uuid.Uuids;
+<%_ } _%>
 <%_ if ((searchEngineAny || fieldsContainNoOwnerOneToOne) && !reactive) { _%>
   <%_ if (!viaService) { _%>
 import java.util.stream.Collectors;
@@ -178,8 +181,13 @@ public class <%= entityClass %>Resource {
     public <% if (reactive) { %>Mono<<% } %>ResponseEntity<<%= instanceType %>><% if (reactive) { %>><% } %> create<%= entityClass %>(<% if (anyPropertyHasValidation) { %>@Valid <% } %>@RequestBody <%= instanceType %> <%= instanceName %>) throws URISyntaxException {
         LOG.debug("REST request to save <%= entityClass %> : {}", <%= instanceName %>);
   <%_ if (primaryKey.autoGenerate) { _%>
+
         <%_ if (primaryKeySaathratri.composite) { _%>
           // Composite Primary Key Code
+          <%_ if (primaryKeySaathratri.hasTimeUUID) { _%>
+            // Generate a TimeUUID for the Primary Key composite fields.
+            <%= getCompositePrimaryKeyTimeUuidInitializations(entityInstance, primaryKeySaathratri) %>
+          <%_ } _%>
           if (<%= getCompositePrimaryKeyNullCheck(entityInstance, primaryKeySaathratri, dtoMapstruct) %>) {
             throw new BadRequestAlertException("A new <%= entityInstance %> cannot have an invalid ID", ENTITY_NAME, "idinvalid");
           }
