@@ -59,29 +59,55 @@ export const springDataCassandraSaathratriUtils = {
                 methodRepositoryParametersQueryString += `${fieldNameUnderscored} = ?${index}`;
             }
 
-            if(fileType === 'Service') {
-                // Get Declaration
-                methodsCode.push(this.getPrimaryKeyMethodSignature(entityClass, 'findAllBy', methodNameString, '', methodParametersDeclarationsString) + ';\n');
-            } else if(fileType === 'Repository') {
-                // Get Declaration
-                methodsCode.push(this.getPrimaryKeyRepositoryMethodSignature(entityClass, entityInstanceSnakeCase, 'findAllBy', methodNameString, '', methodParametersDeclarationsString, '') + ';\n');
-            } else if(fileType === 'ServiceImpl') {
-                // Get Implementation
-                methodsCode.push(this.generatePrimaryKeyServiceMethodImplementation(entityClass, 'findAllBy',  methodNameString, '', methodParametersDeclarationsString, methodParametersInstancesString));
-            } else if(fileType === 'Resource') {
-                // Get Implementation
-                methodsCode.push(this.generatePrimaryKeyResourceMethodImplementation(
-                    entityClass, 
-                    'findAllBy',
-                    methodNameString, 
-                    '',  
-                    methodParametersInstancesString, 
-                    methodUrlSubstitutionParameters, 
-                    methodResourceParametersDeclarationsString,
-                    methodLogSubstitutionParameters,
-                    methodJavaDocParametersString, 
-                    entityInstance));
-            }
+            // We do not need a findAllBy method for the whole composite primary key.
+            if(index < totalIds - 1) {
+                if(fileType === 'Service') {
+                    // Get Declaration
+                    methodsCode.push(this.getPrimaryKeyMethodSignature(entityClass, 'findAllBy', methodNameString, '', methodParametersDeclarationsString) + ';\n');
+                } else if(fileType === 'Repository') {
+                    // Get Declaration
+                    methodsCode.push(this.getPrimaryKeyRepositoryMethodSignature(entityClass, entityInstanceSnakeCase, 'findAllBy', methodNameString, '', methodParametersDeclarationsString, '') + ';\n');
+                } else if(fileType === 'ServiceImpl') {
+                    // Get Implementation
+                    methodsCode.push(this.generatePrimaryKeyServiceMethodImplementation(entityClass, 'findAllBy',  methodNameString, '', methodParametersDeclarationsString, methodParametersInstancesString));
+                } else if(fileType === 'Resource') {
+                    // Get Implementation
+                    methodsCode.push(this.generatePrimaryKeyResourceMethodImplementation(
+                        entityClass, 
+                        'findAllBy',
+                        methodNameString, 
+                        '',  
+                        methodParametersInstancesString, 
+                        methodUrlSubstitutionParameters, 
+                        methodResourceParametersDeclarationsString,
+                        methodLogSubstitutionParameters,
+                        methodJavaDocParametersString, 
+                        entityInstance));
+                }
+
+                if(primaryKey.hasTimeUUID) {
+                    if(fileType === 'Service') {
+                        methodsCode.push(this.getPrimaryKeyMethodSignature(entityClass, 'findLatestBy', methodNameString, '', methodParametersDeclarationsString) + ';\n');  
+                    } else if(fileType === 'Repository') {
+                        methodsCode.push(this.getPrimaryKeyRepositoryMethodSignature(entityClass, entityInstanceSnakeCase, 'findLatestBy', methodNameString, '', methodParametersDeclarationsString, methodRepositoryParametersQueryString) + ';\n');  
+                    } else if(fileType === 'ServiceImpl') {
+                        methodsCode.push(this.generatePrimaryKeyServiceMethodImplementation(entityClass, 'findLatestBy', methodNameString, '', methodParametersDeclarationsString, methodParametersInstancesString) + ';\n');  
+                    } else if(fileType === 'Resource') {
+                        // Get Implementation
+                        methodsCode.push(this.generatePrimaryKeyResourceMethodImplementation(
+                            entityClass, 
+                            'findLatestBy',
+                            methodNameString, 
+                            '',  
+                            methodParametersInstancesString, 
+                            methodUrlSubstitutionParameters, 
+                            methodResourceParametersDeclarationsString,
+                            methodLogSubstitutionParameters,
+                            methodJavaDocParametersString, 
+                            entityInstance));
+                    }             
+                }
+            } // End if(index < totalIds - 1)
 
             if(isClusteredKeySaathratri && (fieldType === 'Long' || fieldTypeTimeUuidSaathratri)) { 
                 if(fileType === 'Service') {
@@ -122,29 +148,6 @@ export const springDataCassandraSaathratriUtils = {
                         entityInstance));
                 }
             }
-        }
-
-        if(primaryKey.hasTimeUUID) {
-            if(fileType === 'Service') {
-                methodsCode.push(this.getPrimaryKeyMethodSignature(entityClass, 'findLatestBy', methodNameString, '', methodParametersDeclarationsString) + ';\n');  
-            } else if(fileType === 'Repository') {
-                methodsCode.push(this.getPrimaryKeyRepositoryMethodSignature(entityClass, entityInstanceSnakeCase, 'findLatestBy', methodNameString, '', methodParametersDeclarationsString, methodRepositoryParametersQueryString) + ';\n');  
-            } else if(fileType === 'ServiceImpl') {
-                methodsCode.push(this.generatePrimaryKeyServiceMethodImplementation(entityClass, 'findLatestBy', methodNameString, '', methodParametersDeclarationsString, methodParametersInstancesString) + ';\n');  
-            } else if(fileType === 'Resource') {
-                // Get Implementation
-                methodsCode.push(this.generatePrimaryKeyResourceMethodImplementation(
-                    entityClass, 
-                    'findLatestBy',
-                    methodNameString, 
-                    '',  
-                    methodParametersInstancesString, 
-                    methodUrlSubstitutionParameters, 
-                    methodResourceParametersDeclarationsString,
-                    methodLogSubstitutionParameters,
-                    methodJavaDocParametersString, 
-                    entityInstance));
-            }             
         }
 
         // Return the array containing all method signatures
