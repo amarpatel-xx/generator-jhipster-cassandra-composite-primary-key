@@ -33,9 +33,7 @@ export const springDataCassandraSaathratriUtils = {
         const totalIds = primaryKey.ids.length;
 
         // Iterate over each primary key ID with an index
-        // We break out of the loop when we reach the second last index, because we do not
-        // want to add a find method with all the composite primary key fields.
-        for (index = 0; index <= totalIds - 1; index++) {
+        for (index = 0; index < totalIds; index++) {
             const { fieldName, fieldType, fieldNameHumanized, fieldNameUnderscored, isClusteredKeySaathratri, fieldTypeTimeUuidSaathratri } = primaryKey.ids[index];
 
             if(methodNameString != "") {
