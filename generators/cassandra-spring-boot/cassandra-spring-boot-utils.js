@@ -90,7 +90,7 @@ export const cassandraSpringBootUtils = {
             return primaryKey.ids.map(pk => `${entityInstanceName}.get${_.upperFirst(primaryKey.name)}().get${_.upperFirst(pk.fieldName)}() == null`).join(' || \n');
         }
     },
-
+    
     getCompositePrimaryKeyTimeUuidInitializations(entityInstance, primaryKey) {
         return primaryKey.ids.map(pk => {
             if (pk.fieldTypeTimeUuidSaathratri) {
@@ -179,12 +179,12 @@ export const cassandraSpringBootUtils = {
 
     initializeSaathratriPrimaryKeyAttributes(entity) {
         if (!entity.primaryKeySaathratri) {
-        entity.primaryKeySaathratri = { composite: false, ids: [] };
-        
-        entity.fields.forEach(field => {
-            this.processFieldForPrimaryKey(entity, field);
-            field.fieldJavaValueGenerator = this.getJavaValueGeneratorForType(field.fieldType);
-        });
+            entity.primaryKeySaathratri = { composite: false, ids: [] };
+            
+            entity.fields.forEach(field => {
+                this.processFieldForPrimaryKey(entity, field);
+                field.fieldJavaValueGenerator = this.getJavaValueGeneratorForType(field.fieldType);
+            });
         }
     },
     
@@ -227,8 +227,7 @@ export const cassandraSpringBootUtils = {
             entity.primaryKeySaathratri.hasInteger = true;
         } else if(this.isTimeUuidField(field)) {
             entity.primaryKeySaathratri.hasTimeUUID = true; 
-            field.fieldTypeTimeUuidSaathratri = true;   
-            console.log("in here");    
+            field.fieldTypeTimeUuidSaathratri = true;    
         } else if (field.fieldType === "UUID") {
             entity.primaryKeySaathratri.hasUUID = true;
         }
