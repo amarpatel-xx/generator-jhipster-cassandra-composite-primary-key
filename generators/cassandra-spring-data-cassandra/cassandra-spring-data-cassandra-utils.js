@@ -25,6 +25,15 @@ export const springDataCassandraSaathratriUtils = {
         let methodResourceParametersDeclarationsString = "";
         let methodRepositoryParametersQueryString = "";
 
+        let methodNameStringFindLast = "";
+        let methodParametersDeclarationsStringFindLast = "";
+        let methodParametersInstancesStringFindLast = "";
+        let methodJavaDocParametersStringFindLast = "";
+        let methodUrlSubstitutionParametersFindLast = "";
+        let methodLogSubstitutionParametersFindLast = "";
+        let methodResourceParametersDeclarationsStringFindLast = "";
+        let methodRepositoryParametersQueryStringFindLast = "";
+
         // Iterate over each primary key ID
         // Initialize an index
         let index = 0;
@@ -54,9 +63,31 @@ export const springDataCassandraSaathratriUtils = {
             methodUrlSubstitutionParameters += `/:${fieldName}`;
             methodLogSubstitutionParameters += `${fieldName}: {}`;
             methodResourceParametersDeclarationsString += `@RequestParam(name = "${fieldName}", required = true) final ${fieldType} ${fieldName}`;
-           
-            if(primaryKey.hasTimeUUID) {
-                methodRepositoryParametersQueryString += `${fieldNameUnderscored} = ?${index}`;
+               
+
+            if(index < totalIds - 1) {
+                if(methodNameStringFindLast != "") {
+                    methodNameStringFindLast += "And" + primaryKey.nameCapitalized + _.upperFirst(fieldName);
+                    methodParametersDeclarationsStringFindLast += ", ";
+                    methodParametersInstancesStringFindLast += ", ";
+                    methodJavaDocParametersStringFindLast += "\n";
+                    methodLogSubstitutionParametersFindLast += ", ";
+                    methodResourceParametersDeclarationsStringFindLast += ", ";
+                    methodRepositoryParametersQueryStringFindLast += " AND ";
+                } else {
+                    methodNameStringFindLast = primaryKey.nameCapitalized + _.upperFirst(fieldName);                
+                }
+
+                methodParametersDeclarationsStringFindLast += `final ${fieldType} ${fieldName}`;
+                methodParametersInstancesStringFindLast += fieldName;
+                methodJavaDocParametersStringFindLast += ` * @param ${fieldName} the ${fieldNameHumanized} of the ${entityInstance} to retrieve.`;
+                methodUrlSubstitutionParametersFindLast += `/:${fieldName}`;
+                methodLogSubstitutionParametersFindLast += `${fieldName}: {}`;
+                methodResourceParametersDeclarationsStringFindLast += `@RequestParam(name = "${fieldName}", required = true) final ${fieldType} ${fieldName}`;
+                    
+                if(primaryKey.hasTimeUUID) {
+                    methodRepositoryParametersQueryString += `${fieldNameUnderscored} = ?${index}`;
+                }
             }
 
             // We do not need a findAllBy method for the whole composite primary key.
@@ -83,29 +114,6 @@ export const springDataCassandraSaathratriUtils = {
                         methodLogSubstitutionParameters,
                         methodJavaDocParametersString, 
                         entityInstance));
-                }
-
-                if(primaryKey.hasTimeUUID) {
-                    if(fileType === 'Service') {
-                        methodsCode.push(this.getPrimaryKeyMethodSignature(entityClass, 'findLatestBy', methodNameString, '', methodParametersDeclarationsString) + ';\n');  
-                    } else if(fileType === 'Repository') {
-                        methodsCode.push(this.getPrimaryKeyRepositoryMethodSignature(entityClass, entityInstanceSnakeCase, 'findLatestBy', methodNameString, '', methodParametersDeclarationsString, methodRepositoryParametersQueryString) + ';\n');  
-                    } else if(fileType === 'ServiceImpl') {
-                        methodsCode.push(this.generatePrimaryKeyServiceMethodImplementation(entityClass, 'findLatestBy', methodNameString, '', methodParametersDeclarationsString, methodParametersInstancesString) + ';\n');  
-                    } else if(fileType === 'Resource') {
-                        // Get Implementation
-                        methodsCode.push(this.generatePrimaryKeyResourceMethodImplementation(
-                            entityClass, 
-                            'findLatestBy',
-                            methodNameString, 
-                            '',  
-                            methodParametersInstancesString, 
-                            methodUrlSubstitutionParameters, 
-                            methodResourceParametersDeclarationsString,
-                            methodLogSubstitutionParameters,
-                            methodJavaDocParametersString, 
-                            entityInstance));
-                    }             
                 }
             } // End if(index < totalIds - 1)
 
@@ -148,6 +156,29 @@ export const springDataCassandraSaathratriUtils = {
                         entityInstance));
                 }
             }
+        }
+
+        if(primaryKey.hasTimeUUID) {
+            if(fileType === 'Service') {
+                methodsCode.push(this.getPrimaryKeyMethodSignature(entityClass, 'findLatestBy', methodNameStringFindLast, '', methodParametersDeclarationsStringFindLast) + ';\n');  
+            } else if(fileType === 'Repository') {
+                methodsCode.push(this.getPrimaryKeyRepositoryMethodSignature(entityClass, entityInstanceSnakeCase, 'findLatestBy', methodNameStringFindLast, '', methodParametersDeclarationsStringFindLast, methodRepositoryParametersQueryStringFindLast) + ';\n');  
+            } else if(fileType === 'ServiceImpl') {
+                methodsCode.push(this.generatePrimaryKeyServiceMethodImplementation(entityClass, 'findLatestBy', methodNameStringFindLast, '', methodParametersDeclarationsStringFindLast, methodParametersInstancesStringFindLast) + ';\n');  
+            } else if(fileType === 'Resource') {
+                // Get Implementation
+                methodsCode.push(this.generatePrimaryKeyResourceMethodImplementation(
+                    entityClass, 
+                    'findLatestBy',
+                    methodNameStringFindLast, 
+                    '',  
+                    methodParametersInstancesStringFindLast, 
+                    methodUrlSubstitutionParametersFindLast, 
+                    methodResourceParametersDeclarationsStringFindLast,
+                    methodLogSubstitutionParametersFindLast,
+                    methodJavaDocParametersStringFindLast, 
+                    entityInstance));
+            }             
         }
 
         // Return the array containing all method signatures
