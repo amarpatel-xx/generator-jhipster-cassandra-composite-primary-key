@@ -195,6 +195,10 @@ public class <%= entityClass %>Resource {
           }
         <%_ } else { _%>
           // Single-value Primary Key Code
+          <%_ if (primaryKeySaathratri.hasTimeUUID) { _%>
+            // Generate a TimeUUID for the Primary Key.
+            <%= instanceName %>.set<%= primaryKey.nameCapitalized %>(Uuids.timeBased());
+          <%_ } _%>
         if (<%= instanceName %>.get<%= primaryKey.nameCapitalized %>() == null) {
             throw new BadRequestAlertException("A new <%= entityInstance %> must have an ID", ENTITY_NAME, "idinvalid");
         }
