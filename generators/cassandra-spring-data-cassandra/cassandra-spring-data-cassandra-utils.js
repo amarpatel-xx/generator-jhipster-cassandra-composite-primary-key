@@ -136,7 +136,7 @@ export const springDataCassandraSaathratriUtils = {
         methodImplementationString += "public " + this.getPrimaryKeyMethodSignature(entityClass, methodNamePrefix, methodNameString, operatorString, methodResourceParametersDeclarationsString) + `{ \n`;
         methodImplementationString += "  // Composite Primary Key Code \n";
         methodImplementationString += `  LOG.debug("REST request to ${methodNamePrefix + methodNameString + operatorString} method for ${entityClass}s with parameteres ${methodLogSubstitutionParameters}", ${methodParametersInstancesString}); \n`;
-        methodImplementationString += `  return  ${entityInstance}Service.${methodNamePrefix + methodNameString + operatorString}(${methodParametersInstancesString}); \n`;
+        methodImplementationString += `  return  ${_.lowerFirst(entityInstance)}Service.${methodNamePrefix + methodNameString + operatorString}(${methodParametersInstancesString}); \n`;
         methodImplementationString += '}\n';
 
         return methodImplementationString;
