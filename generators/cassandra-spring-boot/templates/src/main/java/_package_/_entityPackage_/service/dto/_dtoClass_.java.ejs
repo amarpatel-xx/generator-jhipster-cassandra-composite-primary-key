@@ -45,8 +45,8 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 <%_ } _%>
 <%_ if (restProperties.some(property => property.collection)) { _%>
-import java.util.HashSet;
 import java.util.Set;
+import java.util.HashSet;
 <%_ } _%>
 <%_ if (anyFieldIsUUID) { _%>
 import java.util.UUID;
@@ -57,7 +57,24 @@ import jakarta.persistence.Lob;
 <%_ Object.keys(uniqueEnums).forEach(function(element) { _%>
 import <%- entityAbsolutePackage %>.domain.enumeration.<%- element %>;
 <%_ }); _%>
-
+<%_ for (const field of fields.filter(field => !field.javaInherited && !field.transient && (embedded || !field.id || !primaryKey.composite))) { _%>
+    <%_
+      if(field.fieldTypeSetSaathratri) {
+    _%>
+  import java.util.Set;
+     <%_ 
+         break;
+       }
+     _%>
+     <%_
+      if(field.fieldTypeMapSaathratri) {
+    _%>
+  import java.util.Map;
+     <%_ 
+         break;
+       }
+     _%>
+<%_ } _%>
 
 /**
  * A DTO for the {@link <%- entityAbsolutePackage %>.domain.<%- persistClass %>} entity.
@@ -75,7 +92,21 @@ public class <%- dtoClass %> implements Serializable {
 <%_ } _%>
 <%_ for (property of restProperties) { _%>
   <%_ if (!isCompositePrimaryKeyServerProperty(primaryKeySaathratri, property) && property.propertyName !== 'id') { _%>
+    <%_
+        if(property.fieldTypeSetSaathratri) {
+    _%>
+    private Set<<%- property.propertyDtoJavaType %>> <%- property.propertyName %>;
+    <%_
+        } else if(property.fieldTypeMapSaathratri) {
+    _%>
+    private Map<String, <%- property.propertyDtoJavaType %>> <%- property.propertyName %>;
+    <%_
+        } else {
+    _%>
     private <%- property.propertyDtoJavaType %> <%- property.propertyName %>;
+    <%_
+        }
+    _%>
   <%_ } _%>
 <%_ } _%>
 <%_ for(const field of fields) { _%>
@@ -135,6 +166,41 @@ public <%- dtoClass %> () {
 
 <%_ for (property of restProperties) { _%>
   <%_ if (!isCompositePrimaryKeyServerProperty(primaryKeySaathratri, property) && property.propertyName !== 'id') { _%>
+
+    <%_ if(property.fieldTypeSetSaathratri) { _%>
+    public Set<<%- property.propertyDtoJavaType %>> get<%- property.propertyJavaBeanName %>() {
+        return <%- property.propertyName %>;
+    }
+
+    public void set<%- property.propertyJavaBeanName %>(Set<<%- property.propertyDtoJavaType %>> <%- property.propertyName %>) %> {
+        this.<%- property.propertyName %> = <%- property.propertyName %>;
+    }
+      <%_ if (fluentMethods) { _%>
+
+
+        public <%= dtoClass %> <%= property.propertyName %>(Set<<%= property.propertyDtoJavaType %>> <%= property.propertyName %>) {
+            this.<%= property.propertyName %> = <%= property.propertyName %>;
+            return this;
+    }
+  <%_ } _%>
+  <%_ } else if(property.fieldTypeMapSaathratri) {_%>
+
+  public Map<String, <%- property.propertyDtoJavaType %>> get<%- property.propertyJavaBeanName %>() {
+        return <%- property.propertyName %>;
+    }
+
+    public void set<%- property.propertyJavaBeanName %>(Map<String, <%- property.propertyDtoJavaType %>> <%- property.propertyName %>) %> {
+        this.<%- property.propertyName %> = <%- property.propertyName %>;
+    }
+      <%_ if (fluentMethods) { _%>
+
+
+        public <%= dtoClass %> <%= property.propertyName %>(Map<String, <%= property.propertyDtoJavaType %>> <%= property.propertyName %>) {
+            this.<%= property.propertyName %> = <%= property.propertyName %>;
+            return this;
+    }
+  <%_ } _%>
+  <%_ } else { _%>
     public <%- property.propertyDtoJavaType %> get<%- property.propertyJavaBeanName %>() {
         return <%- property.propertyName %>;
     }
@@ -149,6 +215,7 @@ public <%- dtoClass %> () {
             this.<%= property.propertyName %> = <%= property.propertyName %>;
             return this;
     }
+  <%_ } _%>
   <%_ } _%>
     <%_ } _%>
 <%_ } _%>

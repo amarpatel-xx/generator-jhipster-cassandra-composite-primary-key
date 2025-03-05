@@ -168,6 +168,10 @@ export const cassandraSpringBootUtils = {
         this.initializeSaathratriFieldAttributes(entity);
 
         this.sortIdsByOrdinal(entity);
+
+        entity.restProperties = [
+            ...entity.fields,
+        ];
     },
 
     sortIdsByOrdinal(entity) {
@@ -312,6 +316,8 @@ export const cassandraSpringBootUtils = {
     processFieldTypeAttributes(field) {
         if (field.options?.customAnnotation[0] === "CassandraType.Name.SET") {
             field.fieldTypeSetSaathratri = true;
+        } else if (field.options?.customAnnotation[0] === "CassandraType.Name.MAP") {
+            field.fieldTypeMapSaathratri = true;
         }
 
         if (this.isDateField(field)) {

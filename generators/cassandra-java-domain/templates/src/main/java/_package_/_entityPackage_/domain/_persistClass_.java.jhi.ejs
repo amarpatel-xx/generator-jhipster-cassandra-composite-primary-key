@@ -53,7 +53,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Set;
    <%_ 
        break;
-     } 
+     }
+   _%>
+   <%_
+    if(field.fieldTypeMapSaathratri) {
+  _%>
+import java.util.Map;
+   <%_ 
+       break;
+     }
    _%>
 <%_ } _%>
 import java.io.Serializable;
@@ -130,6 +138,10 @@ _%>
   _%>
   private Set<<%= field.javaFieldType %>> <%= field.fieldName %>;
   <%_
+    } else if(field.fieldTypeMapSaathratri) {
+  _%>
+  private Map<String, <%= field.javaFieldType %>> <%= field.fieldName %>;
+  <%_
     } else {
   _%>
     private <%= field.javaFieldType %> <%= field.fieldName %>;
@@ -191,6 +203,19 @@ _%>
     }
   <%_ } _%>
   <%_
+    } else if(field.fieldTypeMapSaathratri) {
+  _%>
+  public Map<String, <%= field.javaFieldType %>> get<%= field.fieldInJavaBeanMethod %>() {
+        return this.<%= field.fieldName %>;
+    }
+  <%_ if (fluentMethods) { _%>
+
+    public <%= persistClass %> <%= field.fieldName %>(Map<String, <%= field.javaFieldType %>> <%= field.fieldName %>) {
+        this.set<%= field.fieldInJavaBeanMethod %>(<%= field.fieldName %>);
+        return this;
+    }
+  <%_ } _%>
+  <%_
     } else {
   _%>
     <%_ if (field.fieldName !== 'id') { _%>
@@ -215,6 +240,12 @@ _%>
     if(field.fieldTypeSetSaathratri) {
   _%>
     public void set<%= field.fieldInJavaBeanMethod %>(Set<<%= field.javaFieldType %>> <%= field.fieldName %>) {
+      this.<%= field.fieldName %> = <%= field.fieldName %>;
+    }
+  <%_
+    } else if(field.fieldTypeMapSaathratri) {
+  _%>
+    public void set<%= field.fieldInJavaBeanMethod %>(Map<String, <%= field.javaFieldType %>> <%= field.fieldName %>) {
       this.<%= field.fieldName %> = <%= field.fieldName %>;
     }
   <%_

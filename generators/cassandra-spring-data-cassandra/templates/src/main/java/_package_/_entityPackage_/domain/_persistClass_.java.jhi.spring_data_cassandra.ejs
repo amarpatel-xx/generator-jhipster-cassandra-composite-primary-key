@@ -53,7 +53,12 @@ _%>
         if(field.fieldTypeSetSaathratri) {
       _%>
           @Column("<%- field.fieldNameAsDatabaseColumn %>")
-      @CassandraType(type = <%= field.options.customAnnotation[0] %>, typeArguments = <%= field.options.customAnnotation[1] %>)
+          @CassandraType(type = <%= field.options.customAnnotation[0] %>, typeArguments = <%= field.options.customAnnotation[1] %>)
+      <%_
+        } else if(field.fieldTypeMapSaathratri) {
+      _%>
+          @Column("<%- field.fieldNameAsDatabaseColumn %>")
+          @CassandraType(type = <%= field.options.customAnnotation[0] %>, typeArguments = { CassandraType.Name.TEXT, <%= field.options.customAnnotation[1] %> })
       <%_ 
         } else if(field.fieldTypeBlobContent === 'image') { 
       _%>

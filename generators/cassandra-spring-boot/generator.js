@@ -74,12 +74,6 @@ export default class extends BaseApplicationGenerator {
     });
   }
 
-  // get [BaseApplicationGenerator.PREPARING_EACH_ENTITY]() {
-  //   return this.asPreparingEachEntityTaskGroup({
-  //     async preparingEachEntityTemplateTask() {},
-  //   });
-  // }
-
   get [BaseApplicationGenerator.PREPARING_EACH_ENTITY]() {
     return this.asPreparingEachEntityTaskGroup({
       async preparingEachEntityTemplateTask( { entity } ) {
