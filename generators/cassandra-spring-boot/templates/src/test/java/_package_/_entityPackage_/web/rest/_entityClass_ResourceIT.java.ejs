@@ -71,7 +71,9 @@ import <%= packageName %>.web.rest.TestUtil;
 <%_ if (primaryKeySaathratri.composite) { _%>
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Set;
+import java.util.Map;
 import java.util.TreeSet;
+import java.util.HashMap;
 import <%= entityAbsolutePackage %>.domain.<%= persistClass %>Id;
 <%_ } _%>
 import <%= packageName %>.IntegrationTest;
@@ -298,7 +300,7 @@ if (isEnum) {
   }
 }
 
-if (field.fieldTypeString || field.blobContentTypeText) {
+if (field.fieldTypeString || field.blobContentTypeText || field.fieldTypeSetSaathratri || field.fieldTypeMapSaathratri) {
   // Generate Strings, using the min and max string length if they are configured
   let sampleTextString = "";
   let updatedTextString = "";
@@ -344,6 +346,30 @@ if (field.fieldTypeString || field.blobContentTypeText) {
     static {
         DEFAULT_<%= field.fieldNameUnderscored.toUpperCase()%>.add("<%- sampleTextString %>");
         UPDATED_<%= field.fieldNameUnderscored.toUpperCase()%>.add("<%- updatedTextString %>");
+    }
+        <%_ } else if(field.fieldTypeMapSaathratri) { _%>
+    private static final Map<String, <%- field.fieldType%>> DEFAULT_<%= field.fieldNameUnderscored.toUpperCase()%> = new HashMap<String, <%- field.fieldType%>>();
+    private static final Map<String, <%- field.fieldType%>> UPDATED_<%= field.fieldNameUnderscored.toUpperCase()%> = new HashMap<String, <%- field.fieldType%>>();
+    static {
+      <%_ if(field.fieldTypeString) { _%>
+        DEFAULT_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", "<%- defaultValue %>");
+        UPDATED_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", "<%- updatedValue %>");
+        <%_ } else if(field.fieldTypeInteger) { _%>
+        DEFAULT_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", <%- defaultValue %>);
+        UPDATED_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", <%- updatedValue %>);
+      <%_ } else if(field.fieldTypeLong) { _%>
+        DEFAULT_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", <%- defaultValue %>L);
+        UPDATED_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", <%- updatedValue %>L);
+      <%_ } else if(field.fieldTypeBoolean) { _%>
+        DEFAULT_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", false);
+        UPDATED_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", true);
+        <%_ } else if(field.fieldTypeBigDecimal) { _%>
+        DEFAULT_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", new BigDecimal(<%- defaultValue %>));
+        UPDATED_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", new BigDecimal(<%- updatedValue %>));
+      <%_ } else { _%>
+        DEFAULT_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", <%- defaultValue %>);
+        UPDATED_<%= field.fieldNameUnderscored.toUpperCase()%>.put("<%- sampleTextString %>", <%- updatedValue %>);
+      <%_ } _%>
     }
         <%_ } else { _%>
     private static final String <%= defaultValueName %> = "<%- sampleTextString %>";

@@ -101,6 +101,8 @@ public class <%= persistClass %>Asserts {
 <%_  if(primaryKeySaathratri.composite && !field.isCompositePrimaryKeyField ) { _%>
     <%_ if (field.fieldTypeZonedDateTime) { _%>
             .satisfies(e -> assertThat(e.get<%- field.fieldInJavaBeanMethod %>()).as("check <%- field.propertyName %>").usingComparator(zonedDataTimeSameInstant).isEqualTo(actual.get<%- field.fieldInJavaBeanMethod %>()))
+    <%_ } else if (field.fieldTypeMapSaathratri && field.fieldTypeBigDecimal) { _%>
+            .satisfies(e -> assertThat(e.get<%- field.fieldInJavaBeanMethod %>()).as("check <%- field.propertyName %>").containsExactlyEntriesOf(actual.get<%- field.fieldInJavaBeanMethod %>()))
     <%_ } else if (field.fieldTypeBigDecimal) { _%>
             .satisfies(e -> assertThat(e.get<%- field.fieldInJavaBeanMethod %>()).as("check <%- field.propertyName %>").usingComparator(bigDecimalCompareTo).isEqualTo(actual.get<%- field.fieldInJavaBeanMethod %>()))
     <%_ } else { _%>

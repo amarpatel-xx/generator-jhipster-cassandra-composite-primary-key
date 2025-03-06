@@ -30,12 +30,29 @@ export const cassandraSpringBootUtils = {
 
     setSaathratriNonPrimaryKeySampleValues(entity) {
         entity.fields.forEach(field => {
-            if (field.fieldType === 'Boolean') {
-                field.javaValueSample1 = 'false';
-                field.javaValueSample2 = 'true';
-            } else if(field.fieldTypeSetSaathratri) {
+            if(field.fieldTypeSetSaathratri) {
                 field.javaValueSample1 = `new java.util.TreeSet<${field.fieldType}>() {{ add("${field.fieldName}1"); }}`;
                 field.javaValueSample2 = `new java.util.TreeSet<${field.fieldType}>() {{ add("${field.fieldName}2"); }}`;
+            } else if(field.fieldTypeMapSaathratri) {
+                if(field.fieldType === 'String') {
+                    field.javaValueSample1 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}1", "${field.fieldName}1"); }}`;
+                    field.javaValueSample2 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}2", "${field.fieldName}2"); }}`;
+                } else if(field.fieldType === 'Integer') {
+                    field.javaValueSample1 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}1", 1); }}`;
+                    field.javaValueSample2 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}2", 2); }}`;
+                } else if(field.fieldType === 'Long') {
+                    field.javaValueSample1 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}1", 1L); }}`;
+                    field.javaValueSample2 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}2", 2L); }}`;
+                } else if(field.fieldType === 'Boolean') {
+                    field.javaValueSample1 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}1", false); }}`;
+                    field.javaValueSample2 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}2", true); }}`;
+                } else if(field.fieldTypeBigDecimalSaathratri) {
+                    field.javaValueSample1 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}1", new BigDecimal(1)); }}`;
+                    field.javaValueSample2 = `new java.util.HashMap<String, ${field.fieldType}>() {{ put("${field.fieldName}2", new BigDecimal(2)); }}`;
+                }
+            } else if (field.fieldType === 'Boolean') {
+                    field.javaValueSample1 = 'false';
+                    field.javaValueSample2 = 'true';
             } else if(field.fieldType === 'LocalDate') {
                 field.javaValueSample1 = 'java.time.LocalDate.now()';
                 field.javaValueSample2 = 'java.time.LocalDate.now()';
