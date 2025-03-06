@@ -38,10 +38,14 @@ export const springDataCassandraSaathratriUtils = {
                 }
             }
             
-            if (index < totalIds - 1) {
-                this.addMethodDeclarations(methodsCode, entityClass, entityInstanceSnakeCase, 'findAllBy', methodComponents, fileType);
+            if (index < totalIds) {
+                if(index === totalIds - 1) {
+                    this.addMethodDeclarations(methodsCode, entityClass, entityInstanceSnakeCase, 'findBy', methodComponents, fileType);
+                } else {
+                    this.addMethodDeclarations(methodsCode, entityClass, entityInstanceSnakeCase, 'findAllBy', methodComponents, fileType);
+                }
             }
-            
+
             if (isClusteredKeySaathratri && (fieldType === 'Long' || fieldTypeTimeUuidSaathratri)) {
                 this.addComparisonMethods(methodsCode, entityClass, entityInstanceSnakeCase, methodComponents, fileType);
             }
@@ -93,7 +97,7 @@ export const springDataCassandraSaathratriUtils = {
         let methodImplementationString = "@Override \npublic " + this.getPrimaryKeyMethodSignature(entityClass, methodNamePrefix, methodNameString, operatorString, methodParametersDeclarationsString) + `{\n`;
         methodImplementationString += `LOG.debug("Request to ${methodNamePrefix}${methodNameString}${operatorString}(${methodParametersDeclarationsString}) service in ${entityClass}ServiceImpl.");\n`;
         methodImplementationString += `return ${_.lowerFirst(entityClass)}Repository.${methodNamePrefix}${methodNameString}${operatorString}(${methodParametersInstancesString})\n`;
-        
+       
         if(methodNamePrefix === 'findAllBy') {
             methodImplementationString += `.stream()\n`;
         }
@@ -102,6 +106,8 @@ export const springDataCassandraSaathratriUtils = {
         
         if(methodNamePrefix === 'findLatestBy') {
             methodImplementationString += '.orElse(null); // Return null if no record found\n';
+        } else if(methodNamePrefix === 'findBy') {
+            methodImplementationString += ';\n';
         } else {
             methodImplementationString += '.collect(Collectors.toCollection(LinkedList::new));\n';
         }
@@ -143,7 +149,9 @@ export const springDataCassandraSaathratriUtils = {
     },
 
     getPrimaryKeyMethodSignature(entityClass, methodNamePrefix, methodNameString, operatorString, methodParametersDeclarationsString) {
-        if(methodNamePrefix === 'findLatestBy') {
+        if(methodNamePrefix === 'findBy') {
+            return `Optional<${entityClass}DTO> ${methodNamePrefix}${methodNameString}${operatorString}(${methodParametersDeclarationsString})`;
+        } else if(methodNamePrefix === 'findLatestBy') {
             return `${entityClass}DTO ${methodNamePrefix}${methodNameString}${operatorString}(${methodParametersDeclarationsString})`;
         } else {
             return `List<${entityClass}DTO> ${methodNamePrefix}${methodNameString}${operatorString}(${methodParametersDeclarationsString})`;
@@ -151,7 +159,9 @@ export const springDataCassandraSaathratriUtils = {
     },
 
     getPrimaryKeyRepositoryMethodSignature(entityClass, entityInstanceSnakeCase, methodNamePrefix, methodNameString, operatorString, methodParametersDeclarationsString, methodRepositoryParametersQueryString) {
-        if(methodNamePrefix === 'findAllBy') {
+        if(methodNamePrefix === 'findBy') {
+            return `Optional<${entityClass}> ${methodNamePrefix}${methodNameString}${operatorString}(${methodParametersDeclarationsString})`;
+        } else if(methodNamePrefix === 'findAllBy') {
             return `List<${entityClass}> ${methodNamePrefix}${methodNameString}${operatorString}(${methodParametersDeclarationsString})`;
         } else if(methodNamePrefix === 'findLatestBy') {
             let methodImplementationString = `@Query("SELECT * FROM ${entityInstanceSnakeCase} WHERE ${methodRepositoryParametersQueryString} LIMIT 1")\n`;

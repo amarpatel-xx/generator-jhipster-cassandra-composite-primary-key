@@ -213,6 +213,9 @@ export const cassandraSpringBootUtils = {
         if(this.isTimeUuidField(field)) {
             entity.primaryKeySaathratri.hasTimeUUID = true;
             field.fieldTypeTimeUuidSaathratri = true;
+        } else if (field.fieldType === "UUID") {
+            entity.primaryKeySaathratri.hasUUID = true;
+            field.fieldTypeUUIDSaathratri = true;
         }
 
         entity.primaryKeySaathratri.ids.push(field);
@@ -234,6 +237,7 @@ export const cassandraSpringBootUtils = {
             field.fieldTypeTimeUuidSaathratri = true;    
         } else if (field.fieldType === "UUID") {
             entity.primaryKeySaathratri.hasUUID = true;
+            field.fieldTypeUUIDSaathratri = true;
         }
     
         field.isCompositePrimaryKeyField = true;
