@@ -19,7 +19,8 @@ import { MaterialModule } from '../../shared/material.module';
   ],
 })
 export class DateTimeComponent implements OnInit, ControlValueAccessor {
-  editForm: FormGroup;
+  //
+  editForm!: FormGroup;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange: any = () => {};
@@ -33,6 +34,8 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
   @Input() dateTimeLabel = 'Date-Time Label'; // Input property for the label
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @Input() labelClass = 'default-label-class'; // Dynamic class for the label
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  @Input() isRequired = false; // Input property for the required flag
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @Output() timestampChange = new EventEmitter<number>(); // Emit the UTC timestamp
@@ -40,28 +43,55 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @Output() isValid = new EventEmitter<boolean>();
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  constructor() {
+  ngOnInit(): void {
     this.editForm = new FormGroup(
       {
-        date: new FormControl(null, Validators.required),
-        hours: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(12)]),
-        minutes: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(59)]),
-        amPm: new FormControl(null, Validators.required),
+        date: new FormControl(null, this.isRequired ? Validators.required : null),
+        hours: new FormControl(null, this.getValidators(1, 12)),
+        minutes: new FormControl(null, this.getValidators(0, 59)),
+        amPm: new FormControl(null, this.isRequired ? Validators.required : null),
         seconds: new FormControl(0),
         milliseconds: new FormControl(0),
       },
       { validators: this.dateTimeValidator }, // Attach the custom validator
     );
-  }
 
-  ngOnInit(): void {
+    // Initialize only if isRequired is true
+    if (this.isRequired) {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const amPm = hours >= 12 ? 'PM' : 'AM';
+  
+      this.editForm.setValue(
+        {
+          date: now, // Ensure 'date' is a valid Date object
+          hours: this.padZero(hours % 12 || 12), // Convert to 12-hour format
+          minutes: this.padZero(minutes), // Ensure two-digit minute format
+          amPm: amPm,
+          seconds: now.getSeconds(),
+          milliseconds: now.getMilliseconds(),
+        },
+        { emitEvent: false }
+      );
+    }
+
     // Listen to changes on relevant fields and reset seconds and milliseconds
     this.editForm.valueChanges.subscribe(() => {
       this.updateTimestamp();
       this.onTouched();
       this.isValid.emit(this.editForm.valid); // Emit the valid property directly
     });
+
+    // Ensure validation is updated in the next change detection cycle
+    // This esures the component is not marked as invalid after it is being set above.
+    setTimeout(() => {
+      this.editForm.updateValueAndValidity();
+    });
+  }
+
+  getValidators(min: number, max: number): ValidatorFn[] {
+    return this.isRequired ? [Validators.required, Validators.min(min), Validators.max(max)] : [Validators.min(min), Validators.max(max)];
   }
 
   updateTimestamp(): void {

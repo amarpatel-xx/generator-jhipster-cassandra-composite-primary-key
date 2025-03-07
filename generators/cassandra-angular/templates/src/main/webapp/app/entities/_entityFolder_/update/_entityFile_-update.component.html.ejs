@@ -110,6 +110,7 @@ _%>
                             formControlName="<%= fieldName %>"
                             [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
                             [labelClass]="'form-label'"
+                            [isRequired]="true"
                             (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
                         ></app-date-time>
         <%_ } else if (field.blobContentTypeText) { _%>
@@ -256,6 +257,7 @@ _%>
                         formControlName="<%= fieldName %>"
                         [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
                         [labelClass]="'form-label'"
+                        [isRequired]="false"
                         (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
                     ></app-date-time>
     <%_ } else if (field.blobContentTypeText) { _%>
