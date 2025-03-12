@@ -190,8 +190,24 @@ _%>
         }
         
         get areAllDateTimeFieldsValid(): boolean {
-            // Check if all date-time fields are valid
-            return Object.values(this.isDateTimeValid).every(valid => valid);
+
+             <%_ for (const field of fields) { _%>
+                <%_ if (field.fieldTypeTimedSaathratri) { _%>
+                    const <%= field.fieldName %>Control = this.editForm.get('<%= field.fieldName %>');
+                <%_ } _%>
+            <%_ } _%>
+            
+            <%_ let first = true; _%>
+            return (<%_ for (const field of fields) { _%>
+                <%_ if (field.fieldTypeTimedSaathratri) { _%>
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    <%_ if(!first) { _%> && <%_ } _%>(!<%= field.fieldName %>Control?.hasError('required') || this.isDateTimeValid['<%= field.fieldName %>'])
+                <%_ 
+                        first = false;
+                    }
+                _%>
+            <%_ } _%>
+            );
         }             
     <%_ } _%>
 
