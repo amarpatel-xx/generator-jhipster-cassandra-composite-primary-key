@@ -179,7 +179,7 @@ export const cassandraSpringBootUtils = {
     },
 
     setSaathratriPrimaryKeyAttributesOnEntityAndFields(entity) {
-        
+
         this.initializeSaathratriPrimaryKeyAttributes(entity);
 
         this.initializeSaathratriFieldAttributes(entity);
@@ -229,10 +229,8 @@ export const cassandraSpringBootUtils = {
 
         if(this.isTimeUuidField(field)) {
             entity.primaryKeySaathratri.hasTimeUUID = true;
-            field.fieldTypeTimeUuidSaathratri = true;
-        } else if (field.fieldType === "UUID") {
+        } else if (this.isUuidField(field)) {
             entity.primaryKeySaathratri.hasUUID = true;
-            field.fieldTypeUUIDSaathratri = true;
         }
 
         entity.primaryKeySaathratri.ids.push(field);
@@ -250,11 +248,9 @@ export const cassandraSpringBootUtils = {
         } else if (field.fieldType === "Integer") {
             entity.primaryKeySaathratri.hasInteger = true;
         } else if(this.isTimeUuidField(field)) {
-            entity.primaryKeySaathratri.hasTimeUUID = true; 
-            field.fieldTypeTimeUuidSaathratri = true;    
-        } else if (field.fieldType === "UUID") {
+            entity.primaryKeySaathratri.hasTimeUUID = true;    
+        } else if (this.isUuidField(field)) {
             entity.primaryKeySaathratri.hasUUID = true;
-            field.fieldTypeUUIDSaathratri = true;
         }
     
         field.isCompositePrimaryKeyField = true;
@@ -310,6 +306,22 @@ export const cassandraSpringBootUtils = {
                 entity.anyFieldHasTextContentType = false;
             }
         }
+
+        if (entity?.anyFieldIsTimeUUIDSaathratri !== true) {
+            if(this.isTimeUuidField(field)) {
+                entity.anyFieldIsTimeUUIDSaathratri = true;
+            } else {
+                entity.anyFieldIsTimeUUIDSaathratri = false;
+            }
+        }
+
+        if (entity?.anyFieldIsUUIDSaathratri !== true) {
+            if(this.isUuidField(field)) {
+                entity.anyFieldIsUUIDSaathratri = true;
+            } else {
+                entity.anyFieldIsUUIDSaathratri = false;
+            }
+        }
     },
     
     isDateField(field) {
@@ -334,6 +346,11 @@ export const cassandraSpringBootUtils = {
         return annotation === "CassandraType.Name.TIMEUUID";
     },
 
+    isUuidField(field) {
+        const annotation = field.options?.customAnnotation[1];
+        return annotation === "CassandraType.Name.UUID";
+    },
+
     processFieldTypeAttributes(field) {
         if (field.options?.customAnnotation[0] === "CassandraType.Name.SET") {
             field.fieldTypeSetSaathratri = true;
@@ -349,6 +366,8 @@ export const cassandraSpringBootUtils = {
             field.fieldTypeTimedSaathratri = true;
             field.fieldContainsUtcSaathratri = true;
             field.fieldTypeTemporal = true;
+        } else if (this.isUuidField(field)) {
+            field.fieldTypeUuidSaathratri = true;
         } else if (this.isTimeUuidField(field)) {
             field.fieldTypeTemporal = true;
             field.fieldTypeTimeUuidSaathratri = true;

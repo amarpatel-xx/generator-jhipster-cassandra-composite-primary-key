@@ -47,6 +47,12 @@ import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 <%_ enumImports.forEach( (importedPath, importedType) => { _%>
 import { <%- importedType %> } from '<%- importedPath %>';
 <%_ }); _%>
+<%_ if (anyFieldIsUUIDSaathratri) { _%>
+import { v4 as uuidv4 } from 'uuid'; // Import UUID (UUID v4)
+<%_ } _%>
+<%_ if (anyFieldIsTimeUUIDSaathratri) { _%>
+import { v1 as uuidv1 } from 'uuid'; // Import TimeUUID (UUID v1)
+<%_ } _%>
 @Component({
     standalone: true,
     selector: '<%= jhiPrefixDashed %>-<%= entityFileName %>-update',
@@ -210,6 +216,34 @@ _%>
             );
         }             
     <%_ } _%>
+
+    <%_ if (anyFieldIsUUIDSaathratri) { _%>
+        // Generate a new UUID and update the form
+        generateUUID(field: string): void {
+            const newUUID = uuidv4();
+            this.editForm.get(field)?.setValue(newUUID);
+        }
+
+        // Clear the UUID field
+        clearUUID(field: string): void {
+            this.editForm.get(field)?.setValue('');
+        }
+    <%_ } _%>
+
+    <%_ if (anyFieldIsTimeUUIDSaathratri) { _%>
+        // Generate a new TimeUUID and update the form
+        generateTimeUUID(field: string): void {
+            const newTimeUUID = uuidv1();
+            this.editForm.get(field)?.setValue(newTimeUUID);
+        }
+
+        // Clear the TimeUUID field
+        clearTimeUUID(field: string): void {
+            this.editForm.get(field)?.setValue('');
+        }
+    <%_ } _%>
+
+
 
     protected subscribeToSaveResponse(result: Observable<HttpResponse<I<%= entityAngularName %>>>): void {
         result.pipe(finalize(() => this.onSaveFinalize())).subscribe({

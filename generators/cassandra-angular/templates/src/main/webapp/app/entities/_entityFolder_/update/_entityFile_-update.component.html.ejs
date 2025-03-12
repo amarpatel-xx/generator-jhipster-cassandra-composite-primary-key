@@ -119,6 +119,24 @@ _%>
         <%_ } else if (field.fieldTypeBoolean) { _%>
                         <input type="<%= fieldInputType %>" class="form-check" name="<%= fieldName %>" id="field_<%= fieldName %>"
                             data-cy="<%= fieldName %>" formControlName="<%= fieldName %>" <% if (readonly) { %> [readonly]="true"<% } %>/>
+        <%_ } else if (field.fieldTypeUuidSaathratri) { _%>
+            <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
+                formControlName="<%= fieldName %>"/>
+            <button type="button" class="btn btn-primary" (click)="generateUUID('<%= primaryKeySaathratri.name %>.<%= field.fieldName %>')">Generate</button>
+            <button type="button" class="btn btn-danger" (click)="clearUUID('<%= primaryKeySaathratri.name %>.<%= field.fieldName %>')" [disabled]="!editForm.get('<%= primaryKeySaathratri.name %>.<%= fieldName %>')?.value">
+                Clear
+            </button>
+        <%_ } else if (field.fieldTypeTimeUuidSaathratri) { _%>
+            <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
+                formControlName="<%= fieldName %>"/>
+            <button type="button" class="btn btn-primary" (click)="generateTimeUUID('<%= primaryKeySaathratri.name %>.<%= field.fieldName %>')">Generate</button>
+            <button
+                type="button"
+                class="btn btn-danger"
+                (click)="clearTimeUUID('<%= primaryKeySaathratri.name %>.<%= field.fieldName %>')"
+                [disabled]="!editForm.get('<%= primaryKeySaathratri.name %>.<%= fieldName %>')?.value"> 
+                Clear 
+            </button>
         <%_ } else { _%>
                         <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                             formControlName="<%= fieldName %>"/>
@@ -266,6 +284,24 @@ _%>
     <%_ } else if (field.fieldTypeBoolean) { _%>
                     <input type="<%= fieldInputType %>" class="form-check" name="<%= fieldName %>" id="field_<%= fieldName %>"
                            data-cy="<%= fieldName %>" formControlName="<%= fieldName %>" <% if (readonly) { %> [readonly]="true"<% } %>/>
+    <%_ } else if (field.fieldTypeTimeUuidSaathratri) { _%>
+            <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
+                formControlName="<%= fieldName %>"/>
+            <button type="button" class="btn btn-primary" (click)="generateTimeUUID('<%= field.fieldName %>')">Generate</button>
+            <button
+                type="button"
+                class="btn btn-danger"
+                (click)="clearTimeUUID('<%= field.fieldName %>')"
+                [disabled]="!editForm.get('<%= fieldName %>')?.value"> 
+                Clear 
+            </button>
+    <%_ } else if (field.fieldTypeUuidSaathratri) { _%>
+            <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
+                formControlName="<%= fieldName %>"/>
+            <button type="button" class="btn btn-primary" (click)="generateUUID('<%= field.fieldName %>')">Generate</button>
+            <button type="button" class="btn btn-danger" (click)="clearUUID('<%= field.fieldName %>')" [disabled]="!editForm.get('<%= fieldName %>')?.value">
+                Clear
+            </button>
     <%_ } else { _%>
                     <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                              formControlName="<%= fieldName %>"/>
