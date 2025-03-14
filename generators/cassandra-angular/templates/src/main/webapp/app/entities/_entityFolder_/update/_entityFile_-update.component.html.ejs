@@ -237,6 +237,61 @@ _%>
                         <option [value]="<%= this._.lowerFirst(fieldType) %>">__jhiTranslatePipeEnum__('<%= enumPrefix %>', { "value": "<%= this._.lowerFirst(fieldType) %>" })</option>
                     }
                     </select>
+  <%_ } else if(field.id) { _%>
+    <%_ if (field.fieldTypeLocalDate || field.fieldTypeLocalDateSaathratri) { _%>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</mat-label>
+                        <br>
+                        <input
+                        matInput
+                        [matDatepicker]="<%= fieldName %>Picker"
+                        id="field_<%= fieldName %>"
+                        data-cy="<%= fieldName %>"
+                        formControlName="<%= fieldName %>"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mat-datepicker-toggle>
+                        <mat-datepicker #<%= fieldName %>Picker></mat-datepicker>
+                    </mat-form-field>
+    <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
+            <app-date-time
+                formControlName="<%= fieldName %>"
+                [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
+                [labelClass]="'form-label'"
+                [isRequired]="false"
+                (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
+            ></app-date-time>
+            <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateDateTime('<%= fieldName %>')">Generate</button>
+            <button
+                *ngIf="isNew"
+                type="button"
+                class="btn btn-danger"
+                (click)="reset('<%= fieldName %>')"
+                [disabled]="!editForm.get('<%= fieldName %>')?.dirty"> 
+                Reset 
+            </button>
+      <%_ } else if (field.fieldTypeTimeUuidSaathratri) { _%>
+            <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
+                formControlName="<%= fieldName %>"/>
+            <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateTimeUUID('<%= fieldName %>')">Generate</button>
+            <button
+                *ngIf="isNew"
+                type="button"
+                class="btn btn-danger"
+                (click)="reset('<%= fieldName %>')"
+                [disabled]="!editForm.get('<%= fieldName %>')?.value"> 
+                Reset 
+            </button>
+    <%_ } else if (field.fieldTypeUuidSaathratri) { _%>
+            <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
+                formControlName="<%= fieldName %>"/>
+            <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateUUID('<%= fieldName %>')">Generate</button>
+            <button *ngIf="isNew" type="button" class="btn btn-danger" (click)="reset('<%= fieldName %>')" [disabled]="!editForm.get('<%= fieldName %>')?.value">
+                Reset
+            </button>
+    <%_ } else { _%>
+        <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
+        formControlName="<%= fieldName %>"/>
+    <%_ } _%>
   <%_ } else { _%>
     <%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
                     <div>
@@ -288,14 +343,6 @@ _%>
                         [isRequired]="false"
                         (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
                     ></app-date-time>
-                    <button type="button" class="btn btn-primary" (click)="generateDateTime('<%= fieldName %>')">Generate</button>
-                    <button
-                        type="button"
-                        class="btn btn-danger"
-                        (click)="reset('<%= fieldName %>')"
-                        [disabled]="!editForm.get('<%= fieldName %>')?.dirty"> 
-                        Reset 
-                    </button>
     <%_ } else if (field.blobContentTypeText) { _%>
                     <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                               formControlName="<%= fieldName %>"<% if (readonly) { %> [readonly]="true"<% } %>></textarea>
@@ -305,21 +352,9 @@ _%>
     <%_ } else if (field.fieldTypeTimeUuidSaathratri) { _%>
             <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                 formControlName="<%= fieldName %>"/>
-            <button type="button" class="btn btn-primary" (click)="generateTimeUUID('<%= fieldName %>')">Generate</button>
-            <button
-                type="button"
-                class="btn btn-danger"
-                (click)="reset('<%= fieldName %>')"
-                [disabled]="!editForm.get('<%= fieldName %>')?.value"> 
-                Reset 
-            </button>
     <%_ } else if (field.fieldTypeUuidSaathratri) { _%>
             <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                 formControlName="<%= fieldName %>"/>
-            <button type="button" class="btn btn-primary" (click)="generateUUID('<%= fieldName %>')">Generate</button>
-            <button type="button" class="btn btn-danger" (click)="reset('<%= fieldName %>')" [disabled]="!editForm.get('<%= fieldName %>')?.value">
-                Reset
-            </button>
     <%_ } else { _%>
                     <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                              formControlName="<%= fieldName %>"/>
