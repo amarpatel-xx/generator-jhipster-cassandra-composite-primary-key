@@ -19,8 +19,11 @@ import { MaterialModule } from '../../shared/material.module';
   ],
 })
 export class DateTimeComponent implements OnInit, ControlValueAccessor {
-  //
+
   editForm!: FormGroup;
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  private lastValidValue: number | null = null; // Store last valid timestamp
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange: any = () => {};
@@ -56,37 +59,11 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
       { validators: this.dateTimeValidator }, // Attach the custom validator
     );
 
-    // Initialize only if isRequired is true
-    if (this.isRequired) {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const amPm = hours >= 12 ? 'PM' : 'AM';
-  
-      this.editForm.setValue(
-        {
-          date: now, // Ensure 'date' is a valid Date object
-          hours: this.padZero(hours % 12 || 12), // Convert to 12-hour format
-          minutes: this.padZero(minutes), // Ensure two-digit minute format
-          amPm: amPm,
-          seconds: now.getSeconds(),
-          milliseconds: now.getMilliseconds(),
-        },
-        { emitEvent: false }
-      );
-    }
-
     // Listen to changes on relevant fields and reset seconds and milliseconds
     this.editForm.valueChanges.subscribe(() => {
       this.updateTimestamp();
       this.onTouched();
       this.isValid.emit(this.editForm.valid); // Emit the valid property directly
-    });
-
-    // Ensure validation is updated in the next change detection cycle
-    // This esures the component is not marked as invalid after it is being set above.
-    setTimeout(() => {
-      this.editForm.updateValueAndValidity();
     });
   }
 
@@ -118,22 +95,39 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
   }
 
   // ControlValueAccessor implementation
-  writeValue(value: number): void {
-    if (value) {
+  writeValue(value: number | null): void {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (value !== null && value !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (this.lastValidValue === null || this.lastValidValue === undefined) {
+        this.lastValidValue = value; // Store only the first valid value
+      }
+  
       const newDate = new Date(value);
       this.editForm.setValue(
         {
           date: newDate,
-          hours: this.padZero(newDate.getHours() % 12 || 12), // Format hours as 2 digits
-          minutes: this.padZero(newDate.getMinutes()), // Format minutes as 2 digits
+          hours: this.padZero(newDate.getHours() % 12 || 12),
+          minutes: this.padZero(newDate.getMinutes()),
           amPm: newDate.getHours() >= 12 ? 'PM' : 'AM',
           seconds: newDate.getSeconds(),
           milliseconds: newDate.getMilliseconds(),
         },
-        { emitEvent: false },
+        { emitEvent: true }
       );
+    } else {
+      this.reset();
     }
-  }
+  }  
+
+  reset(): void {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (this.lastValidValue !== null && this.lastValidValue !== undefined) {
+      this.writeValue(this.lastValidValue); // Restore last valid value
+    } else {
+      this.editForm.reset(); // Default reset if no last valid value exists
+    }
+  }  
 
   registerOnChange(fn: any): void {
     this.onChange = fn;

@@ -26,7 +26,6 @@
             placeholder="hh"
             min="01"
             max="12"
-            [value]="editForm.get('hours')?.value | number: '2.0'"
             (input)="onInput($event, 'hours')"
           />
           <mat-error *ngIf="editForm.get('hours')?.hasError('required')"> Hours are required </mat-error>
@@ -44,7 +43,6 @@
             placeholder="mm"
             min="00"
             max="59"
-            [value]="editForm.get('minutes')?.value | number: '2.0'"
             (input)="onInput($event, 'minutes')"
           />
           <mat-error *ngIf="editForm.get('minutes')?.hasError('required')"> Minutes are required </mat-error>

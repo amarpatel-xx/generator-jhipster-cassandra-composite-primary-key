@@ -217,16 +217,19 @@ _%>
         }             
     <%_ } _%>
 
+    <%_ if (anyFieldIsTimeDerivedSaathratri) { _%>
+        // Generate today's date and current time
+        generateDateTime(field: string): void {
+            const currentTimestamp = Date.now(); // Get current timestamp in milliseconds
+            this.editForm.get(field)?.setValue(currentTimestamp);
+        }
+    <%_ } _%>
+
     <%_ if (anyFieldIsUUIDSaathratri) { _%>
         // Generate a new UUID and update the form
         generateUUID(field: string): void {
             const newUUID = uuidv4();
             this.editForm.get(field)?.setValue(newUUID);
-        }
-
-        // Clear the UUID field
-        clearUUID(field: string): void {
-            this.editForm.get(field)?.setValue('');
         }
     <%_ } _%>
 
@@ -236,14 +239,14 @@ _%>
             const newTimeUUID = uuidv1();
             this.editForm.get(field)?.setValue(newTimeUUID);
         }
-
-        // Clear the TimeUUID field
-        clearTimeUUID(field: string): void {
-            this.editForm.get(field)?.setValue('');
-        }
     <%_ } _%>
 
-
+    <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri || anyFieldIsTimeDerivedSaathratri) { _%>
+        // Clear the TimeUUID field
+        reset(field: string): void {
+            this.editForm.get(field)?.reset();
+        }
+    <%_ } _%>
 
     protected subscribeToSaveResponse(result: Observable<HttpResponse<I<%= entityAngularName %>>>): void {
         result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
