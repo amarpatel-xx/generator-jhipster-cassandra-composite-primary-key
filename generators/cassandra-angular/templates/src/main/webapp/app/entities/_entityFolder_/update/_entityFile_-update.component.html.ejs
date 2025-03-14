@@ -343,6 +343,14 @@ _%>
                         [isRequired]="false"
                         (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
                     ></app-date-time>
+                    <button type="button" class="btn btn-primary" (click)="generateDateTime('<%= fieldName %>')">Generate</button>
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        (click)="reset('<%= fieldName %>')"
+                        [disabled]="!editForm.get('<%= fieldName %>')?.dirty"> 
+                        Reset 
+                    </button>
     <%_ } else if (field.blobContentTypeText) { _%>
                     <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                               formControlName="<%= fieldName %>"<% if (readonly) { %> [readonly]="true"<% } %>></textarea>
@@ -352,9 +360,21 @@ _%>
     <%_ } else if (field.fieldTypeTimeUuidSaathratri) { _%>
             <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                 formControlName="<%= fieldName %>"/>
+            <button type="button" class="btn btn-primary" (click)="generateTimeUUID('<%= fieldName %>')">Generate</button>
+            <button
+                type="button"
+                class="btn btn-danger"
+                (click)="reset('<%= fieldName %>')"
+                [disabled]="!editForm.get('<%= fieldName %>')?.value"> 
+                Reset 
+            </button>
     <%_ } else if (field.fieldTypeUuidSaathratri) { _%>
             <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                 formControlName="<%= fieldName %>"/>
+            <button type="button" class="btn btn-primary" (click)="generateUUID('<%= fieldName %>')">Generate</button>
+            <button type="button" class="btn btn-danger" (click)="reset('<%= fieldName %>')" [disabled]="!editForm.get('<%= fieldName %>')?.value">
+                Reset
+            </button>
     <%_ } else { _%>
                     <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                              formControlName="<%= fieldName %>"/>

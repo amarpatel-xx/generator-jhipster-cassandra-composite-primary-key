@@ -127,6 +127,10 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
     } else {
       this.editForm.reset(); // Default reset if no last valid value exists
     }
+
+    // Override the dirty state to ensure the form is clean after reset
+    this.editForm.markAsPristine();
+    this.editForm.markAsUntouched();
   }  
 
   registerOnChange(fn: any): void {
