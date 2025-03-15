@@ -85,6 +85,12 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
     protected activatedRoute = inject(ActivatedRoute);
     protected router = inject(Router);
 
+    <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri) { _%>
+        protected isResetDisabled: Record<string, boolean> = {}; // Track reset button states
+        // eslint-disable-next-line @typescript-eslint/member-ordering
+        private lastSavedValues: Record<string, any> = {}; // Store last valid values
+    <%_ } _%>
+
     // eslint-disable-next-line @typescript-eslint/member-ordering
     editForm: <%= entityAngularName %>FormGroup = this.<%= entityInstance %>FormService.create<%= entityAngularName %>FormGroup();
 
@@ -130,6 +136,15 @@ _%>
             }
 
         });
+
+        <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri) { _%>
+            // Listen for changes to enable/disable reset button
+            Object.keys(this.editForm.controls).forEach((field) => {
+                this.editForm.get(field)?.valueChanges.subscribe(() => {
+                this.updateResetButtonState(field);
+                });
+            });
+        <%_ } _%>
     }
 
 <%_ if (anyFieldIsBlobDerived) { _%>
@@ -182,6 +197,11 @@ _%>
             <%_ } _%>
         <%_ } else { _%>
             <%_ if (updatableEntity) { _%>
+                    // Update the last saved values when saving
+                    Object.keys(this.editForm.controls).forEach((field) => {
+                        this.lastSavedValues[field] = this.editForm.get(field)?.value;
+                    });
+
                     // Single-value Primary Key  
                     if(this.isNew) {
                         this.subscribeToSaveResponse(this.<%= entityInstance %>Service.create(<%= entityInstance %>));
@@ -253,10 +273,25 @@ _%>
         }
     <%_ } _%>
 
-    <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri || anyFieldIsTimeDerivedSaathratri) { _%>
+    <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri) { _%>
         // Clear the TimeUUID field
         reset(field: string): void {
-            this.editForm.get(field)?.reset();
+            const lastValue = this.lastSavedValues[field];
+            const currentValue = this.editForm.get(field)?.value;
+
+            // Only reset if the value has changed
+            if (currentValue !== lastValue) {
+                this.editForm.get(field)?.setValue(lastValue, { emitEvent: false });
+            }
+
+            // Ensure reset button gets disabled after restoring the previous value
+            this.updateResetButtonState(field);
+        }
+
+        updateResetButtonState(field: string): void {
+            const lastValue = this.lastSavedValues[field];
+            const currentValue = this.editForm.get(field)?.value;
+            this.isResetDisabled[field] = currentValue === lastValue; // Disable if unchanged
         }
     <%_ } _%>
 
@@ -283,6 +318,13 @@ _%>
         this.<%= entityInstance %> = <%= entityInstance %>;
         this.<%= entityInstance %>FormService.resetForm(this.editForm, <%= entityInstance %>);
 
+        <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri) { _%>
+            // Store the last saved values from the response
+            Object.keys(this.editForm.controls).forEach((field) => {
+                this.lastSavedValues[field] = this.editForm.get(field)?.value;
+                this.isResetDisabled[field] = true; // Disable reset button on load
+            });
+        <%_ } _%>
     }
 
 

@@ -135,7 +135,7 @@ _%>
             <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                 formControlName="<%= fieldName %>"/>
             <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateUUID('<%= primaryKeySaathratri.name %>.<%= fieldName %>')">Generate</button>
-            <button *ngIf="isNew" type="button" class="btn btn-danger" (click)="reset('<%= primaryKeySaathratri.name %>.<%= fieldName %>')" [disabled]="!editForm.get('<%= primaryKeySaathratri.name %>.<%= fieldName %>')?.value">
+            <button *ngIf="isNew" type="button" class="btn btn-danger" (click)="reset('<%= primaryKeySaathratri.name %>.<%= fieldName %>')" [disabled]="isResetDisabled['<%= primaryKeySaathratri.name %>.<%= fieldName %>']">">
                 Reset
             </button>
         <%_ } else if (field.fieldTypeTimeUuidSaathratri) { _%>
@@ -147,7 +147,7 @@ _%>
                 type="button"
                 class="btn btn-danger"
                 (click)="reset('<%= primaryKeySaathratri.name %>.<%= fieldName %>')"
-                [disabled]="!editForm.get('<%= primaryKeySaathratri.name %>.<%= fieldName %>')?.value"> 
+                [disabled]="isResetDisabled['<%= primaryKeySaathratri.name %>.<%= fieldName %>']"> 
                 Reset 
             </button>
         <%_ } else { _%>
@@ -284,14 +284,14 @@ _%>
                 type="button"
                 class="btn btn-danger"
                 (click)="reset('<%= fieldName %>')"
-                [disabled]="!editForm.get('<%= fieldName %>')?.value"> 
+                [disabled]="isResetDisabled['<%= fieldName %>']"> 
                 Reset 
             </button>
     <%_ } else if (field.fieldTypeUuidSaathratri) { _%>
             <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                 formControlName="<%= fieldName %>"/>
             <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateUUID('<%= fieldName %>')">Generate</button>
-            <button *ngIf="isNew" type="button" class="btn btn-danger" (click)="reset('<%= fieldName %>')" [disabled]="!editForm.get('<%= fieldName %>')?.value">
+            <button *ngIf="isNew" type="button" class="btn btn-danger" (click)="reset('<%= fieldName %>')" [disabled]="isResetDisabled['<%= fieldName %>']">">
                 Reset
             </button>
     <%_ } else { _%>
@@ -374,14 +374,14 @@ _%>
                 type="button"
                 class="btn btn-danger"
                 (click)="reset('<%= fieldName %>')"
-                [disabled]="!editForm.get('<%= fieldName %>')?.value"> 
+                [disabled]="isResetDisabled['<%= fieldName %>']"> 
                 Reset 
             </button>
     <%_ } else if (field.fieldTypeUuidSaathratri) { _%>
             <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                 formControlName="<%= fieldName %>"/>
             <button type="button" class="btn btn-primary" (click)="generateUUID('<%= fieldName %>')">Generate</button>
-            <button type="button" class="btn btn-danger" (click)="reset('<%= fieldName %>')" [disabled]="!editForm.get('<%= fieldName %>')?.value">
+            <button type="button" class="btn btn-danger" (click)="reset('<%= fieldName %>')" [disabled]="isResetDisabled['<%= fieldName %>']">
                 Reset
             </button>
     <%_ } else { _%>
