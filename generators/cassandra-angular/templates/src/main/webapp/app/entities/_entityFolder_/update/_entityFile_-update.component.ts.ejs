@@ -217,7 +217,13 @@ _%>
             <%_ } _%>
             );
         }
-        
+
+        // Generate today's date and current time
+        generateDateTime(field: string): void {
+            const currentTimestamp = Date.now(); // Get current timestamp in milliseconds
+            this.editForm.get(field)?.setValue(currentTimestamp);
+        }
+
         // Update dirty state when event is emitted from child
         updateDirtyState(event: { field: string; isDirty: boolean }): void {
             this.isDateTimeDirty[event.field] = event.isDirty; // Store dirty state correctly
@@ -227,14 +233,6 @@ _%>
         resetDateTime(field: string): void {
             this.editForm.get(field)?.reset();
             this.isDateTimeDirty[field] = false;
-        }
-    <%_ } _%>
-
-    <%_ if (anyFieldIsTimeDerivedSaathratri) { _%>
-        // Generate today's date and current time
-        generateDateTime(field: string): void {
-            const currentTimestamp = Date.now(); // Get current timestamp in milliseconds
-            this.editForm.get(field)?.setValue(currentTimestamp);
         }
     <%_ } _%>
 
