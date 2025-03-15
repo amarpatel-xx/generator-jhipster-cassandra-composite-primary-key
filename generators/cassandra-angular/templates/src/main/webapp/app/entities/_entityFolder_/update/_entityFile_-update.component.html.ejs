@@ -113,7 +113,8 @@ _%>
                             [labelClass]="'form-label'"
                             [isRequired]="true"
                             (isValid)="onDateTimeValid('<%= primaryKeySaathratri.name %>.<%= fieldName %>', $event)"
-                            (dirtyStateChange)="updateDirtyState($event)">
+                            (dirtyStateChange)="updateDirtyState($event)"
+                            [isNew]="isNew">
                         </app-date-time>
                         <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateDateTime('<%= primaryKeySaathratri.name %>.<%= fieldName %>')">Generate</button>
                         <button
@@ -262,7 +263,8 @@ _%>
                 [labelClass]="'form-label'"
                 [isRequired]="false"
                 (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
-                (dirtyStateChange)="updateDirtyState($event)">
+                (dirtyStateChange)="updateDirtyState($event)"
+                [isNew]="isNew">
             </app-date-time>
             <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateDateTime('<%= fieldName %>')">Generate</button>
             <button
@@ -347,7 +349,8 @@ _%>
                         [labelClass]="'form-label'"
                         [isRequired]="false"
                         (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
-                        (dirtyStateChange)="updateDirtyState($event)">
+                        (dirtyStateChange)="updateDirtyState($event)"
+                        [isNew]="isNew">
                     </app-date-time>
                     <button type="button" class="btn btn-primary" (click)="generateDateTime('<%= fieldName %>')">Generate</button>
                     <button
