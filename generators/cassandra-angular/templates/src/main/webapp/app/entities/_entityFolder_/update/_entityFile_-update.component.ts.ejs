@@ -65,6 +65,8 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
     isNew = false;
     <%_ if(anyFieldIsTimeDerivedSaathratri) { _%>
         isDateTimeValid: Record<string, boolean> = {};
+        // Track the dirty state for each date-time field
+        isDateTimeDirty: Record<string, boolean> = {};
     <%_ } _%>
     <%= entityInstance %>: I<%= entityAngularName %> | null = null;
 <%_ enumImports.forEach( (importedPath, importedType) => { _%>
@@ -214,7 +216,18 @@ _%>
                 _%>
             <%_ } _%>
             );
-        }             
+        }
+        
+        // Update dirty state when event is emitted from child
+        updateDirtyState(event: { field: string; isDirty: boolean }): void {
+            this.isDateTimeDirty[event.field] = event.isDirty; // Store dirty state correctly
+        }
+
+        // Reset specific field and mark it as pristine
+        resetDateTime(field: string): void {
+            this.editForm.get(field)?.reset();
+            this.isDateTimeDirty[field] = false;
+        }
     <%_ } _%>
 
     <%_ if (anyFieldIsTimeDerivedSaathratri) { _%>

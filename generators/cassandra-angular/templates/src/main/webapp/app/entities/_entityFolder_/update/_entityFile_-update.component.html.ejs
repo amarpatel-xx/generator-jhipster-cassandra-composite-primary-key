@@ -107,19 +107,21 @@ _%>
         <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
 
                         <app-date-time
+                            fieldName="<%= fieldName %>"
                             formControlName="<%= fieldName %>"
                             [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
                             [labelClass]="'form-label'"
                             [isRequired]="true"
-                            (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
-                        ></app-date-time>
+                            (isValid)="onDateTimeValid('<%= primaryKeySaathratri.name %>.<%= fieldName %>', $event)"
+                            (dirtyStateChange)="updateDirtyState($event)">
+                        </app-date-time>
                         <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateDateTime('<%= primaryKeySaathratri.name %>.<%= fieldName %>')">Generate</button>
                         <button
                             *ngIf="isNew"
                             type="button"
                             class="btn btn-danger"
                             (click)="reset('<%= primaryKeySaathratri.name %>.<%= fieldName %>')"
-                            [disabled]="!editForm.get('<%= primaryKeySaathratri.name %>.<%= fieldName %>')?.value"> 
+                            [disabled]="!isDateTimeDirty['<%= primaryKeySaathratri.name %>.<%= fieldName %>']"> 
                             Reset 
                         </button>
         <%_ } else if (field.blobContentTypeText) { _%>
@@ -254,19 +256,21 @@ _%>
                     </mat-form-field>
     <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
             <app-date-time
+                fieldName="<%= fieldName %>"
                 formControlName="<%= fieldName %>"
                 [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
                 [labelClass]="'form-label'"
                 [isRequired]="false"
                 (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
-            ></app-date-time>
+                (dirtyStateChange)="updateDirtyState($event)">
+            </app-date-time>
             <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateDateTime('<%= fieldName %>')">Generate</button>
             <button
                 *ngIf="isNew"
                 type="button"
                 class="btn btn-danger"
                 (click)="reset('<%= fieldName %>')"
-                [disabled]="!editForm.get('<%= fieldName %>')?.dirty"> 
+                [disabled]="!isDateTimeDirty['<%= fieldName %>']"> 
                 Reset 
             </button>
       <%_ } else if (field.fieldTypeTimeUuidSaathratri) { _%>
@@ -337,18 +341,20 @@ _%>
                     </mat-form-field>
       <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
                     <app-date-time
+                        fieldName="<%= fieldName %>"
                         formControlName="<%= fieldName %>"
                         [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
                         [labelClass]="'form-label'"
                         [isRequired]="false"
                         (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
-                    ></app-date-time>
+                        (dirtyStateChange)="updateDirtyState($event)">
+                    </app-date-time>
                     <button type="button" class="btn btn-primary" (click)="generateDateTime('<%= fieldName %>')">Generate</button>
                     <button
                         type="button"
                         class="btn btn-danger"
                         (click)="reset('<%= fieldName %>')"
-                        [disabled]="!editForm.get('<%= fieldName %>')?.dirty"> 
+                        [disabled]="!isDateTimeDirty['<%= fieldName %>']"> 
                         Reset 
                     </button>
     <%_ } else if (field.blobContentTypeText) { _%>
