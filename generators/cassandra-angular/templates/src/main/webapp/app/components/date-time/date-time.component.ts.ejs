@@ -139,6 +139,16 @@ export class DateTimeComponent implements OnInit, ControlValueAccessor {
       this.writeValue(this.lastValidValue); // Restore last valid value
     } else {
       this.editForm.reset(); // Default reset if no last valid value exists
+      this.editForm.setValue({
+          date: null, // Set date to null (clears input)
+          hours: null, // Clear hours
+          minutes: null, // Clear minutes
+          amPm: null, // Clear AM/PM selection
+          seconds: null, // Reset seconds
+          milliseconds: null, // Reset milliseconds
+        },
+        { emitEvent: false }
+      );
     }
 
     // Override the dirty state to ensure the form is clean after reset
