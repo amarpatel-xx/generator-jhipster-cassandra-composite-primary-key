@@ -120,7 +120,7 @@ _%>
                             *ngIf="isNew"
                             type="button"
                             class="btn btn-danger"
-                            (click)="reset('<%= primaryKeySaathratri.name %>.<%= fieldName %>')"
+                            (click)="resetDateTime('<%= primaryKeySaathratri.name %>.<%= fieldName %>')"
                             [disabled]="!isDateTimeDirty['<%= primaryKeySaathratri.name %>.<%= fieldName %>']"> 
                             Reset 
                         </button>
@@ -269,7 +269,7 @@ _%>
                 *ngIf="isNew"
                 type="button"
                 class="btn btn-danger"
-                (click)="reset('<%= fieldName %>')"
+                (click)="resetDateTime('<%= fieldName %>')"
                 [disabled]="!isDateTimeDirty['<%= fieldName %>']"> 
                 Reset 
             </button>
@@ -353,7 +353,7 @@ _%>
                     <button
                         type="button"
                         class="btn btn-danger"
-                        (click)="reset('<%= fieldName %>')"
+                        (click)="resetDateTime('<%= fieldName %>')"
                         [disabled]="!isDateTimeDirty['<%= fieldName %>']"> 
                         Reset 
                     </button>
