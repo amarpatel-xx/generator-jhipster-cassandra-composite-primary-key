@@ -200,6 +200,7 @@ _%>
                     // Update the last saved values when saving
                     Object.keys(this.editForm.controls).forEach((field) => {
                         this.lastSavedValues[field] = this.editForm.get(field)?.value;
+                        this.isResetDisabled[field] = true; // Disable reset button on load
                     });
 
                     // Single-value Primary Key  
