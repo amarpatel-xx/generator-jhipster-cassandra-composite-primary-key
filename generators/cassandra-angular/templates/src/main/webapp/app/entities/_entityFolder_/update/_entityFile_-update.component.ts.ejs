@@ -17,6 +17,7 @@
  limitations under the License.
 -%>
 import { Component, inject, OnInit<% if (anyFieldHasImageContentType) { %>, ElementRef<% } %> } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -133,6 +134,8 @@ _%>
             this.<%= entityInstance %> = <%= entityInstance %>;
             if (<%= entityInstance %>) {
                 this.updateForm(<%= entityInstance %>);
+            } else {
+                this.initializeResetButtonStates();
             }
 
         });
@@ -263,6 +266,7 @@ _%>
         generateUUID(field: string): void {
             const newUUID = uuidv4();
             this.editForm.get(field)?.setValue(newUUID);
+            this.updateResetButtonState(field);
         }
     <%_ } _%>
 
@@ -271,6 +275,7 @@ _%>
         generateTimeUUID(field: string): void {
             const newTimeUUID = uuidv1();
             this.editForm.get(field)?.setValue(newTimeUUID);
+            this.updateResetButtonState(field);
         }
     <%_ } _%>
 
@@ -292,6 +297,7 @@ _%>
         updateResetButtonState(field: string): void {
             const lastValue = this.lastSavedValues[field];
             const currentValue = this.editForm.get(field)?.value;
+            
             if(currentValue === null) {
                 this.isResetDisabled[field] = true; // Disable if null
             } else {
@@ -331,5 +337,19 @@ _%>
         <%_ } _%>
     }
 
+    protected initializeResetButtonStates(): void {
+        Object.keys(this.editForm.controls).forEach(field => {
+            const control = this.editForm.get(field);
 
+            // Handle nested composite keys
+            if (control instanceof FormGroup) {
+                Object.keys(control.controls).forEach(nestedField => {
+                this.updateResetButtonState(`<%= primaryKeySaathratri.name %>.${nestedField}`);
+                });
+            } else {
+                this.updateResetButtonState(field);
+            }
+        }
+    );
+  }
 }
