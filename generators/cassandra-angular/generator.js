@@ -133,7 +133,15 @@ export default class extends BaseApplicationGenerator {
                   'components/date-time/date-time.component.css',
                   'components/date-time/date-time.component.html',
                   'components/date-time/date-time.component.spec.ts',
-                  'components/date-time/date-time.component.ts'
+                  'components/date-time/date-time.component.ts',
+                  'components/set-component/set-component.component.css',
+                  'components/set-component/set-component.component.html',
+                  'components/set-component/set-component.component.spec.ts',
+                  'components/set-component/set-component.component.ts',
+                  'components/map-component/map-component.component.css',
+                  'components/map-component/map-component.component.html',
+                  'components/map-component/map-component.component.spec.ts',
+                  'components/map-component/map-component.component.ts'
                 ]
               },
             ],

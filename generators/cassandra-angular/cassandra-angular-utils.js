@@ -148,8 +148,11 @@ export const angularSaathratriUtils = {
                 if(field.options) {
                     if(field.fieldTypeLocalDateSaathratri || field.fieldTypeTimedSaathratri) {
                         variableDeclarations.push(`${field.fieldName}?: dayjs.Dayjs | null`);
+                    } else if (field.fieldTypeSetSaathratri) { 
+                        variableDeclarations.push(`${field.fieldName}?: Set<string | null>`);
+                    } else if (field.fieldTypeMapSaathratri) { 
+                        variableDeclarations.push(`${field.fieldName}?: Map<string, ${field.tsType} | null>`);
                     } else {
-                        //variableDeclarations.push(this.getCompositePrimaryKeyClientVariableWithType(variablesWithTypes, field.fieldName, false));
                         variableDeclarations.push(`${field.fieldName}?: ${this.getTypescriptType(field)} | null`);
                     }
                 }

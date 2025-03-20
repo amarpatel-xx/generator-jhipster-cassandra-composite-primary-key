@@ -1,0 +1,17 @@
+<div class="container">
+  <div *ngFor="let input of inputFields; let i = index" class="input-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Key {{ i + 1 }}</mat-label>
+      <input matInput [(ngModel)]="inputFields[i].key">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Value {{ i + 1 }}</mat-label>
+      <input matInput [(ngModel)]="inputFields[i].value">
+    </mat-form-field>
+  </div>
+
+  <button mat-mini-fab color="primary" (click)="addRow()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

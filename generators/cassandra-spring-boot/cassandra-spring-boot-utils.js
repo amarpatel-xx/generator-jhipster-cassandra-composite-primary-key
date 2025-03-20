@@ -288,6 +288,22 @@ export const cassandraSpringBootUtils = {
             }
         }
 
+        if (entity?.anyFieldIsSetSaathratri !== true) {
+            if (this.isSetField(field)) {
+                entity.anyFieldIsSetSaathratri = true;
+            } else {
+                entity.anyFieldIsSetSaathratri = false;
+            }
+        }
+
+        if (entity?.anyFieldIsMapSaathratri !== true) {
+            if (this.isMapField(field)) {
+                entity.anyFieldIsMapSaathratri = true;
+            } else {
+                entity.anyFieldIsMapSaathratri = false;
+            }
+        }
+
         if (entity?.anyFieldHasImageContentType !== true) {
             if(this.isBlobFieldContentType(field, 'image')) { 
                 entity.anyFieldHasImageContentType = true;
@@ -351,10 +367,20 @@ export const cassandraSpringBootUtils = {
         return annotation === "CassandraType.Name.UUID";
     },
 
+    isSetField(field) {
+        const annotation = field.options?.customAnnotation[0];
+        return annotation === "CassandraType.Name.SET";
+    },
+
+    isMapField(field) {
+        const annotation = field.options?.customAnnotation[0];
+        return annotation === "CassandraType.Name.MAP";
+    },
+
     processFieldTypeAttributes(field) {
-        if (field.options?.customAnnotation[0] === "CassandraType.Name.SET") {
+        if (this.isSetField(field)) {
             field.fieldTypeSetSaathratri = true;
-        } else if (field.options?.customAnnotation[0] === "CassandraType.Name.MAP") {
+        } else if (this.isMapField(field)) {
             field.fieldTypeMapSaathratri = true;
         }
 

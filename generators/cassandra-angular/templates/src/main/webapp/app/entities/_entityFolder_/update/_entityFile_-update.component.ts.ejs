@@ -54,6 +54,12 @@ import { v4 as uuidv4 } from 'uuid'; // Import UUID (UUID v4)
 <%_ if (anyFieldIsTimeUUIDSaathratri) { _%>
 import { v1 as uuidv1 } from 'uuid'; // Import TimeUUID (UUID v1)
 <%_ } _%>
+<%_ if (anyFieldIsSetSaathratri) { _%>
+import { SetComponent } from 'app/components/set-component/set-component.component';
+<%_ } _%>
+<%_ if (anyFieldIsMapSaathratri) { _%>
+import { MapComponent } from 'app/components/map-component/map-component.component';
+<%_ } _%>
 @Component({
     standalone: true,
     selector: '<%= jhiPrefixDashed %>-<%= entityFileName %>-update',
@@ -85,6 +91,14 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
 <%_ } _%>
     protected activatedRoute = inject(ActivatedRoute);
     protected router = inject(Router);
+
+    <%_ if (anyFieldIsSetSaathratri) { _%>
+        protected setData: string[] = [];
+    <%_ } _%>
+
+    <%_ if (anyFieldIsMapSaathratri) { _%>
+        protected mapData: { key: string; value: string }[] = [];
+    <%_ } _%>
 
     <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri) { _%>
         protected isResetDisabled: Record<string, boolean> = {}; // Track reset button states
@@ -303,6 +317,22 @@ _%>
             } else {
                 this.isResetDisabled[field] = currentValue === lastValue; // Disable if unchanged
             }
+        }
+    <%_ } _%>
+
+    <%_ if (anyFieldIsSetSaathratri) { _%>
+        handleSetDataUpdate(data: string[]): void {
+            this.setData = data;
+            // eslint-disable-next-line no-console
+            console.log('Updated Data from Child:', this.setData);
+        }
+    <%_ } _%>
+
+    <%_ if (anyFieldIsMapSaathratri) { _%>
+        handleMapDataUpdate(data: { key: string; value: string }[]): void {
+            this.mapData = data;
+            // eslint-disable-next-line no-console
+            console.log('Updated Data from Child:', this.mapData);
         }
     <%_ } _%>
 
