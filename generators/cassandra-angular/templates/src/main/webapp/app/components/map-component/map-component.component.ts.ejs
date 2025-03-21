@@ -1,21 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-map-component',
   templateUrl: './map-component.component.html',
-  styleUrls: ['./map-component.component.scss']
+  styleUrls: ['./map-component.component.scss'],
 })
 export class MapComponent {
-  inputFields: { key: string; value: string }[] = [{ key: '', value: '' }];
+  addOnDetailsText: Map<string, string> = new Map();
 
-  @Output() dataChange = new EventEmitter<{ key: string; value: string }[]>();
+  @Output() dataChange = new EventEmitter<Map<string, string>>();
 
-  addRow(): void {
-    this.inputFields.push({ key: '', value: '' });
-    this.emitData();
+  addRow(key: string, value: string): void {
+    if (key) {
+      this.addOnDetailsText.set(key, value);
+      this.emitData();
+    }
+  }
+
+  updateValue(key: string, value: string): void {
+    if (this.addOnDetailsText.has(key)) {
+      this.addOnDetailsText.set(key, value);
+      this.emitData();
+    }
   }
 
   emitData(): void {
-    this.dataChange.emit(this.inputFields);
+    this.dataChange.emit(new Map(this.addOnDetailsText)); // Emit a copy
   }
 }

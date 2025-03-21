@@ -1,17 +1,17 @@
 <div class="container">
-  <div *ngFor="let input of inputFields; let i = index" class="input-row">
+  <div *ngFor="let entry of addOnDetailsText | keyvalue" class="input-row">
     <mat-form-field appearance="outline">
-      <mat-label>Key {{ i + 1 }}</mat-label>
-      <input matInput [(ngModel)]="inputFields[i].key">
+      <mat-label>Key</mat-label>
+      <input matInput [value]="entry.key" readonly />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Value {{ i + 1 }}</mat-label>
-      <input matInput [(ngModel)]="inputFields[i].value">
+      <mat-label>Value</mat-label>
+      <input matInput [value]="entry.value" (input)="updateValue(entry.key, $event.target.value)" />
     </mat-form-field>
   </div>
 
-  <button mat-mini-fab color="primary" (click)="addRow()">
+  <button mat-mini-fab color="primary" (click)="addRow('NewKey', 'NewValue')">
     <mat-icon>add</mat-icon>
   </button>
 </div>

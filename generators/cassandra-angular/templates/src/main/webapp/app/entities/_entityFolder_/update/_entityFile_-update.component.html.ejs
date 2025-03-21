@@ -275,7 +275,7 @@ _%>
                 [disabled]="!isDateTimeDirty['<%= fieldName %>']"> 
                 Reset 
             </button>
-      <%_ } else if (field.fieldTypeTimeUuidSaathratri) { _%>
+    <%_ } else if (field.fieldTypeTimeUuidSaathratri) { _%>
             <input type="<%= fieldInputType %>" class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                 formControlName="<%= fieldName %>"/>
             <button *ngIf="isNew" type="button" class="btn btn-primary" (click)="generateTimeUUID('<%= fieldName %>')">Generate</button>
@@ -360,6 +360,16 @@ _%>
                         [disabled]="!isDateTimeDirty['<%= fieldName %>']"> 
                         Reset 
                     </button>
+    <%_ } else if (field.fieldTypeSetSaathratri) { _%>
+            <app-set-component 
+                [inputFields]="inputFields<%= this._.upperFirst(field.fieldName) %>" 
+                (inputFieldsChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
+            </app-set-component>
+    <%_ } else if (field.fieldTypeMapSaathratri) { _%>
+            <app-map-component 
+                [inputFields]="inputFields<%= this._.upperFirst(field.fieldName) %>" 
+                (inputFieldsChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
+            </app-map-component>
     <%_ } else if (field.blobContentTypeText) { _%>
                     <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                               formControlName="<%= fieldName %>"<% if (readonly) { %> [readonly]="true"<% } %>></textarea>

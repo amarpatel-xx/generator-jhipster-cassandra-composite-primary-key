@@ -93,11 +93,29 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
     protected router = inject(Router);
 
     <%_ if (anyFieldIsSetSaathratri) { _%>
-        protected setData: string[] = [];
+        <%_ for (const field of fields) {
+            if (field.fieldTypeSetSaathratri) {
+            const fieldName = field.fieldName;
+        _%>
+            inputFields<%= this._.upperFirst(fieldName) %>: Set<string> = new Set(); // Start with one input field
+        <%_ 
+            } 
+        }
+        _%>
     <%_ } _%>
 
     <%_ if (anyFieldIsMapSaathratri) { _%>
-        protected mapData: { key: string; value: string }[] = [];
+        <%_ for (const field of fields) {
+            if (field.fieldTypeMapSaathratri) {
+            const fieldName = field.fieldName;
+            const fieldType = field.fieldType;
+        _%>
+            inputFields<%= this._.upperFirst(fieldName) %>: Map<string, <%= fieldName.tsType %>> = new Map('',''); // Start with one input field
+        <%_ 
+            } 
+        }
+        _%>
+        inputFields: Map<number, string> = new Map([['', '']]); // Start with one input field
     <%_ } _%>
 
     <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri) { _%>
@@ -137,7 +155,6 @@ _%>
                 const today = dayjs().startOf('day');
             <%_ for (const field of fields) {
                 const fieldName = field.fieldName;
-                const fieldType = field.fieldType;
             _%>
                 <%_ if (field.fieldTypeTimed) { _%>
                 <%= entityInstance %>.<%= fieldName %> = today;
@@ -321,19 +338,34 @@ _%>
     <%_ } _%>
 
     <%_ if (anyFieldIsSetSaathratri) { _%>
-        handleSetDataUpdate(data: string[]): void {
-            this.setData = data;
-            // eslint-disable-next-line no-console
-            console.log('Updated Data from Child:', this.setData);
+
+        <%_ for (const field of fields) {
+            if (field.fieldTypeSetSaathratri) {
+            const fieldName = field.fieldName;
+        _%>
+            handle<%= this._.upperFirst(fieldName) %>InputChange(updatedFields: Set<string>): void {
+                this.inputFields<%= this._.upperFirst(fieldName) %> = new Set(updatedFields); // Update parent data when child component emits changes
+            }
+        <%_ 
+            } 
         }
+        _%>
     <%_ } _%>
 
     <%_ if (anyFieldIsMapSaathratri) { _%>
-        handleMapDataUpdate(data: { key: string; value: string }[]): void {
-            this.mapData = data;
-            // eslint-disable-next-line no-console
-            console.log('Updated Data from Child:', this.mapData);
+
+        <%_ for (const field of fields) {
+            if (field.fieldTypeMapSaathratri) {
+            const fieldName = field.fieldName;
+            const fieldType = field.fieldType;
+        _%>
+            handle<%= this._.upperFirst(fieldName) %>InputChange(updatedFields: Map<string, <%= field.tsType %>>): void {
+                this.inputFields<%= this._.upperFirst(fieldName) %> = new Map(updatedFields); // Update parent with new values from child
+            }
+        <%_ 
+            } 
         }
+        _%>
     <%_ } _%>
 
     protected subscribeToSaveResponse(result: Observable<HttpResponse<I<%= entityAngularName %>>>): void {
