@@ -304,6 +304,30 @@ export const cassandraSpringBootUtils = {
             }
         }
 
+        if (entity?.anyFieldIsMapBooleanSaathratri !== true) {
+            if (this.isMapBooleanField(field)) {
+                entity.anyFieldIsMapBooleanSaathratri = true;
+            } else {
+                entity.anyFieldIsMapBooleanSaathratri = false;
+            }
+        }
+
+        if (entity?.anyFieldIsMapNumberSaathratri !== true) {
+            if (this.isMapNumberField(field)) {
+                entity.anyFieldIsMapNumberSaathratri = true;
+            } else {
+                entity.anyFieldIsMapNumberSaathratri = false;
+            }
+        }
+
+        if (entity?.anyFieldIsMapStringSaathratri !== true) {
+            if (this.isMapStringField(field)) {
+                entity.anyFieldIsMapStringSaathratri = true;
+            } else {
+                entity.anyFieldIsMapStringSaathratri = false;
+            }
+        }
+
         if (entity?.anyFieldHasImageContentType !== true) {
             if(this.isBlobFieldContentType(field, 'image')) { 
                 entity.anyFieldHasImageContentType = true;
@@ -377,11 +401,37 @@ export const cassandraSpringBootUtils = {
         return annotation === "CassandraType.Name.MAP";
     },
 
+    isMapBooleanField(field) {
+        const annotation = field.options?.customAnnotation[0];
+        const annotation2 = field.options?.customAnnotation[1];
+        return annotation === "CassandraType.Name.MAP" && annotation2 === 'CassandraType.Name.BOOLEAN';
+    },
+
+    isMapNumberField(field) {
+        const annotation = field.options?.customAnnotation[0];
+        const annotation2 = field.options?.customAnnotation[1];
+        return annotation === "CassandraType.Name.MAP" && (annotation2 === 'CassandraType.Name.DECIMAL' ||  annotation2 === 'CassandraType.Name.BIGINT');
+    },
+
+    isMapStringField(field) {
+        const annotation = field.options?.customAnnotation[0];
+        const annotation2 = field.options?.customAnnotation[1];
+        return annotation === "CassandraType.Name.MAP" && annotation2 === 'CassandraType.Name.TEXT';
+    },
+
     processFieldTypeAttributes(field) {
         if (this.isSetField(field)) {
             field.fieldTypeSetSaathratri = true;
         } else if (this.isMapField(field)) {
             field.fieldTypeMapSaathratri = true;
+        }
+
+        if (this.isMapBooleanField(field)) {
+            field.fieldTypeMapBooleanSaathratri = true;
+        } else if (this.isMapNumberField(field)) {
+            field.fieldTypeMapNumberSaathratri = true;
+        } else if (this.isMapStringField(field)) {
+            field.fieldTypeMapStringSaathratri = true;
         }
 
         if (this.isDateField(field)) {

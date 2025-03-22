@@ -138,10 +138,18 @@ export default class extends BaseApplicationGenerator {
                   'components/set-component/set-component.component.html',
                   'components/set-component/set-component.component.spec.ts',
                   'components/set-component/set-component.component.ts',
-                  'components/map-component/map-component.component.css',
-                  'components/map-component/map-component.component.html',
-                  'components/map-component/map-component.component.spec.ts',
-                  'components/map-component/map-component.component.ts'
+                  'components/map-boolean-component/map-boolean-component.component.css',
+                  'components/map-boolean-component/map-boolean-component.component.html',
+                  'components/map-boolean-component/map-boolean-component.component.spec.ts',
+                  'components/map-boolean-component/map-boolean-component.component.ts',
+                  'components/map-number-component/map-number-component.component.css',
+                  'components/map-number-component/map-number-component.component.html',
+                  'components/map-number-component/map-number-component.component.spec.ts',
+                  'components/map-number-component/map-number-component.component.ts',
+                  'components/map-string-component/map-string-component.component.css',
+                  'components/map-string-component/map-string-component.component.html',
+                  'components/map-string-component/map-string-component.component.spec.ts',
+                  'components/map-string-component/map-string-component.component.ts'
                 ]
               },
             ],

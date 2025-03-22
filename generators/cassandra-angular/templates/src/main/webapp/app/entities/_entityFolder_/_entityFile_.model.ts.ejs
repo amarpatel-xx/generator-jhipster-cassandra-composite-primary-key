@@ -57,7 +57,7 @@ export interface I<%= entityAngularName %> {
       const { fieldName, fieldValidationRequired, id } = field;
       const tsType = `${field.fieldIsEnum ? 'keyof typeof ' : ''}${field.tsType}`;
 _%>
-      <%= fieldName %><% if (!id /* && !fieldValidationRequired */) { %>?<% } %>: <%_ if(field.fieldTypeLocalDateSaathratri || field.fieldTypeTimedSaathratri) { _%>dayjs.Dayjs |  null,<%_ } else if (field.fieldTypeSetSaathratri) { _%>Set<string | null>,<%_ } else if (field.fieldTypeMapSaathratri) { _%>Map<string, <%= tsType %> | null>,<%_ } else if(!id) { _%><%= tsType %> | null,<%_ } else { _%><%= tsType %>,<%_} _%>
+      <%= fieldName %><% if (!id /* && !fieldValidationRequired */) { %>?<% } %>: <%_ if(field.fieldTypeLocalDateSaathratri || field.fieldTypeTimedSaathratri) { _%>dayjs.Dayjs |  null,<%_ } else if (field.fieldTypeSetSaathratri) { _%>Set<string> | null,<%_ } else if (field.fieldTypeMapSaathratri) { _%>Map<string, <%= tsType %>> | null,<%_ } else if(!id) { _%><%= tsType %> | null,<%_ } else { _%><%= tsType %>,<%_} _%>
   <%_ if (field.fieldTypeBinary && !field.blobContentTypeText) { _%>
   <%= fieldName %>ContentType<% if (!id /* && !fieldValidationRequired */) { %>?<% } %>: string<% if (!id /* && !fieldValidationRequired */) { %> | null<% } %>,
   <%_ } _%>

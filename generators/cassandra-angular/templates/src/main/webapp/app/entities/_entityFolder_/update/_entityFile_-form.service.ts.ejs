@@ -312,9 +312,9 @@ _%>
   <%_ } _%>
   },
 <%_ for (field of fields.filter( field => !field.isCompositePrimaryKeyField )) {
-    const { fieldName, fieldTypeBoolean, fieldTypeTimed, fieldTypeLocalDate } = field;
+    const { fieldName, fieldTypeBoolean, fieldTypeTimed, fieldTypeLocalDate, fieldTypeSetSaathratri, fieldTypeMapSaathratri } = field;
 _%>
-      <%_ if (fieldTypeBoolean) { _%>
+      <%_ if (fieldTypeBoolean && !fieldTypeSetSaathratri && !fieldTypeMapSaathratri) { _%>
         <%= fieldName %>: false,
       <%_ } _%>
     <%_ } _%>

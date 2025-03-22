@@ -363,13 +363,23 @@ _%>
     <%_ } else if (field.fieldTypeSetSaathratri) { _%>
             <app-set-component 
                 [inputFields]="inputFields<%= this._.upperFirst(field.fieldName) %>" 
-                (inputFieldsChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
+                (dataChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
             </app-set-component>
-    <%_ } else if (field.fieldTypeMapSaathratri) { _%>
-            <app-map-component 
+    <%_ } else if (field.fieldTypeMapBooleanSaathratri) { _%>
+            <app-map-boolean-component 
                 [inputFields]="inputFields<%= this._.upperFirst(field.fieldName) %>" 
-                (inputFieldsChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
-            </app-map-component>
+                (dataChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
+            </app-map-boolean-component>
+    <%_ } else if (field.fieldTypeMapNumberSaathratri) { _%>
+            <app-map-number-component 
+                [inputFields]="inputFields<%= this._.upperFirst(field.fieldName) %>" 
+                (dataChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
+            </app-map-number-component>
+    <%_ } else if (field.fieldTypeMapStringSaathratri) { _%>
+            <app-map-string-component 
+                [inputFields]="inputFields<%= this._.upperFirst(field.fieldName) %>" 
+                (dataChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
+            </app-map-string-component>
     <%_ } else if (field.blobContentTypeText) { _%>
                     <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                               formControlName="<%= fieldName %>"<% if (readonly) { %> [readonly]="true"<% } %>></textarea>

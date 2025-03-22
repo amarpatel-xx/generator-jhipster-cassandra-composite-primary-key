@@ -87,9 +87,9 @@ type RestOf<T extends I<%= entityAngularName %><% if (!readOnly) { %> | New<%= e
     <%_ if (field.fieldTypeLocalDateSaathratri || field.fieldTypeTimedSaathratri) { _%>
         <%= field.fieldName %>?: number | null;
     <%_ } else if (field.fieldTypeSetSaathratri) { _%>
-        <%= field.fieldName %>?: Set<string | null>;
+        <%= field.fieldName %>?: Set<string> | null;
     <%_ } else if (field.fieldTypeMapSaathratri) { _%>
-        <%= field.fieldName %>?: Map<string, <%= field.tsType %> | null>;
+        <%= field.fieldName %>?: Map<string, <%= field.tsType %>> | null;
     <%_ } _%>
   <%_ } _%>
   };

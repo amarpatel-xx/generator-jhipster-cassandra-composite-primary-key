@@ -36,6 +36,18 @@ import { dateLongToFormattedString, datetimeLongToFormattedString } from '../../
 <%_ if (anyFieldIsTimeDerived || anyFieldIsTimeDerivedSaathratri) { _%>
 import { DateTimeComponent } from 'app/components/date-time/date-time.component';
 <%_ } _%>
+<%_ if (anyFieldIsSetSaathratri) { _%>
+import { SetComponent } from 'app/components/set-component/set-component.component';
+<%_ } _%>
+<%_ if (anyFieldIsMapBooleanSaathratri) { _%>
+import { MapBooleanComponent } from 'app/components/map-boolean-component/map-boolean-component.component';
+<%_ } _%>
+<%_ if (anyFieldIsMapNumberSaathratri) { _%>
+import { MapNumberComponent } from 'app/components/map-number-component/map-number-component.component';
+<%_ } _%>
+<%_ if (anyFieldIsMapStringSaathratri) { _%>
+import { MapStringComponent } from 'app/components/map-string-component/map-string-component.component';
+<%_ } _%>
 
 import { I<%= entityAngularName %> } from '../<%= entityFileName %>.model';
 import { <%= entityAngularName %>Service } from '../service/<%= entityFileName %>.service';
@@ -54,22 +66,18 @@ import { v4 as uuidv4 } from 'uuid'; // Import UUID (UUID v4)
 <%_ if (anyFieldIsTimeUUIDSaathratri) { _%>
 import { v1 as uuidv1 } from 'uuid'; // Import TimeUUID (UUID v1)
 <%_ } _%>
-<%_ if (anyFieldIsSetSaathratri) { _%>
-import { SetComponent } from 'app/components/set-component/set-component.component';
-<%_ } _%>
-<%_ if (anyFieldIsMapSaathratri) { _%>
-import { MapComponent } from 'app/components/map-component/map-component.component';
-<%_ } _%>
+
 @Component({
     standalone: true,
     selector: '<%= jhiPrefixDashed %>-<%= entityFileName %>-update',
     templateUrl: './<%= entityFileName %>-update.component.html',
-    imports: [ SharedModule, FormsModule, ReactiveFormsModule, MaterialModule <%_ if (anyFieldIsTimeDerived || anyFieldIsTimeDerivedSaathratri) { _%>, DateTimeComponent<%_ } _%> ],
+    imports: [ SharedModule, FormsModule, ReactiveFormsModule, MaterialModule <%_ if (anyFieldIsTimeDerived || anyFieldIsTimeDerivedSaathratri) { _%>, DateTimeComponent<%_ } _%> <%_ if (anyFieldIsSetSaathratri) { _%>, SetComponent<%_ } _%> <%_ if (anyFieldIsMapBooleanSaathratri) { _%>, MapBooleanComponent<%_ } _%> <%_ if (anyFieldIsMapNumberSaathratri) { _%>, MapNumberComponent<%_ } _%> <%_ if (anyFieldIsMapStringSaathratri) { _%>, MapStringComponent<%_ } _%>],
 })
 export class <%= entityAngularName %>UpdateComponent implements OnInit {
     isSaving = false;
     // Saathratri:
     isNew = false;
+    
     <%_ if(anyFieldIsTimeDerivedSaathratri) { _%>
         isDateTimeValid: Record<string, boolean> = {};
         // Track the dirty state for each date-time field
@@ -79,6 +87,31 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
 <%_ enumImports.forEach( (importedPath, importedType) => { _%>
     <%- this._.lowerFirst(importedType) %>Values = Object.keys(<%- importedType %>);
 <%_ }); _%>
+
+<%_ if (anyFieldIsSetSaathratri) { _%>
+    <%_ for (const field of fields) {
+        if (field.fieldTypeSetSaathratri) {
+        const fieldName = field.fieldName;
+    _%>
+        inputFields<%= this._.upperFirst(fieldName) %>: Set<string> = new Set<string>(); // Start with one input field
+    <%_ 
+        } 
+    }
+    _%>
+<%_ } _%>
+
+<%_ if (anyFieldIsMapSaathratri) { _%>
+    <%_ for (const field of fields) {
+        if (field.fieldTypeMapSaathratri) {
+        const fieldName = field.fieldName;
+        const fieldType = field.fieldType;
+    _%>
+        inputFields<%= this._.upperFirst(fieldName) %>: Map<string, <%= field.tsType %>> = new Map<string, <%= field.tsType %>>(); // Start with one input field
+    <%_ 
+        } 
+    }
+    _%>
+<%_ } _%>
 
 <%_ if (anyFieldIsBlobDerived) { _%>
     protected dataUtils = inject(DataUtils);
@@ -91,32 +124,6 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
 <%_ } _%>
     protected activatedRoute = inject(ActivatedRoute);
     protected router = inject(Router);
-
-    <%_ if (anyFieldIsSetSaathratri) { _%>
-        <%_ for (const field of fields) {
-            if (field.fieldTypeSetSaathratri) {
-            const fieldName = field.fieldName;
-        _%>
-            inputFields<%= this._.upperFirst(fieldName) %>: Set<string> = new Set(); // Start with one input field
-        <%_ 
-            } 
-        }
-        _%>
-    <%_ } _%>
-
-    <%_ if (anyFieldIsMapSaathratri) { _%>
-        <%_ for (const field of fields) {
-            if (field.fieldTypeMapSaathratri) {
-            const fieldName = field.fieldName;
-            const fieldType = field.fieldType;
-        _%>
-            inputFields<%= this._.upperFirst(fieldName) %>: Map<string, <%= fieldName.tsType %>> = new Map('',''); // Start with one input field
-        <%_ 
-            } 
-        }
-        _%>
-        inputFields: Map<number, string> = new Map([['', '']]); // Start with one input field
-    <%_ } _%>
 
     <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri) { _%>
         protected isResetDisabled: Record<string, boolean> = {}; // Track reset button states
@@ -222,7 +229,7 @@ _%>
         const <%= entityInstance %> = this.<%= entityInstance %>FormService.get<%= entityAngularName %>(this.editForm);
         <%_ if(primaryKeySaathratri.composite) { _%>
 <%_ if (updatableEntity) { _%>
-                    if (this.isNew) {
+         if (this.isNew) {
                         this.subscribeToSaveResponse(this.<%= entityInstance %>Service.create(<%= entityInstance %>));
         } else {
 <%_ } _%>
