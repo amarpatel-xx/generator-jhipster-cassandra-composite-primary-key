@@ -19,14 +19,22 @@ export class SetComponent {
   }
 
   addInputField(): void {
-    this.inputFields.add(''); // ✅ Adds an empty string
-    this.emitChange();
-  }
+    // Convert Set to an array
+    const entries = Array.from(this.inputFields);
+  
+    // Ensure all previous rows have values
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const allFilled = entries.every(value => value !== undefined && value !== null && value !== '');
+  
+    if (allFilled) {
+      this.inputFields.add(''); // ✅ Adds an empty string only if all fields are filled
+      this.emitChange();
+    }
+  }  
 
   removeInputField(value: string): void {
     if (this.inputFields.has(value)) {
       this.inputFields.delete(value);
-      this.emitChange();
     }
   }
 

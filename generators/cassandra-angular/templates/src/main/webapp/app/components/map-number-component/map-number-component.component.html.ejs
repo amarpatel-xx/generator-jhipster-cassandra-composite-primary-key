@@ -2,16 +2,16 @@
   <div *ngFor="let entry of mapDetails | keyvalue" class="input-row">
     <mat-form-field appearance="outline">
       <mat-label>Key</mat-label>
-      <input matInput [value]="entry.key" readonly />
+      <input matInput [value]="entry.key" />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Value</mat-label>
-      <input matInput [value]="entry.value" (input)="handleInputChange($event, entry.key)" />
+      <input matInput [value]="entry.value" />
     </mat-form-field>
   </div>
 
-  <button mat-mini-fab color="primary" (click)="addRow('NewKey', 1)">
+  <button type="button" mat-mini-fab color="primary" (click)="addEmptyRow()">
     <mat-icon>add</mat-icon>
   </button>
 </div>

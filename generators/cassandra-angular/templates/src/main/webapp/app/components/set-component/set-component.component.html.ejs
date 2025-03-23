@@ -1,8 +1,11 @@
-<h3>Set Component</h3>
-<div *ngFor="let field of inputFieldsArray; let i = index">
-  <input type="text" [value]="field" (input)="handleInputChange($event, i)" />
+<div class="container">
+  <div *ngFor="let field of inputFieldsArray; let i = index">
+    <input type="text" [value]="field" />
 
-  <button (click)="removeInputField(field)" *ngIf="inputFields.size > 1">Remove</button>
+    <button (click)="removeInputField(field)" *ngIf="inputFields.size > 1">Remove</button>
+  </div>
+
+  <button type="button" mat-mini-fab color="primary" (click)="addInputField()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
-
-<button (click)="addInputField()">Add Input Field</button>
