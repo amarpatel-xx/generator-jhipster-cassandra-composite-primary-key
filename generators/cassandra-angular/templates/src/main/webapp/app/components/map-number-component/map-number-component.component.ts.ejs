@@ -1,12 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';  
 import { MaterialModule } from '../../shared/material.module';
+import { EditDialogComponent } from '../edit-dialog-component/edit-dialog-component.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-map-number-component',
   standalone: true,
-  imports: [MaterialModule, CommonModule],
+  imports: [MaterialModule, CommonModule, FormsModule, EditDialogComponent],
   templateUrl: './map-number-component.component.html',
   styleUrls: ['./map-number-component.component.css'],
 })
@@ -15,10 +18,14 @@ export class MapNumberComponent {
   @Output() dataChange = new EventEmitter<Map<string, number>>();
 
   mapDetails: Map<string, number> = new Map<string, number>();
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+  newKey: string = '';
+  newValue: number | null = null; // ✅ Ensure it's a number
 
-  constructor() {
-    this.mapDetails = new Map(this.inputFields);
-  }
+  editingKey: string | null = null;
+  editingValue: number | null = null; // ✅ Ensure it's a number
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnChanges(): void {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -27,39 +34,44 @@ export class MapNumberComponent {
     }
   }
 
-  addRow(key: string, value: number): void {
-    if (key) {
-      this.mapDetails.set(key, value);
+  openEditDialog(key: string, value: number): void {
+    const dialogRef = this.dialog.open(EditDialogComponent, {
+      data: { key, value },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined && !isNaN(result)) { // ✅ Ensure result is a valid number
+        this.mapDetails.set(key, parseFloat(result)); // ✅ Convert to number
+        this.emitData();
+      }
+    });
+  }
+
+  addNewRow(): void {
+    if (this.newKey.trim() !== '' && this.newValue !== null && !isNaN(this.newValue)) {
+      this.mapDetails.set(this.newKey.trim(), this.newValue);
+      this.newKey = '';
+      this.newValue = null;
       this.emitData();
     }
   }
 
-  addEmptyRow(): void {
-    // Convert map to an array
-    const entries = Array.from(this.mapDetails.entries());
-  
-    // Ensure all previous rows have both key and value filled
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const allFilled = entries.every(([key, value]) => key.trim() !== '' && value !== undefined && value !== null);
-  
-    if (allFilled) {
-      this.mapDetails.set('', 0); // Add an empty row
-      this.emitData();
-    }
-  }  
-
-  updateValue(key: string, value: number): void {
-    if (this.mapDetails.has(key)) {
-      this.mapDetails.set(key, value);
-      this.emitData();
-    }
+  deleteRow(key: string): void {
+    this.mapDetails.delete(key);
+    this.emitData();
   }
 
-  handleInputChange(event: Event, key: string): void {
-    const inputElement = event.target as HTMLInputElement;
-    // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-    const value: number = Number(inputElement.value); // Convert to number
-    this.updateValue(key, value);
+  saveChanges(): void {
+    if (this.editingKey !== null && this.editingValue !== null && !isNaN(this.editingValue)) {
+      this.mapDetails.set(this.editingKey, this.editingValue);
+      this.emitData();
+    }
+    this.closeDialog();
+  }
+
+  closeDialog(): void {
+    this.editingKey = null;
+    this.editingValue = null;
   }
 
   private emitData(): void {

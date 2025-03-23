@@ -1,0 +1,38 @@
+/* Make the dialog box taller and wider */
+.mat-dialog-container {
+  width: 600px;  /* ✅ Increase width */
+  height: 700px; /* ✅ Increase height */
+  max-height: 90vh; /* Prevents it from exceeding screen height */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make title stand out */
+.dialog-title {
+  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Ensure content takes up full available space */
+.dialog-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow-y: auto;
+}
+
+/* Make text fields wider */
+.full-width {
+  width: 100%; /* ✅ Ensures text fields stretch full width */
+}
+
+/* Ensure buttons are properly aligned */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px; /* Adds spacing between buttons */
+}

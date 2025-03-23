@@ -1,17 +1,65 @@
 <div class="container">
+  <!-- Loop through existing data rows -->
   <div *ngFor="let entry of mapDetails | keyvalue" class="input-row">
+    
+    <!-- Read-Only Key -->
     <mat-form-field appearance="outline">
       <mat-label>Key</mat-label>
-      <input matInput [value]="entry.key"/>
+      <input matInput [value]="entry.key" readonly />
+    </mat-form-field>
+
+    <!-- Read-Only Value -->
+    <mat-form-field appearance="outline">
+      <mat-label>Value</mat-label>
+      <input matInput [value]="entry.value" readonly />
+    </mat-form-field>
+
+    <!-- Pencil Icon (Edit) -->
+    <button type="button" mat-icon-button (click)="openEditDialog(entry.key, entry.value)">
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <!-- Delete Icon (Remove) -->
+    <button type="button" mat-icon-button (click)="deleteRow(entry.key)">
+      <mat-icon>close</mat-icon>
+    </button>
+
+  </div>
+
+  <!-- Always present blank row at the bottom -->
+  <div class="input-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Key</mat-label>
+      <input matInput [(ngModel)]="newKey" />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Value</mat-label>
-      <input matInput [value]="entry.value" />
+      <input matInput [(ngModel)]="newValue" />
     </mat-form-field>
-  </div>
 
-  <button type="button" mat-mini-fab color="primary" (click)="addEmptyRow()">
-    <mat-icon>add</mat-icon>
-  </button>
+    <!-- Disabled Add Button Until a Key is Entered -->
+    <button mat-raised-button color="primary" [disabled]="!newKey.trim()" (click)="addNewRow()" class="add-button">
+      Add
+    </button>    
+  </div>
 </div>
+
+<!-- Edit Dialog Popup -->
+<mat-dialog-content *ngIf="editingKey !== null">
+  <h2>Edit Entry</h2>
+  <mat-form-field>
+    <mat-label>Key</mat-label>
+    <input matInput [value]="editingKey" readonly />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Value</mat-label>
+    <input matInput [(ngModel)]="editingValue" />
+  </mat-form-field>
+
+  <div class="dialog-actions">
+    <button type="button" mat-button (click)="closeDialog()">Cancel</button>
+    <button type="button" mat-raised-button color="primary" (click)="saveChanges()">Save Changes</button>
+  </div>
+</mat-dialog-content>

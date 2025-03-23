@@ -149,7 +149,11 @@ export default class extends BaseApplicationGenerator {
                   'components/map-string-component/map-string-component.component.css',
                   'components/map-string-component/map-string-component.component.html',
                   'components/map-string-component/map-string-component.component.spec.ts',
-                  'components/map-string-component/map-string-component.component.ts'
+                  'components/map-string-component/map-string-component.component.ts',
+                  'components/edit-dialog-component/edit-dialog-component.component.css',
+                  'components/edit-dialog-component/edit-dialog-component.component.html',
+                  'components/edit-dialog-component/edit-dialog-component.component.spec.ts',
+                  'components/edit-dialog-component/edit-dialog-component.component.ts'
                 ]
               },
             ],
