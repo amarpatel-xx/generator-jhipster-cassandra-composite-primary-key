@@ -36,6 +36,9 @@ export class MapBooleanComponent {
 
   openEditDialog(key: string, value: boolean): void {
     const dialogRef = this.dialog.open(EditDialogComponent, {
+      width: '500px', // ✅ Set width inline
+      height: '300px', // ✅ Set height inline
+      maxHeight: '90vh', // ✅ Prevent overflow
       data: { key, value },
     });
 

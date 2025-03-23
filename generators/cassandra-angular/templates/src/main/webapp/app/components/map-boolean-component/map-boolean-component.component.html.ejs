@@ -39,7 +39,7 @@
     </mat-form-field>
 
     <!-- Disabled Add Button Until a Key is Entered -->
-    <button mat-raised-button color="primary" [disabled]="!newKey.trim()" (click)="addNewRow()" class="add-button">
+    <button type="button" color="primary" [disabled]="!newKey.trim()" (click)="addNewRow()" class="add-button">
       Add
     </button>    
   </div>
