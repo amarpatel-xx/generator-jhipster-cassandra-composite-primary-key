@@ -8,34 +8,33 @@
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.full-width {
   width: 100%;
 }
 
+mat-form-field {
+  width: 45%; /* ✅ Key field gets 45% width */
+}
+
 .large-toggle {
-  padding: 10px;
+  width: 45%; /* ✅ Toggle gets 45% width */
+  display: flex;
+  align-items: center;
   font-size: 18px;
+  padding-left: 10px;
 }
 
-.large-toggle .mat-slide-toggle-thumb {
-  width: 28px;
-  height: 28px;
-}
-
-.large-toggle .mat-slide-toggle-bar {
-  height: 36px;
-  width: 85px;
+.action-buttons {
+  width: 10%; /* ✅ Icons (Edit & Delete) get 10% */
+  display: flex;
+  gap: 5px;
+  justify-content: center;
 }
 
 .add-button {
-  width: 200px;  /* Adjust width */
-  height: 40px;  /* Adjust height */
+  width: 100px;  /* Adjust width */
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px; /* Space between icon and text */
-  margin-top: 6px; /* ✅ Adds a 3px shim above the button */
 }

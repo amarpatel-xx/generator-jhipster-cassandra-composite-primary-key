@@ -9,7 +9,7 @@
 
     <!-- Toggle Switch for Boolean Value -->
     <mat-slide-toggle formControlName="value" class="large-toggle">
-      True / False
+      {{ toggleLabel }}
     </mat-slide-toggle>
 
     <mat-error *ngIf="form.controls['value'].invalid && form.controls['value'].touched">

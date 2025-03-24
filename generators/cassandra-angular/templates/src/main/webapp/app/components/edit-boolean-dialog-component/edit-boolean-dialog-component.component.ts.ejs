@@ -35,4 +35,10 @@ export class EditBooleanDialogComponent {
       this.dialogRef.close(this.form.get('value')?.value);
     }
   }
+
+  get toggleLabel(): string {
+    const value = this.form.get('value')?.value;
+    if (value === null) return 'Please select';
+    return value ? 'True' : 'False';
+  }
 }

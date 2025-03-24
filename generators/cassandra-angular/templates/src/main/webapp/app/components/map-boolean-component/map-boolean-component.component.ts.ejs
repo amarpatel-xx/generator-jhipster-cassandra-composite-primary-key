@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
 import { EditBooleanDialogComponent } from '../edit-boolean-dialog-component/edit-boolean-dialog-component.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,34 +18,50 @@ export class MapBooleanComponent {
   @Output() dataChange = new EventEmitter<Map<string, boolean>>();
 
   mapDetails: Map<string, boolean> = new Map<string, boolean>();
-
   form: FormGroup;
 
   constructor(private fb: FormBuilder, private dialog: MatDialog) {
     this.form = this.fb.group({
+      fields: this.fb.array([]), // ✅ FormArray to manage dynamic boolean fields
       newKey: ['', Validators.required], // ✅ Key is required
       newValue: [null, Validators.required], // ✅ Required selection (True/False)
     });
+
+    this.populateFormArray();
+  }
+
+  get fields(): FormArray {
+    return this.form.get('fields') as FormArray;
   }
 
   ngOnChanges(): void {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (this.inputFields) {
-      this.mapDetails = new Map(this.inputFields);
-    }
+    this.populateFormArray();
   }
 
-  openEditBooleanDialog(key: string, value: boolean): void {
+  populateFormArray(): void {
+    this.fields.clear();
+    Array.from(this.mapDetails.entries()).forEach(([key, value]) => {
+      this.fields.push(this.fb.group({ key: [key], value: [value, Validators.required] }));
+    });
+  }
+
+  getFormControl(index: number, controlName: string): FormControl {
+    return this.fields.at(index).get(controlName) as FormControl;
+  }
+
+  openEditBooleanDialog(index: number): void {
+    const field = this.fields.at(index).value;
     const dialogRef = this.dialog.open(EditBooleanDialogComponent, {
       width: '500px',
       height: '300px',
       maxHeight: '90vh',
-      data: { key, value },
+      data: { key: field.key, value: field.value },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined && typeof result === 'boolean') {
-        this.mapDetails.set(key, result);
+        this.getFormControl(index, 'value').setValue(result);
+        this.mapDetails.set(field.key, result);
         this.emitData();
       }
     });
@@ -55,13 +71,16 @@ export class MapBooleanComponent {
     if (this.form.valid) {
       const { newKey, newValue } = this.form.value;
       this.mapDetails.set(newKey.trim(), newValue);
+      this.fields.push(this.fb.group({ key: [newKey.trim()], value: [newValue, Validators.required] }));
       this.form.reset({ newKey: '', newValue: null }); // ✅ Reset form after adding
       this.emitData();
     }
   }
 
-  deleteRow(key: string): void {
-    this.mapDetails.delete(key);
+  deleteRow(index: number): void {
+    const field = this.fields.at(index).value;
+    this.mapDetails.delete(field.key);
+    this.fields.removeAt(index);
     this.emitData();
   }
 
