@@ -150,10 +150,18 @@ export default class extends BaseApplicationGenerator {
                   'components/map-string-component/map-string-component.component.html',
                   'components/map-string-component/map-string-component.component.spec.ts',
                   'components/map-string-component/map-string-component.component.ts',
-                  'components/edit-dialog-component/edit-dialog-component.component.css',
-                  'components/edit-dialog-component/edit-dialog-component.component.html',
-                  'components/edit-dialog-component/edit-dialog-component.component.spec.ts',
-                  'components/edit-dialog-component/edit-dialog-component.component.ts'
+                  'components/edit-string-dialog-component/edit-string-dialog-component.component.css',
+                  'components/edit-string-dialog-component/edit-string-dialog-component.component.html',
+                  'components/edit-string-dialog-component/edit-string-dialog-component.component.spec.ts',
+                  'components/edit-string-dialog-component/edit-string-dialog-component.component.ts',
+                  'components/edit-number-dialog-component/edit-number-dialog-component.component.css',
+                  'components/edit-number-dialog-component/edit-number-dialog-component.component.html',
+                  'components/edit-number-dialog-component/edit-number-dialog-component.component.spec.ts',
+                  'components/edit-number-dialog-component/edit-number-dialog-component.component.ts',
+                  'components/edit-boolean-dialog-component/edit-boolean-dialog-component.component.css',
+                  'components/edit-boolean-dialog-component/edit-boolean-dialog-component.component.html',
+                  'components/edit-boolean-dialog-component/edit-boolean-dialog-component.component.spec.ts',
+                  'components/edit-boolean-dialog-component/edit-boolean-dialog-component.component.ts'
                 ]
               },
             ],

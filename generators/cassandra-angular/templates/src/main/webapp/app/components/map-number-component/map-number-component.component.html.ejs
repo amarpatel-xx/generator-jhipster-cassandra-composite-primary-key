@@ -15,7 +15,7 @@
     </mat-form-field>
 
     <!-- Pencil Icon (Edit) -->
-    <button type="button" mat-icon-button (click)="openEditDialog(entry.key, entry.value)">
+    <button type="button" mat-icon-button (click)="openEditNumberDialog(entry.key, entry.value)">
       <mat-icon>edit</mat-icon>
     </button>
 
@@ -23,43 +23,29 @@
     <button type="button" mat-icon-button (click)="deleteRow(entry.key)">
       <mat-icon>close</mat-icon>
     </button>
-
   </div>
 
   <!-- Always present blank row at the bottom -->
-  <div class="input-row">
+  <form [formGroup]="form" class="input-row">
     <mat-form-field appearance="outline">
       <mat-label>Key</mat-label>
-      <input matInput [(ngModel)]="newKey" />
+      <input matInput formControlName="newKey" (blur)="form.controls['newKey'].markAsTouched()" />
+      <mat-error *ngIf="form.controls['newKey'].invalid && form.controls['newKey'].touched">
+        Key is required
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Value</mat-label>
-      <input matInput [(ngModel)]="newValue" />
+      <input matInput formControlName="newValue" type="number" />
+      <mat-error *ngIf="form.controls['newValue'].invalid && form.controls['newValue'].touched">
+        Please enter a valid number
+      </mat-error>
     </mat-form-field>
 
     <!-- Disabled Add Button Until a Key is Entered -->
-    <button type="button" mat-raised-button color="primary" [disabled]="!newKey.trim()" (click)="addNewRow()" class="add-button">
+    <button type="button" mat-raised-button color="primary" [disabled]="form.invalid" (click)="addNewRow()" class="add-button">
       Add
-    </button>    
-  </div>
+    </button>
+  </form>
 </div>
-
-<!-- Edit Dialog Popup -->
-<mat-dialog-content *ngIf="editingKey !== null">
-  <h2>Edit Entry</h2>
-  <mat-form-field>
-    <mat-label>Key</mat-label>
-    <input matInput [value]="editingKey" readonly />
-  </mat-form-field>
-
-  <mat-form-field>
-    <mat-label>Value</mat-label>
-    <input matInput [(ngModel)]="editingValue" />
-  </mat-form-field>
-
-  <div class="dialog-actions">
-    <button type="button" mat-button (click)="closeDialog()">Cancel</button>
-    <button type="button" mat-raised-button color="primary" (click)="saveChanges()">Save Changes</button>
-  </div>
-</mat-dialog-content>

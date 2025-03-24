@@ -1,11 +1,31 @@
 <div class="container">
-  <div *ngFor="let field of inputFieldsArray; let i = index">
-    <input type="text" [value]="field" />
+  <form [formGroup]="form">
+    <!-- Loop through existing data rows -->
+    <div *ngFor="let control of fields.controls; let i = index" class="input-row">
+      
+      <!-- Text Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Field</mat-label>
+        <input matInput [formControl]="getFormControl(i)" />
+        <mat-error *ngIf="getFormControl(i).invalid && getFormControl(i).touched">
+          Field is required
+        </mat-error>
+      </mat-form-field>
 
-    <button (click)="removeInputField(field)" *ngIf="inputFields.size > 1">Remove</button>
-  </div>
+      <!-- Edit Icon (Edit) -->
+      <button type="button" mat-icon-button (click)="openEditDialog(i)">
+        <mat-icon>edit</mat-icon>
+      </button>
 
-  <button type="button" mat-mini-fab color="primary" (click)="addInputField()">
-    Add
-  </button>
+      <!-- Delete Icon (Remove) -->
+      <button type="button" mat-icon-button (click)="removeInputField(i)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Always present add button -->
+    <button type="button" mat-raised-button color="primary" (click)="addInputField()" class="add-button">
+      <mat-icon>add</mat-icon> Add Field
+    </button>
+  </form>
 </div>

@@ -1,59 +1,70 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'app-set-component', // ✅ Fixed selector prefix
+  selector: 'app-set-component',
   standalone: true,
-  imports: [MaterialModule, CommonModule],
+  imports: [MaterialModule, CommonModule, ReactiveFormsModule],
   templateUrl: './set-component.component.html',
-  styleUrls: ['./set-component.component.css']
+  styleUrls: ['./set-component.component.css'],
 })
 export class SetComponent {
-  @Input() inputFields: Set<string> = new Set<string>(); // ✅ Explicitly defined type
+  @Input() inputFields: Set<string> = new Set<string>();
   @Output() dataChange = new EventEmitter<Set<string>>();
 
-  get inputFieldsArray(): string[] {
-    return Array.from(this.inputFields); // ✅ Convert Set to Array for iteration
+  form: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      fields: this.fb.array([]), // ✅ Reactive FormArray
+    });
+
+    this.populateFormArray(); // ✅ Populate FormArray with inputFields
+  }
+
+  get fields(): FormArray {
+    return this.form.get('fields') as FormArray;
+  }
+
+  ngOnChanges(): void {
+    this.populateFormArray();
+  }
+
+  populateFormArray(): void {
+    this.fields.clear();
+    Array.from(this.inputFields).forEach(value => {
+      this.fields.push(new FormControl(value, Validators.required));
+    });
   }
 
   addInputField(): void {
-    // Convert Set to an array
-    const entries = Array.from(this.inputFields);
-  
-    // Ensure all previous rows have values
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const allFilled = entries.every(value => value !== undefined && value !== null && value !== '');
-  
-    if (allFilled) {
-      this.inputFields.add(''); // ✅ Adds an empty string only if all fields are filled
+    if (this.fields.valid) {
+      this.fields.push(new FormControl('', Validators.required));
+    }
+  }
+
+  removeInputField(index: number): void {
+    this.fields.removeAt(index);
+    this.emitChange();
+  }
+
+  openEditDialog(index: number): void {
+    const currentValue = this.fields.at(index).value;
+    const newValue = prompt('Edit Field:', currentValue);
+    if (newValue !== null && newValue.trim() !== '') {
+      this.fields.at(index).setValue(newValue.trim());
       this.emitChange();
     }
+  }
+
+  getFormControl(index: number): FormControl {
+    return this.fields.at(index) as FormControl;
   }  
 
-  removeInputField(value: string): void {
-    if (this.inputFields.has(value)) {
-      this.inputFields.delete(value);
-    }
-  }
-
-  updateField(index: number, newValue: string): void {
-    const values = Array.from(this.inputFields);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (values[index] !== undefined) {
-      values[index] = newValue;
-      this.inputFields = new Set<string>(values); // ✅ Ensure new Set is explicitly typed
-      this.emitChange();
-    }
-  }
-
-  handleInputChange(event: Event, index: number): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.updateField(index, inputElement.value);
-  }
-
   private emitChange(): void {
-    this.dataChange.emit(new Set<string>(this.inputFields)); // ✅ Emit updated Set to parent
+    this.dataChange.emit(new Set(this.fields.value));
   }
 }

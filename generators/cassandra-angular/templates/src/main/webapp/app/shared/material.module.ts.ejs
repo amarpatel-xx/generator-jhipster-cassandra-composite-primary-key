@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { ConvertFromDayjsToDateLongPipe } from './date/convert-from-dayjs-to-date-long.pipe';
 
@@ -23,6 +24,7 @@ import { ConvertFromDayjsToDateLongPipe } from './date/convert-from-dayjs-to-dat
     MatSelectModule,
     MatIconModule,
     MatDialogModule,
+    MatSlideToggleModule,
     ConvertFromDayjsToDateLongPipe,
   ],
 })

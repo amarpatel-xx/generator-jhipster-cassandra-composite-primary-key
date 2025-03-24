@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';  
+import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../shared/material.module';
-import { EditDialogComponent } from '../edit-dialog-component/edit-dialog-component.component';
+import { EditStringDialogComponent } from '../edit-string-dialog-component/edit-string-dialog-component.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-map-string-component',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule, EditDialogComponent],
+  imports: [MaterialModule, CommonModule, ReactiveFormsModule, EditStringDialogComponent], // ✅ Use ReactiveFormsModule
   templateUrl: './map-string-component.component.html',
   styleUrls: ['./map-string-component.component.css'],
 })
@@ -18,34 +18,15 @@ export class MapStringComponent {
   @Output() dataChange = new EventEmitter<Map<string, string>>();
 
   mapDetails: Map<string, string> = new Map<string, string>();
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  newKey: string = '';
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  newValue: string = '';
 
-  editingKey: string | null = null;
-  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  editingValue: string = '';
+  form: FormGroup;
 
-  constructor(private dialog: MatDialog) {
-    this.mapDetails = new Map(this.inputFields);
+  constructor(private fb: FormBuilder, private dialog: MatDialog) {
+    this.form = this.fb.group({
+      newKey: ['', Validators.required], // ✅ Key is required
+      newValue: [''], // ✅ Value is optional
+    });
   }
-
-  openEditDialog(key: string, value: string): void {
-    const dialogRef = this.dialog.open(EditDialogComponent, {
-      width: '500px', // ✅ Set width inline
-      height: '300px', // ✅ Set height inline
-      maxHeight: '90vh', // ✅ Prevent overflow
-      data: { key, value },
-    });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        this.mapDetails.set(key, result);
-        this.emitData();
-      }
-    });
-  }  
 
   ngOnChanges(): void {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -54,11 +35,27 @@ export class MapStringComponent {
     }
   }
 
+  openEditStringDialog(key: string, value: string): void {
+    const dialogRef = this.dialog.open(EditStringDialogComponent, {
+      width: '500px',
+      height: '300px',
+      maxHeight: '90vh',
+      data: { key, value },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        this.mapDetails.set(key, result);
+        this.emitData();
+      }
+    });
+  }
+
   addNewRow(): void {
-    if (this.newKey.trim() !== '') {
-      this.mapDetails.set(this.newKey.trim(), this.newValue.trim());
-      this.newKey = '';
-      this.newValue = '';
+    if (this.form.valid) {
+      const { newKey, newValue } = this.form.value;
+      this.mapDetails.set(newKey.trim(), newValue.trim());
+      this.form.reset(); // ✅ Clear form fields after adding
       this.emitData();
     }
   }
@@ -66,19 +63,6 @@ export class MapStringComponent {
   deleteRow(key: string): void {
     this.mapDetails.delete(key);
     this.emitData();
-  }
-
-  closeDialog(): void {
-    this.editingKey = null;
-    this.editingValue = '';
-  }
-
-  saveChanges(): void {
-    if (this.editingKey !== null) {
-      this.mapDetails.set(this.editingKey, this.editingValue);
-      this.emitData();
-    }
-    this.closeDialog();
   }
 
   private emitData(): void {
