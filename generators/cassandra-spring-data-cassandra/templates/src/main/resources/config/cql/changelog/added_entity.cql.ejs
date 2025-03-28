@@ -20,7 +20,17 @@
 CREATE TABLE IF NOT EXISTS <%= entityInstanceSnakeCase %> (
 <%_ for (const field of fields) {
   const fieldNameUnderscored = field.fieldNameUnderscored; _%>
-  <%_ if (field.fieldTypeUUID) { _%>
+  <%_ if (field.fieldTypeMapSaathratri) { _%>
+    <%_ if (field.fieldTypeMapBooleanSaathratri) { _%>
+      <%= fieldNameUnderscored %> map<text, boolean>,
+    <%_ } else if(field.fieldTypeMapNumberSaathratri) { _%>
+      <%= fieldNameUnderscored %> map<text, decimal>,
+    <%_ } else if (field.fieldTypeMapStringSaathratri) { _%>
+      <%= fieldNameUnderscored %> map<text, text>,
+    <%_ } else if (field.fieldTypeMapDayjsSaathratri) { _%>
+          <%= fieldNameUnderscored %> map<text, bigint>,  
+    <%_ } _%>   
+  <%_ } else if (field.fieldTypeUUID) { _%>
     <%= fieldNameUnderscored %> uuid,
   <%_ } else if (field.fieldTypeString || field.fieldIsEnum) { _%>
     <%= fieldNameUnderscored %> text,
