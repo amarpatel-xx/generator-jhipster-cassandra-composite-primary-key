@@ -102,11 +102,12 @@ export class <%= entityAngularName %>UpdateComponent implements OnInit {
 
 <%_ if (anyFieldIsMapSaathratri) { _%>
     <%_ for (const field of fields) {
-        if (field.fieldTypeMapSaathratri) {
         const fieldName = field.fieldName;
         const fieldType = field.fieldType;
+
+        if (field.fieldTypeMapSaathratri) {
     _%>
-        inputFields<%= this._.upperFirst(fieldName) %>: Map<string, <%= field.tsType %>> = new Map<string, <%= field.tsType %>>(); // Start with one input field
+        inputFields<%= this._.upperFirst(fieldName) %>: Record<string, <%_ if (field.fieldTypeMapDayjsSaathratri) { _%>dayjs.Dayjs<%_ } else { _%><%= field.tsType %><%_ } _%>> = {}; // Start with one input field
     <%_ 
         } 
     }
@@ -227,6 +228,18 @@ _%>
     save(): void {
         this.isSaving = true;
         const <%= entityInstance %> = this.<%= entityInstance %>FormService.get<%= entityAngularName %>(this.editForm);
+       
+        <%_ for (const field of fields) {
+                if (field.fieldTypeMapSaathratri) {
+                const fieldName = field.fieldName;
+                const fieldType = field.fieldType;
+        _%>
+            <%= entityInstance %>.<%=  fieldName %> = this.inputFields<%= this._.upperFirst(fieldName) %>;
+        <%_ 
+            } 
+        }
+        _%>
+
         <%_ if(primaryKeySaathratri.composite) { _%>
 <%_ if (updatableEntity) { _%>
          if (this.isNew) {
@@ -362,12 +375,12 @@ _%>
     <%_ if (anyFieldIsMapSaathratri) { _%>
 
         <%_ for (const field of fields) {
-            if (field.fieldTypeMapSaathratri) {
             const fieldName = field.fieldName;
             const fieldType = field.fieldType;
+            if (field.fieldTypeMapSaathratri) {
         _%>
-            handle<%= this._.upperFirst(fieldName) %>InputChange(updatedFields: Map<string, <%= field.tsType %>>): void {
-                this.inputFields<%= this._.upperFirst(fieldName) %> = new Map(updatedFields); // Update parent with new values from child
+            handle<%= this._.upperFirst(fieldName) %>InputChange(updatedFields: Record<string, <%_ if (field.fieldTypeMapDayjsSaathratri) { _%>dayjs.Dayjs<%_ } else { _%><%= field.tsType %><%_ } _%>>): void {
+                this.inputFields<%= this._.upperFirst(fieldName) %> = { ...updatedFields }; // Update parent with new values from child
             }
         <%_ 
             } 

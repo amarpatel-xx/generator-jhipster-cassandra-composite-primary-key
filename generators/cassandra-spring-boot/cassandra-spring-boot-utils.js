@@ -312,6 +312,14 @@ export const cassandraSpringBootUtils = {
             }
         }
 
+        if (entity?.anyFieldIsMapDayjsSaathratri !== true) {
+            if (this.isMapDayjsField(field)) {
+                entity.anyFieldIsMapDayjsSaathratri = true;
+            } else {
+                entity.anyFieldIsMapDayjsSaathratri = false;
+            }
+        }
+
         if (entity?.anyFieldIsMapNumberSaathratri !== true) {
             if (this.isMapNumberField(field)) {
                 entity.anyFieldIsMapNumberSaathratri = true;
@@ -410,7 +418,14 @@ export const cassandraSpringBootUtils = {
     isMapNumberField(field) {
         const annotation = field.options?.customAnnotation[0];
         const annotation2 = field.options?.customAnnotation[1];
-        return annotation === "CassandraType.Name.MAP" && (annotation2 === 'CassandraType.Name.DECIMAL' ||  annotation2 === 'CassandraType.Name.BIGINT');
+        return annotation === "CassandraType.Name.MAP" && annotation2 === 'CassandraType.Name.DECIMAL';
+    },
+
+    isMapDayjsField(field) {
+        const annotation = field.options?.customAnnotation[0];
+        const annotation2 = field.options?.customAnnotation[1];
+        const annotation3 = field.options?.customAnnotation[2];
+        return annotation === "CassandraType.Name.MAP" && annotation2 === 'CassandraType.Name.BIGINT' && annotation3 === 'UTC_DATETIME';
     },
 
     isMapStringField(field) {
@@ -428,12 +443,14 @@ export const cassandraSpringBootUtils = {
 
         if (this.isMapBooleanField(field)) {
             field.fieldTypeMapBooleanSaathratri = true;
-        } else if (this.isMapNumberField(field)) {
-            field.fieldTypeMapNumberSaathratri = true;
         } else if (this.isMapStringField(field)) {
             field.fieldTypeMapStringSaathratri = true;
-        }
-
+        } else if (this.isMapDayjsField(field)) {
+            field.fieldTypeMapDayjsSaathratri = true;
+        } else if (this.isMapNumberField(field)) {
+            field.fieldTypeMapNumberSaathratri = true;
+        } 
+        
         if (this.isDateField(field)) {
             field.fieldTypeLocalDateSaathratri = true;
             field.fieldContainsUtcSaathratri = true;

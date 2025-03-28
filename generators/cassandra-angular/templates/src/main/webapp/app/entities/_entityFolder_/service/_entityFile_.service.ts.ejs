@@ -39,7 +39,7 @@ import {
 import { catchError } from 'rxjs/operators';
 <%_ } _%>
 
-<%_ if (anyFieldIsDateDerived || anyFieldIsDateDerivedSaathratri) { _%>
+<%_ if (anyFieldIsDateDerived || anyFieldIsDateDerivedSaathratri || anyFieldIsMapDayjsSaathratri) { _%>
 import dayjs from 'dayjs/esm';
 <%_ } _%>
 
@@ -84,12 +84,14 @@ type RestOf<T extends I<%= entityAngularName %><% if (!readOnly) { %> | New<%= e
     };
   <%_ } _%>
   <%_ for (const field of fields.filter(field => !field.isCompositePrimaryKeyField)) { _%>
-    <%_ if (field.fieldTypeLocalDateSaathratri || field.fieldTypeTimedSaathratri) { _%>
+    <%_ if (field.fieldTypeMapDayjsSaathratri) { _%>
+        <%= field.fieldName %>?: Record<string, dayjs.Dayjs> | null;
+    <%_ } else if (field.fieldTypeLocalDateSaathratri || field.fieldTypeTimedSaathratri) { _%>
         <%= field.fieldName %>?: number | null;
     <%_ } else if (field.fieldTypeSetSaathratri) { _%>
         <%= field.fieldName %>?: Set<string> | null;
     <%_ } else if (field.fieldTypeMapSaathratri) { _%>
-        <%= field.fieldName %>?: Map<string, <%= field.tsType %>> | null;
+        <%= field.fieldName %>?: Record<string, <%= field.tsType %>> | null;
     <%_ } _%>
   <%_ } _%>
   };
@@ -304,13 +306,18 @@ export class <%= entityAngularName %>Service {
                 },
             <%_ } _%>
     <%_ for (const field of fields.filter(field => !field.isCompositePrimaryKeyField)) { _%>
-        <%_ if (field.fieldTypeTimedSaathratri) { _%>
+        <%_ if(field.fieldTypeMapDayjsSaathratri) { _%>
+           
+            <%= field.fieldName %>: <%= entityInstance %>.<%= field.fieldName %> 
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                ? Object.fromEntries(Object.entries(<%= entityInstance %>.<%= field.fieldName %>).map(([k, v]) => [k, v?.valueOf()])) : {},
+        <%_ } else if (field.fieldTypeTimedSaathratri) { _%>
             <%= field.fieldName %>: <%= entityInstance %>.<%= field.fieldName %> ? <%= entityInstance %>.<%= field.fieldName %>.valueOf() : null,
         <%_ } else if (field.fieldTypeLocalDateSaathratri) { _%>
             <%= field.fieldName %>: <%= entityInstance %>.<%= field.fieldName %> ? <%= entityInstance %>.<%= field.fieldName %>.valueOf() : null,
         <%_ } _%>
     <%_ } _%>
-        };
+        } as RestOf<T>;
     }
 
     protected convertDateFromServer(rest<%= entityAngularName %>: <%= entityRestName %>): I<%= entityAngularName %> {
@@ -330,7 +337,11 @@ export class <%= entityAngularName %>Service {
                 },
             <%_ } _%>
     <%_ for (const field of fields.filter(field => !field.isCompositePrimaryKeyField)) { _%>
-        <%_ if (field.fieldTypeTimedSaathratri) { _%>
+        <%_ if (field.fieldTypeMapDayjsSaathratri) { _%>
+            <%= field.fieldName %>: rest<%= entityAngularName %>.<%= field.fieldName %> 
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                ? Object.fromEntries(Object.entries(rest<%= entityAngularName %>.<%= field.fieldName %>).map(([k, v]) => [k, dayjs(v)])) : {},
+        <%_ } else if (field.fieldTypeTimedSaathratri) { _%>
         <%= field.fieldName %>: rest<%= entityAngularName %>.<%= field.fieldName %> ? dayjs(rest<%= entityAngularName %>.<%= field.fieldName %>) : null,
         <%_ } else if (field.fieldTypeLocalDateSaathratri) { _%>
         <%= field.fieldName %>: rest<%= entityAngularName %>.<%= field.fieldName %> ? dayjs(rest<%= entityAngularName %>.<%= field.fieldName %>) : null,

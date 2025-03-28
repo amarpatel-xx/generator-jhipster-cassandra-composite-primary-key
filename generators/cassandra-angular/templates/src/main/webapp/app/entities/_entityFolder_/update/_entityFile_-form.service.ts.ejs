@@ -62,7 +62,11 @@ type <%= entityAngularName %>FormGroupInput = I<%= entityAngularName %> | Partia
  */
 type FormValueOf<T extends I<%= entityAngularName %> | New<%= entityAngularName %>> = Omit<T, '<%- fields.filter(field => field.fieldTypeTimed || field.fieldTypeTimedSaathratri).map(field => field.fieldName).join("' | '") %>'> & {
   <%_ for (const field of fields.filter(field => field.fieldTypeTimed || field.fieldTypeTimedSaathratri)) { _%>
-  <%= field.fieldName %>?: string | null;
+  <%_ if (field.fieldTypeMapSaathratri) { _%>
+    <%= field.fieldName %>: Record<string, string> | null | undefined;
+  <%_ } else { _%>
+    <%= field.fieldName %>?: string | null;
+  <%_ } _%>
   <%_ } _%>
 };
 
@@ -351,7 +355,16 @@ _%>
 <%_ for (field of fields.filter(field => !field.isCompositePrimaryKeyField)) {
       const { fieldName, fieldTypeTimed } = field;
 _%>
-  <%_ if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
+  <%_ if (field.fieldTypeMapDayjsSaathratri) { _%>
+    <%= fieldName %>: raw<%= entityAngularName %>.<%= fieldName %>
+      ? Object.fromEntries(
+          Object.entries(raw<%= entityAngularName %>.<%= fieldName %>).map(([key, value]) => [
+            key,
+            dayjs(value, DATE_TIME_FORMAT),
+          ])
+        )
+      : {},
+  <%_ } else if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
       <%= fieldName %>: dayjs(raw<%= entityAngularName %>.<%= fieldName %>, DATE_TIME_FORMAT),
   <%_ } _%>
 <%_ } _%>
@@ -384,7 +397,16 @@ _%>
 <%_ for (field of fields.filter(field => !field.isCompositePrimaryKeyField)) {
       const { fieldName, fieldTypeTimed } = field;
 _%>
-  <%_ if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
+  <%_ if(field.fieldTypeMapDayjsSaathratri) { _%>
+    <%= fieldName %>: <%= entityInstance %>.<%= fieldName %>
+      ? Object.fromEntries(
+          Object.entries(<%= entityInstance %>.<%= fieldName %>).map(([key, value]) => [
+            key,
+            value.format(DATE_TIME_FORMAT),
+          ])
+        )
+      : {},
+  <%_ } else if (fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
       <%= fieldName %>: <%= entityInstance %>.<%= fieldName %> ? <%= entityInstance %>.<%= fieldName %>.format(DATE_TIME_FORMAT) : undefined,
   <%_ } _%>
 <%_ } _%>
