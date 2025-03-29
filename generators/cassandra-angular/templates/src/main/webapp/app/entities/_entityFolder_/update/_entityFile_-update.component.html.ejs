@@ -327,40 +327,7 @@ _%>
                         <input type="file" id="file_<%= fieldName %>" data-cy="<%= fieldName %>" (change)="setFileData($event, '<%= fieldName %>', <% if (fieldTypeBlobContent === 'image') { %>true)" accept="image/*"<% if (enableTranslation) { %> <%= jhiPrefix %>Translate="entity.action.addimage"<% } %><% } else { %>false)"<% if (enableTranslation) { %> <%= jhiPrefix %>Translate="entity.action.addblob"<% } %><% } %>/>
                     </div>
     <%_ } _%>
-      <%_ if (field.fieldTypeLocalDate || field.fieldTypeLocalDateSaathratri) { _%>
-                    <mat-form-field appearance="fill" class="full-width">
-                        <mat-label>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</mat-label>
-                        <br>
-                        <input
-                        matInput
-                        [matDatepicker]="<%= fieldName %>Picker"
-                        id="field_<%= fieldName %>"
-                        data-cy="<%= fieldName %>"
-                        formControlName="<%= fieldName %>"
-                        />
-                        <mat-datepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mat-datepicker-toggle>
-                        <mat-datepicker #<%= fieldName %>Picker></mat-datepicker>
-                    </mat-form-field>
-      <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
-                    <app-date-time
-                        fieldName="<%= fieldName %>"
-                        formControlName="<%= fieldName %>"
-                        [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
-                        [labelClass]="'form-label'"
-                        [isRequired]="false"
-                        (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
-                        (dirtyStateChange)="updateDirtyState($event)"
-                        [isNew]="isNew">
-                    </app-date-time>
-                    <button type="button" class="btn btn-primary" (click)="generateDateTime('<%= fieldName %>')">Generate</button>
-                    <button
-                        type="button"
-                        class="btn btn-danger"
-                        (click)="resetDateTime('<%= fieldName %>')"
-                        [disabled]="!isDateTimeDirty['<%= fieldName %>']"> 
-                        Reset 
-                    </button>
-    <%_ } else if (field.fieldTypeSetSaathratri) { _%>
+    <%_ if (field.fieldTypeSetSaathratri) { _%>
             <app-set-component 
                 [inputFields]="inputFields<%= this._.upperFirst(field.fieldName) %>" 
                 (dataChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
@@ -380,6 +347,44 @@ _%>
                 [inputFields]="inputFields<%= this._.upperFirst(field.fieldName) %>" 
                 (dataChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
             </app-map-string-component>
+    <%_ } else if (field.fieldTypeMapDayjsSaathratri) { _%>
+            <app-map-dayjs-component 
+                [inputFields]="inputFields<%= this._.upperFirst(field.fieldName) %>" 
+                (dataChange)="handle<%= this._.upperFirst(field.fieldName) %>InputChange($event)">
+            </app-map-dayjs-component>
+    <%_ } else if (field.fieldTypeLocalDate || field.fieldTypeLocalDateSaathratri) { _%>
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>__jhiTranslateTag__('<%= i18nKeyPrefix %>.<%= fieldName %>')</mat-label>
+                        <br>
+                        <input
+                        matInput
+                        [matDatepicker]="<%= fieldName %>Picker"
+                        id="field_<%= fieldName %>"
+                        data-cy="<%= fieldName %>"
+                        formControlName="<%= fieldName %>"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="<%= fieldName %>Picker"></mat-datepicker-toggle>
+                        <mat-datepicker #<%= fieldName %>Picker></mat-datepicker>
+                    </mat-form-field>
+    <%_ } else if (field.fieldTypeTimed || field.fieldTypeTimedSaathratri) { _%>
+                    <app-date-time
+                        fieldName="<%= fieldName %>"
+                        formControlName="<%= fieldName %>"
+                        [dateTimeLabel]="'<%= i18nKeyPrefix %>.<%= fieldName %>' | translate"
+                        [labelClass]="'form-label'"
+                        [isRequired]="false"
+                        (isValid)="onDateTimeValid('<%= fieldName %>', $event)"
+                        (dirtyStateChange)="updateDirtyState($event)"
+                        [isNew]="isNew">
+                    </app-date-time>
+                    <button type="button" class="btn btn-primary" (click)="generateDateTime('<%= fieldName %>')">Generate</button>
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        (click)="resetDateTime('<%= fieldName %>')"
+                        [disabled]="!isDateTimeDirty['<%= fieldName %>']"> 
+                        Reset 
+                    </button>
     <%_ } else if (field.blobContentTypeText) { _%>
                     <textarea class="form-control" name="<%= fieldName %>" id="field_<%= fieldName %>" data-cy="<%= fieldName %>"
                               formControlName="<%= fieldName %>"<% if (readonly) { %> [readonly]="true"<% } %>></textarea>
