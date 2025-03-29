@@ -136,14 +136,14 @@ _%>
     <%_ } else if (primaryKeySaathratri.composite && !field.isCompositePrimaryKeyField && field.fieldTypeMapSaathratri) { 
             // Composite Primary Key Code
     _%>
-            <dl *ngIf="<%= entityInstance %>.<%= fieldName %>">
+            <td *ngIf="<%= entityInstance %>.<%= fieldName %>">
                 <div *ngFor="let item of <%= entityInstance %>.<%= fieldName %> | keyvalue">
                   <dt>{{ item.key }}</dt>
                   <dd>
                     <td>{{ item.value <%_ if(field.fieldTypeMapDayjsSaathratri) { _%> | formatMediumDatetime<%_ } _%>}}</td>
                   </dd>
                 </div>
-            </dl>
+            </td>
     <%_ } else if (primaryKeySaathratri.composite && !field.isCompositePrimaryKeyField && field.fieldTypeTimedSaathratri) { 
                     // Composite Primary Key Code
 	_%>
