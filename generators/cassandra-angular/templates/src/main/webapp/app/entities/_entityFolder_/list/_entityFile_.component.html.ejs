@@ -136,7 +136,7 @@ _%>
     <%_ } else if (primaryKeySaathratri.composite && !field.isCompositePrimaryKeyField && field.fieldTypeMapSaathratri) { 
             // Composite Primary Key Code
     _%>
-            <td *ngIf="<%= entityInstance %>.<%= fieldName %>">
+            <td>
                 <div *ngFor="let item of <%= entityInstance %>.<%= fieldName %> | keyvalue">
                   <dt>{{ item.key }}</dt>
                   <dd>
