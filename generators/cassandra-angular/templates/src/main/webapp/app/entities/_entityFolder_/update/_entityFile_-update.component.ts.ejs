@@ -415,11 +415,20 @@ _%>
         this.<%= entityInstance %>FormService.resetForm(this.editForm, <%= entityInstance %>);
 
         <%_ if (anyFieldIsUUIDSaathratri || anyFieldIsTimeUUIDSaathratri) { _%>
-            // Store the last saved values from the response
             Object.keys(this.editForm.controls).forEach((field) => {
                 this.lastSavedValues[field] = this.editForm.get(field)?.value;
             });
         <%_ } _%>
+
+        <%_ for (const field of fields) {
+                if (field.fieldTypeMapSaathratri) {
+                    const fieldName = field.fieldName;
+        _%>
+                    this.inputFields<%= this._.upperFirst(fieldName) %> = { ...(<%= entityInstance %>.<%= fieldName %> ?? {}) };
+        <%_ 
+                }
+            } 
+        _%>
     }
 
     protected initializeResetButtonStates(): void {
