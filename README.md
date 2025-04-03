@@ -2,6 +2,13 @@
 
 > JHipster blueprint, cassandra-composite-primary-key blueprint for JHipster.
 
+# Project Update
+
+This project has been renamed and relocated to a new repository: https://github.com/amarpatel-xx/generator-jhipster-cassandra.
+Additionally, the JHipster Blueprint example has been moved to: https://github.com/amarpatel-xx/jhipster-cassandra-example.
+
+Please note that all future updates and developments will be available exclusively at these new locations.
+
 # Introduction
 
 This is a [JHipster](https://www.jhipster.tech/) blueprint, that is meant to be used in a JHipster application.
